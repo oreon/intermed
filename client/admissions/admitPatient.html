@@ -1,0 +1,30 @@
+<template name="AdmitPatient">
+    {{ facility.name }}
+    {{# each facility.wards }}
+
+        <h2> {{name}} </h2>
+
+        {{#each rooms}}
+
+            <h3> {{name}} </h3>
+
+            {{#each beds}}
+            {{#if (bed.patient) }}
+
+                <span style="background-color: #ffdddd">
+
+                         {{name}}
+
+                </span>
+
+            {{/if}}
+
+        {{/each}}
+
+        <hr/>
+
+        {{/each}}
+
+    {{/each}}
+
+</template>

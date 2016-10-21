@@ -1,0 +1,34 @@
+<template name="Patient">
+
+    <article class="recipe">
+        <h3> {{patient.firstName}} {{patient.lastName}} F 25 </h3>
+
+        {{#if editMode}}
+            {{> quickForm collection="Patient" id="updatePatient" type="update" doc=this autosave=true}}
+        {{else}}
+
+
+
+            <p>
+                {{#each encounters}}
+                {{reason}}
+                {{script.notes}} <br/>
+                {{#each script.items}}
+                {{ drugName(drug) }} {{frequency}} - {{amount}}
+                {{/each}}
+                <br/>
+                {{/each}}
+            </p>
+            <a href="recipe/{{_id}}"> Viw Details</a>
+
+            {{#if inMenu}}
+                <button class="btn-deny toggle-menu">Remove from Menu</button>
+            {{else}}
+                <button class="btn-primary toggle-menu">Add to Menu</button>
+            {{/if}}
+        {{/if}}
+        <i class="fa fa-trash"></i>
+        <i class="fa fa-pencil"></i>
+    </article>
+
+</template>

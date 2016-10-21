@@ -1,0 +1,18 @@
+<template name="RecipeSingle">
+    <article class="recipe">
+        <h3> {{recipe.name}}</h3>
+        <p> {{recipe.desc }}</p>
+        <p>
+            {{#each recipe.ingredients}}
+            <span class="ingredient">  {{ prdName(product) }} {{name}} - {{amount}} </span>
+            <br/>
+            {{/each}}
+
+
+        </p>
+
+        <i class="fa fa-trash"></i>
+        <i class="fa fa-pencil"></i>
+    </article>
+
+</template>

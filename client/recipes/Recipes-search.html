@@ -1,0 +1,23 @@
+<template name="Recipes-old">
+    {{> NewRecipe}}
+
+
+
+
+    <section class="recipes">
+
+        {{> EasySearch.Input index=recipesIndex }}
+
+        {{#if Template.subscriptionsReady}}
+
+            {{#EasySearch.Each index=recipesIndex }}
+            {{> Recipe}}
+            {{/EasySearch.Each}}
+
+        {{> EasySearch.Pagination index=recipesIndex }}
+
+        {{else}}
+            <p>Loading</p>
+        {{/if}}
+    </section>
+</template>
