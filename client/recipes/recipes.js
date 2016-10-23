@@ -7,7 +7,7 @@ Template.Recipes.onCreated(function(){
 	var self = this;
 	self.autorun(function() {
 		self.subscribe('recipes');
-		//self.subscribe('products')
+		self.subscribe('compPts')
 	});
 
 
@@ -19,6 +19,10 @@ Template.Recipes.helpers({
 	},
 	patients: () => {
 		return Patients.find({});
+	},
+	encounters: function(){
+		//console.log(this._id)
+		return PtEncounters.find({patient: this._id});
 	},
 
 //recipesIndex: () => RecipesIndex

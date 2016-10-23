@@ -1,13 +1,13 @@
 Recipes = new Mongo.Collection('recipes');
 
-RecipesIndex = new EasySearch.Index({
-    collection: Recipes,
-    'limit': 3,
-    fields: ['name', 'desc', 'ingredients'],
-    engine: new EasySearch.MongoDB({
-            sort: () => {score: 1}
-})
-})
+//RecipesIndex = new EasySearch.Index({
+//    collection: Recipes,
+//    'limit': 3,
+//    fields: ['name', 'desc', 'ingredients'],
+//    engine: new EasySearch.MongoDB({
+//            sort: () => {score: 1}
+//})
+//})
 
 
 Products = new Mongo.Collection('products');

@@ -34,24 +34,24 @@ Template.Patient.onCreated(function () {
     var self = this;
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
-        self.subscribe('FullPatient', id);
+        self.id = id;
+        self.subscribe('compPt', id);
         self.subscribe('Drugs')
+        //self.subscribe('Encounters')
     });
 });
 
 Template.Patient.helpers({
 
-        patient: function () {
-            var id = FlowRouter.getParam('id');
-            pt = Patients.findOne({_id: id});
-            return pt;
-        },
+    patient: function () {
+        //console.log(this)
+        return Patients.findOne(FlowRouter.getParam('id'));
+    },
 
-        encounters: function () {
-            return Encounters.find();
-        },
+    encounters: function () {
+        return PtEncounters.find({patient:FlowRouter.getParam('id')});
+    },
 
-        drugName: (id) => Drugs.findOne({_id: id}).name
-
+    drugName: (id) => Drugs.findOne({_id: id}).name
 
 })

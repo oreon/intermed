@@ -60,7 +60,16 @@ Meteor.publish('Facilities', function(){
     return Facilities.find();
 });
 
-Meteor.publish(null, function (){
+Meteor.publish('Wards', function(){
+    return Wards.find();
+});
+
+Meteor.publish('Rooms', function(){
+    return Rooms.find();
+});
+
+
+Meteor.publish('Roles', function (){
     return Meteor.roles.find({})
 })
 
@@ -69,7 +78,6 @@ Meteor.publish(null, function (){
 
 Meteor.publish('FullPatient', function(id){
     check(id, String);
-    pt =  Patients.find({_id: id});
 
     if ( id ) {
         return [
@@ -79,7 +87,78 @@ Meteor.publish('FullPatient', function(id){
     } else {
         return null;
     }
-});
+})
+
+Meteor.publishComposite('compPt',function(id) {
+    return {
+        find: function () {
+            // Find top ten highest scoring posts
+
+            return Patients.find({_id: id}, {sort: {score: -1}, limit: 1});
+        },
+        children: [
+            {
+                collectionName: "ptEncounters",
+
+                find: function (pt) {
+
+                    return Encounters.find(
+                        {patient: pt._id},
+                        {limit: 1000/*, fields: {profile: 1}*/});
+                }
+            },
+        ]
+    }
+})
+
+
+
+Meteor.publishComposite('compPts',function() {
+    return {
+        find: function () {
+            // Find top ten highest scoring posts
+
+            return Patients.find({}, {sort: {score: -1}, limit: 100});
+        },
+        children: [
+            {
+                collectionName: "ptEncounters",
+
+                find: function (pt) {
+
+                    return Encounters.find(
+                        {patient: pt._id},
+                        {limit: 1000/*, fields: {profile: 1}*/});
+                }
+            },
+        ]
+    }
+})
+
+
+Meteor.publishComposite('compWards',{
+        find: function () {
+            return Wards.find({}, {sort: {name: -1}, limit: 100});
+        },
+        children: [
+            {
+                //collectionName: "ptEncounters",
+
+                find: function (ward) {
+
+                    return Rooms.find(
+                        {ward: ward._id},
+                        {sort: {name: -1} , limit: 1000/*, fields: {profile: 1}*/});
+                },
+
+                children:[
+
+                ]
+            },
+        ]
+
+})
+
 
 
 Meteor.publish('Scripts', function(){

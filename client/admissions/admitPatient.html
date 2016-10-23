@@ -1,30 +1,40 @@
 <template name="AdmitPatient">
-    {{ facility.name }}
-    {{# each facility.wards }}
+    Admit {{patient.firstName}}
 
-        <h2> {{name}} </h2>
+    {{# each wards }}
+    <article class="recipe">
+    <h2> {{name}} </h2>
 
-        {{#each rooms}}
+    {{#each rooms}}
 
-            <h3> {{name}} </h3>
+    <h3> {{name}} </h3>
 
-            {{#each beds}}
-            {{#if (bed.patient) }}
+    {{#each beds}}
 
-                <span style="background-color: #ffdddd">
+    {{> AvailableBed }}
 
-                         {{name}}
-
-                </span>
-
-            {{/if}}
-
-        {{/each}}
-
-        <hr/>
-
-        {{/each}}
+    {{else}} <p> No beds Available   </p>
 
     {{/each}}
+
+    <hr/>
+
+    {{/each}}
+    </article>
+    {{/each}}
+
+</template>
+
+
+<template name="AvailableBed">
+    {{#unless patient }}
+
+        <span style="background-color: #ffdddd">
+
+             BED {{name}} {{patient}} <button class="btn-primary admit">Admit</button>
+
+        </span>
+        &nbsp;
+    {{/unless}}
 
 </template>

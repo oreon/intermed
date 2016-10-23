@@ -4,14 +4,33 @@
     {{else}}
     <button class="new-recipe">New Recipe</button>
     {{/if}}
-    {{> paginationBar itemsPerPage=3 window=5 count='total_recipes'}}
+
     <section class="recipes">
         {{#if Template.subscriptionsReady}}
         {{#each patients}}
-        <article>
-        {{firstName}} {{lastName}} <a href="recipe/{{_id}}"> Viw Details</a>
+        <article class="recipe">
+        {{firstName}} {{lastName}}
+            <br>
+            <a href="recipe/{{_id}}"> Viw Details</a>
 
+            {{# if bed}}
+            <a href="admitPatient/{{_id}}"> Move Patient </a>
+            {{else}}
             <a href="admitPatient/{{_id}}"> Admit </a>
+
+            {{/if}}
+
+            <p>
+                {{#each encounters }}
+                {{reason}}
+                {{script.notes}} <br/>
+                {{#each script.items}}
+                 {{frequency}} - {{amount}}
+                {{/each}}
+                <br/>
+                {{/each}}
+            </p>
+
         </article>
         {{/each}}
 
