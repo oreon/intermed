@@ -1,5 +1,5 @@
 <template name="AdmitPatient">
-    Admit {{patient.firstName}}
+    {{#if bed}} Move {{else }}Admit {{/if}} {{patient.firstName}} {{patient.bed}}
 
     {{# each wards }}
     <article class="recipe">
@@ -27,7 +27,7 @@
 
 
 <template name="AvailableBed">
-    {{#unless patient }}
+
 
         <span style="background-color: #ffdddd">
 
@@ -35,6 +35,5 @@
 
         </span>
         &nbsp;
-    {{/unless}}
 
 </template>

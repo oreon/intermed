@@ -44,6 +44,7 @@ erasaur:meteor-lodash@4.0.0
 es5-shim@4.6.14_1
 fastclick@1.0.12
 fortawesome:fontawesome@4.6.3
+fourseven:scss@3.8.1
 geojson-utils@1.0.9
 gwendall:auth-client-callbacks@0.1.0
 hot-code-push@1.0.4
@@ -124,6 +125,7 @@ templating@1.2.15
 templating-compiler@1.2.15
 templating-runtime@1.2.15
 templating-tools@1.0.5
+themeteorchef:bert@2.1.1
 tracker@1.1.0
 twbs:bootstrap@3.3.6
 ui@1.0.12

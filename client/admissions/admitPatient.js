@@ -42,18 +42,31 @@ Template.AvailableBed.events({
         pt = FlowRouter.getParam('id')
         patient = Patients.findOne({_id: pt});
 
-        if (patient.bed) {
-            Meteor.call('admit', this.id, pt);
-            Bert.alert( 'Successfully admitted patient to  bed : ', 'success', 'growl-top-right' );
+        if (!patient.bed ) {
+
+            Meteor.call('admit', this.id, pt, function (error, response) {
+                if (error) {
+                    Bert.alert(error.reason, "danger");
+                } else {
+                    Bert.alert( 'Successfully admitted patient to  bed : ', 'success', 'growl-top-right' );
+                    FlowRouter.go('/recipe/' + pt)
+                }
+            });
 
         }
         else {
-            Meteor.call('move', this.bed, this.id, pt);
-            Bert.alert( 'Successfully moved patient to new bed : ', 'success', 'growl-top-right' );
+            Meteor.call('move', this.id, pt, function (error, response) {
+                if (error) {
+                    Bert.alert(error.reason, "danger");
+                } else {
+                    Bert.alert( 'Successfully moved patient to  bed : ', 'success', 'growl-top-right' );
+                    FlowRouter.go('/recipe/' + pt)
+                }
+            });
         }
 
 
-        FlowRouter.go('/recipe/' + pt)
+
     }
 
 });
