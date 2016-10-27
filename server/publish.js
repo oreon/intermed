@@ -1,30 +1,28 @@
-
-
-Meteor.publish('recipes', function(skip, limit){
+Meteor.publish('recipes', function (skip, limit) {
     //Counts.publish(this, 'total_recipes', Recipes.find())
-    return Recipes.find({author: this.userId}, {limit:5} );
+    return Recipes.find({author: this.userId}, {limit: 5});
 });
 
 
-Meteor.publish('recipes-paginated', function(skip, limit){
+Meteor.publish('recipes-paginated', function (skip, limit) {
     Counts.publish(this, 'total_recipes', Recipes.find())
 
-    if (skip < 0 )
+    if (skip < 0)
         skip = 0
     options = {}
     options.skip = skip
     options.limit = limit
-    if ( options.limit > 10 ) options.limit = 10
+    if (options.limit > 10) options.limit = 10
     options.sort = {createdAt: 1}
 
-    return Recipes.find({author: this.userId}, options );
+    return Recipes.find({author: this.userId}, options);
 });
 
-Meteor.publish('AllProducts', function(){
+Meteor.publish('AllProducts', function () {
     return Products.find();
 });
 
-Meteor.publish('SingleRecipe', function(id){
+Meteor.publish('SingleRecipe', function (id) {
     //check(id, String);
     return Recipes.find({_id: id});
 });
@@ -35,61 +33,63 @@ Meteor.publish('SingleRecipe', function(id){
 //    return Recipes.find({_id: id});
 //});
 
-Meteor.publish('Drugs', function(){
+//Meteor.publish('Admissions', function(){
+//    return Admissions.find();
+//});
+
+Meteor.publish('Drugs', function () {
     return Drugs.find();
 });
 
-Meteor.publish('Patients', function(){
+Meteor.publish('Patients', function () {
     return Patients.find();
 });
 
-Meteor.publish('Encounters', function(){
+Meteor.publish('Encounters', function () {
     return Encounters.find();
 });
 
-Meteor.publish('ChronicDiseases', function(){
+Meteor.publish('ChronicDiseases', function () {
     return ChronicDiseases.find();
 });
 
-Meteor.publish('LabTests', function(){
+Meteor.publish('LabTests', function () {
     return LabTests.find();
 });
 
 
-Meteor.publish('Facilities', function(){
+Meteor.publish('Facilities', function () {
     return Facilities.find();
 });
 
-Meteor.publish('Wards', function(){
+Meteor.publish('Wards', function () {
     return Wards.find();
 });
 
-Meteor.publish('Rooms', function(){
+Meteor.publish('Rooms', function () {
     return Rooms.find();
 });
 
 
-Meteor.publish('Roles', function (){
+Meteor.publish('Roles', function () {
     return Meteor.roles.find({})
 })
 
 
-
-
-Meteor.publish('FullPatient', function(id){
+Meteor.publish('FullPatient', function (id) {
     check(id, String);
 
-    if ( id ) {
+    if (id) {
         return [
-            Patients.find( { '_id': id } ),
-            Encounters.find( { 'patient': id } /*, { sort: { "date": -1 } } */)
+            Patients.find({'_id': id}),
+            Encounters.find({'patient': id} /*, { sort: { "date": -1 } } */)
         ];
     } else {
         return null;
     }
 })
 
-Meteor.publishComposite('compPt',function(id) {
+Meteor.publishComposite('compPt', function (id) {
     return {
         find: function () {
             // Find top ten highest scoring posts
@@ -112,8 +112,7 @@ Meteor.publishComposite('compPt',function(id) {
 })
 
 
-
-Meteor.publishComposite('compPts',function() {
+Meteor.publishComposite('compPts', function () {
     return {
         find: function () {
             // Find top ten highest scoring posts
@@ -136,31 +135,80 @@ Meteor.publishComposite('compPts',function() {
 })
 
 
-Meteor.publishComposite('compWards',{
-        find: function () {
-            return Wards.find({}, {sort: {name: -1}, limit: 100});
-        },
-        children: [
-            {
-                //collectionName: "ptEncounters",
+Meteor.publishComposite('compWards', {
+    find: function () {
+        return Wards.find({}, {sort: {name: -1}, limit: 100});
+    },
+    children: [
+        {
+            //collectionName: "ptEncounters",
 
-                find: function (ward) {
+            find: function (ward) {
 
-                    return Rooms.find(
-                        {ward: ward._id},
-                        {sort: {name: -1} , limit: 1000/*, fields: {profile: 1}*/});
-                },
-
-                children:[
-
-                ]
+                return Rooms.find(
+                    {ward: ward._id},
+                    {sort: {name: -1}, limit: 1000/*, fields: {profile: 1}*/});
             },
-        ]
+
+            children: [
+
+                {
+                    find: function (room) {
+
+                        return Beds.find(
+                            {room: room._id},
+                            {sort: {name: -1}, limit: 1000/*, fields: {profile: 1}*/});
+                    }
+                }
+
+            ]
+        },
+    ]
 
 })
 
+Meteor.publishComposite('compAdmissions', {
+    find: function () {
+        return Admissions.find({isCurrent: true}, {sort: {name: -1}, limit: 100});
+    },
+    children: [
+        {
+            find: function (adm) {
+                return Patients.find(
+                    {_id: adm.patient},
+                    {sort: {name: -1}, limit: 1/*, fields: {profile: 1}*/});
+            },
+        },
+    ]
+})
+
+Meteor.publishComposite('compAdmission', function (id) {
+    return {
+        find: function () {
+            return Admissions.find({isCurrent: true, _id: id}, {sort: {name: -1}, limit: 1});
+        },
+        children: [
+            {
+                find: function (adm) {
+                    return Patients.find(
+                        {_id: adm.patient},
+                        {sort: {name: -1}, limit: 1/*, fields: {profile: 1}*/});
+                },
+            },
+        ]
+    }
+})
 
 
-Meteor.publish('Scripts', function(){
+Meteor.publish('Scripts', function () {
     return Scripts.find();
 });
+
+
+//if(Meteor.isServer()){
+//make sure a patient is not used in two current admissions simultaneously
+Admissions._ensureIndex({patient: 1, isCurrent: 1}, {unique: true})
+//make sure a bed is not used in two admissions simultaneously
+Admissions._ensureIndex({"currentBedStay.bed": 1, isCurrent: 1}, {unique: true})
+
+//}

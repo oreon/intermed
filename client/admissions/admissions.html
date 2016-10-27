@@ -1,7 +1,6 @@
-<template name="AdmitPatient">
-    {{#if Template.subscriptionsReady}}
-        {{#if currentBed}} Move from {{currentBed.name}} {{else }}Admit {{/if}} {{patient.firstName}}
+<template name="Admissions">
 
+    {{#if Template.subscriptionsReady}}
         {{# each wards }}
             <article class="recipe">
                 <h2> {{name}} </h2>
@@ -12,9 +11,7 @@
 
                     {{#each rbeds}}
 
-                        {{> AvailableBed }}
-
-                    {{else}} <p> No beds Available </p>
+                        {{> Admitted }}
 
                     {{/each}}
 
@@ -23,16 +20,16 @@
                 {{/each}}
             </article>
         {{/each}}
+
     {{/if}}
 </template>
 
 
-<template name="AvailableBed">
-
-    {{#if isBedAvailable}}
+<template name="Admitted">
+    {{#if bedHasPatient}}
         <span style="background-color: #ffdddd">
-             BED {{name}}
-            <button class="btn-primary admit">Admit</button>
+             BED {{name}} {{bedpatient.firstName}}
+            <a href="viewAdmission/{{admission._id}}"> View </a>
         </span>
         &nbsp;
     {{/if}}

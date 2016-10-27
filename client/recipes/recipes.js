@@ -7,7 +7,8 @@ Template.Recipes.onCreated(function(){
 	var self = this;
 	self.autorun(function() {
 		self.subscribe('recipes');
-		self.subscribe('compPts')
+		self.subscribe('compPts');
+		self.subscribe('compAdmissions')
 	});
 
 
@@ -24,6 +25,10 @@ Template.Recipes.helpers({
 		//console.log(this._id)
 		return PtEncounters.find({patient: this._id});
 	},
+	isAdmitted:function(){
+		adm =  Admissions.findOne({patient:this._id})
+		return !!adm
+	}
 
 //recipesIndex: () => RecipesIndex
 });

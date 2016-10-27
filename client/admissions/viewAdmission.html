@@ -1,0 +1,73 @@
+<template name="ViewAdmission">
+    {{#if Template.subscriptionsReady}}
+
+        <article class="recipe">
+            <h2> {{patient.firstName}} {{patient.lastName}}</h2>
+
+
+            {{#if editMode}}
+                {{> quickForm collection="Admissions" id='updateAdmission' type="update" doc=admission }}
+            {{else}}
+
+
+                {{#if admission.eligibleForDischarge}}
+                    <button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+
+                    <button class="btn-deny discharge">Discharge</button>
+
+                {{else}}
+                    <button class="btn-primary toggleDischarge">Make eligible for discharge</button>
+
+                {{/if}}
+
+
+                <a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+
+                <br/>
+                Admission: {{admission.admissionNote}}  <br/>  {{admission.created}} <br/>
+                <b> {{admission.currentBedStay.bed}}  </b>
+                <br/>
+                From : {{admission.currentBedStay.fromDate}}
+                To: {{admission.currentBedStay.toDate}}
+                <br/>
+
+
+
+
+                <table border="1">
+                    <tr>
+                        <th>Bed</th>
+                        <th> From</th>
+                        <th> To</th>
+                    </tr>
+
+                    {{#each admission.bedStays}}
+                        <tr>
+                            <td>{{bed}}</td>
+                            <td> {{fromDatef}} </td>
+                            <td>   {{toDatef}}  </td>
+                        </tr>
+                    {{/each}}
+
+                </table>
+
+                <i class="fa fa-trash"></i>
+                <i class="fa fa-pencil"></i>
+            {{/if}}
+
+
+        </article>
+    {{/if}}
+</template>
+
+
+
+<template name="updateScriptForm">
+    {{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var}}
+        <fieldset>
+            <legend>Update Script</legend>
+            {{> afQuickField name='script'}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+</template>

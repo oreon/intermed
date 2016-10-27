@@ -13,7 +13,7 @@ Template.Recipe.helpers({
     usr: function(){
         return Meteor.userId()
     },
-        prdName : (id) =>   Products.findOne({_id: id}).name
+    prdName : (id) =>   Products.findOne({_id: id}).name
 });
 
 Template.Recipe.events({

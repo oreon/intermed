@@ -11,6 +11,10 @@ Meteor.subscribe('LabTests')
 
 Meteor.subscribe('Wards')
 Meteor.subscribe('Rooms')
+Meteor.subscribe('Beds')
+
+
+Meteor.subscribe('Admissions')
 
 
 

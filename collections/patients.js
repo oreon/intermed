@@ -1,25 +1,29 @@
+import { Meteor } from 'meteor/meteor'
+
 Patients = new Mongo.Collection('patients');
 Drugs = new Mongo.Collection('drugs')
 Scripts = new Mongo.Collection('scripts')
 Encounters = new Mongo.Collection('encounters')
 
-ChronicDiseases = new  Mongo.Collection('chronicDiseases')
-LabTests = new  Mongo.Collection('labTests')
+ChronicDiseases = new Mongo.Collection('chronicDiseases')
+LabTests = new Mongo.Collection('labTests')
 Facilities = new Mongo.Collection('facilities')
 
 
 Patients.helpers({
     encounters(){
-        return Encounters.find({ patient: this._id });
+        return Encounters.find({patient: this._id});
     },
     test(){
-      return "a test string";
+        return "a test string";
     }
 })
 
 Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
-//Beds = new Mongo.Collection('beds')
+Admissions = new Mongo.Collection('admissions')
+Beds = new Mongo.Collection('beds')
+
 //
 //Wards.helpers({
 //    fullName(){
@@ -34,7 +38,7 @@ BaseSchema = new SimpleSchema({
     created: {
         type: Date,
         label: "Created At",
-        autoValue: function() {
+        autoValue: function () {
             return new Date()
         },
         autoform: {
@@ -43,15 +47,12 @@ BaseSchema = new SimpleSchema({
     }
 })
 
-ChronicDiseaseSchema = new SimpleSchema([BaseSchema, {name:{type:String, unique: true} } ])
-LabTestSchema = new SimpleSchema([BaseSchema, {name:{type:String, unique: true} } ])
-
-
-
+ChronicDiseaseSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true}}])
+LabTestSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true}}])
 
 
 BedSchema = new SimpleSchema([BaseSchema, {
-    name:{type:String},
+    name: {type: String},
     patient: {
         type: String,
         optional: true,
@@ -59,12 +60,22 @@ BedSchema = new SimpleSchema([BaseSchema, {
             type: "hidden",
         }
     },
-    id: {
-        type:String,
-        autoValue : function () {
-            return Meteor.uuid();
-        }
-    },
+    //id: {
+    //    type: String,
+    //    autoValue: function () {
+    //        //var idfld = this.field("id");
+    //        return this.value   ? this.value : Meteor.uuid()
+    //
+    //    }
+    //},
+    //fullName:{
+    //    type: String,
+    //    autoValue: function () {
+    //        var room = this.field("room");
+    //        wardName = Wards.find()
+    //        return (content.isSet)  ? content.value : Meteor.uuid()
+    //    }
+    //},
     //_wardId:{
     //    type:String,
     //    autoValue : function () {
@@ -79,9 +90,9 @@ BedSchema = new SimpleSchema([BaseSchema, {
 ])
 
 RoomSchema = new SimpleSchema([BaseSchema, {
-    name:{type:String},
-    type:{type:String, optional:true},
-    beds:{type:[BedSchema]},
+    name: {type: String},
+    type: {type: String, optional: true},
+    beds: {type: [BedSchema]},
     ward: {
         type: String,
         optional: false,
@@ -98,15 +109,14 @@ RoomSchema = new SimpleSchema([BaseSchema, {
 ])
 
 
-
 WardSchema = new SimpleSchema([BaseSchema, {
     name: {type: String},
-    price: {type: Number, decimal: true, optional:true },
+    price: {type: Number, decimal: true, optional: true},
     //rooms: {type: [RoomSchema]},
     //beds: {type: [BedSchema], optional:true },
     facility: {
-        type:String,
-        autoValue : function () {
+        type: String,
+        autoValue: function () {
             return Facilities.findOne()._id;  //TODO change to current user's facility
         }
     }
@@ -115,13 +125,22 @@ WardSchema = new SimpleSchema([BaseSchema, {
 
 
 FacilitySchema = new SimpleSchema([BaseSchema, {
-    name:{type:String}
+    name: {type: String}
 }
 ])
 
+
+BedStaySchema = new SimpleSchema([BaseSchema, {
+    bed: {type: String},
+    fromDate: {type: Date, optional: true},
+    toDate: {type: Date, optional: true}
+
+}])
+
+
 TestResultValue = new SimpleSchema({
-    name:{type:String},
-    value:{type:Number, decimal:true }
+    name: {type: String},
+    value: {type: Number, decimal: true}
 
 })
 
@@ -138,25 +157,25 @@ TestResults = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    values:{type:[TestResultValue], optional: true}
+    values: {type: [TestResultValue], optional: true}
 }
 
 ])
 
 PatientSchema = new SimpleSchema([BaseSchema, {
-    firstName:{
-        type:String,
-        label:"First Name",
+    firstName: {
+        type: String,
+        label: "First Name",
     },
-    lastName:{
-        type:String,
-        label:"Last Name",
+    lastName: {
+        type: String,
+        label: "Last Name",
     },
     dob: {
         type: Date
     },
-    chronicConditions:{
-        type:[String],
+    chronicConditions: {
+        type: [String],
         autoform: {
             type: "select-checkbox",
             options: function () {
@@ -177,13 +196,12 @@ PatientSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
-DrugSchema =  new SimpleSchema({
-    name:{
-        type:String,
-        label:"Name",
+DrugSchema = new SimpleSchema({
+    name: {
+        type: String,
+        label: "Name",
     },
 })
-
 
 
 ScriptItem = new SimpleSchema({
@@ -203,35 +221,36 @@ ScriptItem = new SimpleSchema({
         type: String,
         label: "Route",
         defaultValue: 'PO',
-        allowedValues:  ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
+        allowedValues: ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
 
     },
-    amount : {
+    amount: {
         type: String
     },
     frequency: {
         type: String,
         label: "Frequency",
     },
-    quantity: {type:Number , defaultValue: 1 }
+    quantity: {type: Number, defaultValue: 1}
 
 })
 
-ScriptSchema =   new SimpleSchema({
+ScriptSchema = new SimpleSchema({
 
-
-    notes :{
-        type:String,
-        label:"reason",
+    notes: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea",
+        }
     },
-    items:{
-        type:[ScriptItem]
+    items: {
+        type: [ScriptItem]
     }
 })
 
 
-
-EncounterSchema =   new SimpleSchema({
+EncounterSchema = new SimpleSchema({
 
     patient: {
         type: String,
@@ -245,22 +264,98 @@ EncounterSchema =   new SimpleSchema({
             }
         }
     },
-    reason :{
-        type:String,
-        label:"reason",
+    reason: {
+        type: String,
+        label: "reason",
         autoform: {
             type: "textarea"
         }
     },
-    script:{
-        type:ScriptSchema,
+    script: {
+        type: ScriptSchema,
         optional: true,
     },
-    tests:{
-        type:[TestResults],
+    tests: {
+        type: [TestResults],
         optional: true,
     }
 })
+
+
+AdmissionSchema = new SimpleSchema([BaseSchema, {
+    patient: {
+        type: String,
+        optional: false,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    currentBedStay: {
+        type: BedStaySchema,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    bedStays: {
+        type: [BedStaySchema],
+        autoform: {
+            type: "hidden"
+        }
+    },
+    admitDate: {
+        type: Date, optional: true
+        ,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    dischargeDate: {
+        type: Date, optional: true, autoform: {
+            type: "hidden"
+        }
+
+    },
+
+    admissionNote: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    },
+    dischargeNote: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    },
+    script: {
+        type: ScriptSchema,
+        optional: true,
+    },
+    tests: {
+        type: [TestResults],
+        optional: true,
+    },
+    eligibleForDischarge: {
+        type: Boolean,
+        defaultValue: false,
+        optional: true,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    isCurrent: {
+        type: Boolean,
+        defaultValue: true,
+        optional: false,
+        autoform: {
+            type: "hidden"
+        }
+    },
+
+}])
 
 
 Patients.attachSchema(PatientSchema)
@@ -274,5 +369,15 @@ Facilities.attachSchema(FacilitySchema);
 
 Wards.attachSchema(WardSchema)
 Rooms.attachSchema(RoomSchema)
+Beds.attachSchema(BedSchema)
 
 
+Admissions.attachSchema(AdmissionSchema)
+
+
+Admissions.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    }
+})
