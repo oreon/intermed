@@ -2,7 +2,7 @@
     {{#if Template.subscriptionsReady}}
 
         <article class="recipe">
-            <h2> {{patient.firstName}} {{patient.lastName}}</h2>
+            <h2> {{patient.firstName}} {{patient.lastName}}  {{admission.isCurrent}}   </h2>
 
 
             {{#if editMode}}
@@ -22,6 +22,8 @@
 
 
                 <a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+
+                <a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
 
                 <br/>
                 Admission: {{admission.admissionNote}}  <br/>  {{admission.created}} <br/>

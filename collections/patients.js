@@ -8,6 +8,7 @@ Encounters = new Mongo.Collection('encounters')
 ChronicDiseases = new Mongo.Collection('chronicDiseases')
 LabTests = new Mongo.Collection('labTests')
 Facilities = new Mongo.Collection('facilities')
+ScriptTemplates = new Mongo.Collection('scriptTemplates')
 
 
 Patients.helpers({
@@ -35,16 +36,61 @@ Beds = new Mongo.Collection('beds')
 //});
 
 BaseSchema = new SimpleSchema({
-    created: {
+
+    createdAt: {
         type: Date,
-        label: "Created At",
-        autoValue: function () {
-            return new Date()
+        optional: true,
+        autoValue: function() {
+            if (this.isInsert) {
+                return new Date();
+            } else if (this.isUpsert) {
+                return {$setOnInsert: new Date()};
+            } else {
+                this.unset();  // Prevent user from supplying their own value
+            }
         },
         autoform: {
             type: "hidden"
         }
-    }
+    },
+
+    createdBy: {
+        type: Date,
+        optional: true,
+        autoValue: function() {
+            if (this.isInsert) {
+                return Meteor.userId()
+            } else if (this.isUpsert) {
+                return {$setOnInsert: Meteor.userId()};
+            } else {
+                this.unset();  // Prevent user from supplying their own value
+            }
+        },
+        autoform: {
+            type: "hidden"
+        }
+    },
+
+
+    // Force value to be current date (on server) upon update
+    // and don't allow it to be set upon insert.
+    updatedAt: {
+        type: Date,
+        autoValue: function() {
+            if (this.isUpdate) {
+                return new Date();
+            }
+        },
+        denyInsert: true,
+        optional: true,
+        autoform: {
+            type: "hidden"
+        }
+    },
+
+
+
+
 })
 
 ChronicDiseaseSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true}}])
@@ -53,13 +99,13 @@ LabTestSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true
 
 BedSchema = new SimpleSchema([BaseSchema, {
     name: {type: String},
-    patient: {
-        type: String,
-        optional: true,
-        autoform: {
-            type: "hidden",
-        }
-    },
+    //patient: {
+    //    type: String,
+    //    optional: true,
+    //    autoform: {
+    //        type: "hidden",
+    //    }
+    //},
     //id: {
     //    type: String,
     //    autoValue: function () {
@@ -85,6 +131,14 @@ BedSchema = new SimpleSchema([BaseSchema, {
     room: {
         type: String,
         optional: true,
+        autoform: {
+            type: "select",
+            options: function () {
+                return Rooms.find().map(function (c) {  //TODO:  wards should belong to current faciltiy
+                    return {label: c.name, value: c._id};
+                });
+            }
+        }
     },
 }
 ])
@@ -130,12 +184,12 @@ FacilitySchema = new SimpleSchema([BaseSchema, {
 ])
 
 
-BedStaySchema = new SimpleSchema([BaseSchema, {
+BedStaySchema = new SimpleSchema( {
     bed: {type: String},
     fromDate: {type: Date, optional: true},
     toDate: {type: Date, optional: true}
 
-}])
+})
 
 
 TestResultValue = new SimpleSchema({
@@ -176,6 +230,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     },
     chronicConditions: {
         type: [String],
+        optional:true,
         autoform: {
             type: "select-checkbox",
             options: function () {
@@ -222,7 +277,6 @@ ScriptItem = new SimpleSchema({
         label: "Route",
         defaultValue: 'PO',
         allowedValues: ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
-
     },
     amount: {
         type: String
@@ -241,11 +295,12 @@ ScriptSchema = new SimpleSchema({
         type: String,
         optional: true,
         autoform: {
-            type: "textarea",
+            rows: 5,
         }
     },
     items: {
-        type: [ScriptItem]
+        type: [ScriptItem],
+        optional: true,
     }
 })
 
@@ -281,6 +336,31 @@ EncounterSchema = new SimpleSchema({
     }
 })
 
+VisitSchema = new SimpleSchema([BaseSchema, {
+    note: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    },
+    tests: {
+        type: [String],
+        optional:true,
+        autoform: {
+            type: "select-checkbox",
+            options: function () {
+                return LabTests.find().map(function (c) {
+                    return {label: c.name, value: c.name};
+                });
+            }
+        }
+    },
+    imaging: {
+        type: String,
+        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
+    },
+}])
 
 AdmissionSchema = new SimpleSchema([BaseSchema, {
     patient: {
@@ -292,25 +372,32 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
     currentBedStay: {
         type: BedStaySchema,
+        optional: true,
         autoform: {
             type: "hidden"
         }
     },
     bedStays: {
         type: [BedStaySchema],
+        optional: true,
         autoform: {
             type: "hidden"
         }
     },
     admitDate: {
-        type: Date, optional: true
+        type: Date,
+        optional: true
         ,
         autoform: {
             type: "hidden"
         }
     },
     dischargeDate: {
-        type: Date, optional: true, autoform: {
+        type: Date,
+        optional: true,
+
+
+        autoform: {
             type: "hidden"
         }
 
@@ -322,6 +409,10 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "textarea"
         }
+    },
+    visits:{
+        type:[VisitSchema],
+        optional: true,
     },
     dischargeNote: {
         type: String,
@@ -373,6 +464,8 @@ Beds.attachSchema(BedSchema)
 
 
 Admissions.attachSchema(AdmissionSchema)
+
+ScriptTemplates.attachSchema(ScriptSchema)
 
 
 Admissions.allow({

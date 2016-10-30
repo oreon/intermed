@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-function getAdmission() {
+export function getAdmission() {
     return Admissions.findOne({_id: FlowRouter.getParam('id')});
 }
 
@@ -14,9 +14,7 @@ Template.ViewAdmission.onCreated(function () {
     self.autorun(function () {
 
         var id = FlowRouter.getParam('id');
-
         self.subscribe('compAdmission', id);
-        self.subscribe('AllProducts')
 
         //adm = Admissions.findOne({_id: FlowRouter.getParam('id')});
        // self.entity = new ReactiveVar(adm);

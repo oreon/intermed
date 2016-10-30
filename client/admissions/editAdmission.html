@@ -1,0 +1,14 @@
+<template name="EditAdmission">
+
+
+    {{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission}}
+        <fieldset>
+            <legend>Update Script</legend>
+            {{> afQuickField name='script'}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+
+
+{{> quickForm collection="Admissions" id='updateAdmissionfrm' type="update" doc=admission  autosave=false}}
+</template>

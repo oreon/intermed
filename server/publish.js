@@ -4,6 +4,10 @@ Meteor.publish('recipes', function (skip, limit) {
 });
 
 
+
+
+
+
 Meteor.publish('recipes-paginated', function (skip, limit) {
     Counts.publish(this, 'total_recipes', Recipes.find())
 
@@ -169,7 +173,7 @@ Meteor.publishComposite('compWards', {
 
 Meteor.publishComposite('compAdmissions', {
     find: function () {
-        return Admissions.find({isCurrent: true}, {sort: {name: -1}, limit: 100});
+        return Admissions.find({"currentBedStay":{$exists:true}}, {sort: {name: -1}, limit: 100});
     },
     children: [
         {
@@ -185,7 +189,7 @@ Meteor.publishComposite('compAdmissions', {
 Meteor.publishComposite('compAdmission', function (id) {
     return {
         find: function () {
-            return Admissions.find({isCurrent: true, _id: id}, {sort: {name: -1}, limit: 1});
+            return Admissions.find({ "currentBedStay":{$exists:true}, _id: id}, {sort: {name: -1}, limit: 1});
         },
         children: [
             {
@@ -200,15 +204,20 @@ Meteor.publishComposite('compAdmission', function (id) {
 })
 
 
-Meteor.publish('Scripts', function () {
-    return Scripts.find();
+//Meteor.publish('Scripts', function () {
+//    return Scripts.find();
+//});
+
+Meteor.publish('ScriptTemplates', function (skip, limit) {
+    //Counts.publish(this, 'total_recipes', Recipes.find())
+    return ScriptTemplates.find({});
 });
 
 
-//if(Meteor.isServer()){
+if(Meteor.isServer){
 //make sure a patient is not used in two current admissions simultaneously
-Admissions._ensureIndex({patient: 1, isCurrent: 1}, {unique: true})
+Admissions._ensureIndex({patient: 1, "currentBedStay.bed": 1}, {unique: true,  sparse: true })
 //make sure a bed is not used in two admissions simultaneously
-Admissions._ensureIndex({"currentBedStay.bed": 1, isCurrent: 1}, {unique: true})
+//Admissions._ensureIndex({"currentBedStay.bed": 1}, {unique: true, sparse: true })
 
-//}
+}
