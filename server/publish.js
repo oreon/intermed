@@ -4,10 +4,6 @@ Meteor.publish('recipes', function (skip, limit) {
 });
 
 
-
-
-
-
 Meteor.publish('recipes-paginated', function (skip, limit) {
     Counts.publish(this, 'total_recipes', Recipes.find())
 
@@ -75,9 +71,9 @@ Meteor.publish('Rooms', function () {
 });
 
 
-Meteor.publish('Roles', function () {
-    return Meteor.roles.find({})
-})
+//Meteor.publish('Roles', function () {
+//    return Meteor.roles.find({})
+//})
 
 
 Meteor.publish('FullPatient', function (id) {
@@ -173,7 +169,7 @@ Meteor.publishComposite('compWards', {
 
 Meteor.publishComposite('compAdmissions', {
     find: function () {
-        return Admissions.find({"currentBedStay":{$exists:true}}, {sort: {name: -1}, limit: 100});
+        return Admissions.find({"currentBedStay": {$exists: true}}, {sort: {name: -1}, limit: 100});
     },
     children: [
         {
@@ -189,7 +185,7 @@ Meteor.publishComposite('compAdmissions', {
 Meteor.publishComposite('compAdmission', function (id) {
     return {
         find: function () {
-            return Admissions.find({ "currentBedStay":{$exists:true}, _id: id}, {sort: {name: -1}, limit: 1});
+            return Admissions.find({"currentBedStay": {$exists: true}, _id: id}, {sort: {name: -1}, limit: 1});
         },
         children: [
             {
@@ -214,10 +210,11 @@ Meteor.publish('ScriptTemplates', function (skip, limit) {
 });
 
 
-if(Meteor.isServer){
+if (Meteor.isServer) {
 //make sure a patient is not used in two current admissions simultaneously
-Admissions._ensureIndex({patient: 1, "currentBedStay.bed": 1}, {unique: true,  sparse: true })
-//make sure a bed is not used in two admissions simultaneously
-//Admissions._ensureIndex({"currentBedStay.bed": 1}, {unique: true, sparse: true })
+    Admissions._ensureIndex({patient: 1 }, {unique: true, partialFilterExpression: { isCurrent: true }})
+//make sure a bed is not used in two admissions simultaneously : TODO this currently fails when updating
+    Admissions._ensureIndex({"currentBedStay.bed": 1}, {unique: true, sparse:true})
+
 
 }

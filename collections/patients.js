@@ -20,7 +20,31 @@ Patients.helpers({
     }
 })
 
-Wards = new Mongo.Collection('wards')
+Wards = new orion.collection('wards', {
+        singularName: 'post', // The name of one of these items
+        pluralName: 'posts', // The name of more than one of these items
+        title: 'posts', // The title in the index of the collection
+
+
+        /**
+         * Tabular settings for this collection
+         */
+        tabular: {
+            // here we set which data columns we want to appear on the data table
+            // in the CMS panel
+            columns: [
+                {
+                    data: "name",
+                    title: "Name"
+                },
+                {
+                    data: "created",
+                    //title: "Submitted"
+                },
+            ]
+        }
+    }
+)
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
@@ -40,7 +64,7 @@ BaseSchema = new SimpleSchema({
     createdAt: {
         type: Date,
         optional: true,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return new Date();
             } else if (this.isUpsert) {
@@ -55,9 +79,9 @@ BaseSchema = new SimpleSchema({
     },
 
     createdBy: {
-        type: Date,
+        type: String,
         optional: true,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert) {
                 return Meteor.userId()
             } else if (this.isUpsert) {
@@ -76,7 +100,7 @@ BaseSchema = new SimpleSchema({
     // and don't allow it to be set upon insert.
     updatedAt: {
         type: Date,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isUpdate) {
                 return new Date();
             }
@@ -87,8 +111,6 @@ BaseSchema = new SimpleSchema({
             type: "hidden"
         }
     },
-
-
 
 
 })
@@ -184,7 +206,7 @@ FacilitySchema = new SimpleSchema([BaseSchema, {
 ])
 
 
-BedStaySchema = new SimpleSchema( {
+BedStaySchema = new SimpleSchema({
     bed: {type: String},
     fromDate: {type: Date, optional: true},
     toDate: {type: Date, optional: true}
@@ -230,7 +252,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     },
     chronicConditions: {
         type: [String],
-        optional:true,
+        optional: true,
         autoform: {
             type: "select-checkbox",
             options: function () {
@@ -346,7 +368,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     },
     tests: {
         type: [String],
-        optional:true,
+        optional: true,
         autoform: {
             type: "select-checkbox",
             options: function () {
@@ -358,6 +380,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     },
     imaging: {
         type: String,
+        optional: true,
         allowedValues: ['XRay', 'CT', 'MRI', 'Other']
     },
 }])
@@ -404,14 +427,14 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
 
     admissionNote: {
-        type: String,
+        type: orion.attribute('summernote'),
         optional: true,
-        autoform: {
-            type: "textarea"
-        }
+        //autoform: {
+        //    type: "textarea"
+        //}
     },
-    visits:{
-        type:[VisitSchema],
+    visits: {
+        type: [VisitSchema],
         optional: true,
     },
     dischargeNote: {
