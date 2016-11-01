@@ -28,6 +28,7 @@ fastclick@1.0.12
 raix:handlebar-helpers
 
 aldeed:collection2
+lai:collection-extensions
 aldeed:autoform
 
 accounts-ui@1.1.9
@@ -41,12 +42,12 @@ check@1.2.3
 aldeed:template-extension
 
 #added by jag singh
-#sach:flow-db-admin
+sach:flow-db-admin
 #easy:search
 #tmeasday:publish-counts
 #miguelalarcos:flow-router-pagination
 #shell-server
-#dburles:collection-helpers
+dburles:collection-helpers
 dburles:factory
 #alanning:roles
 materialize:materialize@=0.97.7
@@ -67,12 +68,13 @@ didericis:callpromise-mixin
 ziarno:restrict-mixin
 
 practicalmeteor:mocha
+
 xolvio:cleaner
 
-orionjs:core
-orionjs:materialize
-orionjs:relationships
-orionjs:summernote
+#orionjs:core
+#orionjs:materialize
+#orionjs:relationships
+#orionjs:summernote
 
-twbs:bootstrap
+#twbs:bootstrap
 #orionjs:bootstrap

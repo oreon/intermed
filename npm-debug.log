@@ -1,0 +1,985 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'upgrade' ]
+2 info using npm@3.5.3
+3 info using node@v4.2.5
+4 silly mapToRegistry name faker
+5 silly mapToRegistry using default registry
+6 silly mapToRegistry registry https://registry.npmjs.org/
+7 silly mapToRegistry uri https://registry.npmjs.org/faker
+8 silly mapToRegistry name moment
+9 silly mapToRegistry using default registry
+10 silly mapToRegistry registry https://registry.npmjs.org/
+11 silly mapToRegistry uri https://registry.npmjs.org/moment
+12 silly mapToRegistry name rus-diff
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry uri https://registry.npmjs.org/rus-diff
+16 silly mapToRegistry name meteor-node-stubs
+17 silly mapToRegistry using default registry
+18 silly mapToRegistry registry https://registry.npmjs.org/
+19 silly mapToRegistry uri https://registry.npmjs.org/meteor-node-stubs
+20 verbose request uri https://registry.npmjs.org/faker
+21 verbose request no auth needed
+22 info attempt registry request try #1 at 1:28:39 PM
+23 verbose request id 41f88b764032fa17
+24 verbose etag "5AS2CLOMB5ZLS0V02WE8VFBG2"
+25 http request GET https://registry.npmjs.org/faker
+26 verbose request uri https://registry.npmjs.org/moment
+27 verbose request no auth needed
+28 info attempt registry request try #1 at 1:28:39 PM
+29 verbose etag "14M0HKWICRVPMAC69QCSNZT8J"
+30 http request GET https://registry.npmjs.org/moment
+31 verbose request uri https://registry.npmjs.org/rus-diff
+32 verbose request no auth needed
+33 info attempt registry request try #1 at 1:28:39 PM
+34 verbose etag "5N78M4V1N9WRS4BIR98TWH50V"
+35 http request GET https://registry.npmjs.org/rus-diff
+36 verbose request uri https://registry.npmjs.org/meteor-node-stubs
+37 verbose request no auth needed
+38 info attempt registry request try #1 at 1:28:39 PM
+39 verbose etag "7UFET68S5UWVZMV7CYJ3ESNHD"
+40 http request GET https://registry.npmjs.org/meteor-node-stubs
+41 http 200 https://registry.npmjs.org/meteor-node-stubs
+42 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+42 verbose headers   etag: '"D098EN4SYLMZUBUC1S7U5PZ1V"',
+42 verbose headers   'content-type': 'application/json',
+42 verbose headers   'content-encoding': 'gzip',
+42 verbose headers   'cache-control': 'max-age=300',
+42 verbose headers   'content-length': '1983',
+42 verbose headers   'accept-ranges': 'bytes',
+42 verbose headers   date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+42 verbose headers   via: '1.1 varnish',
+42 verbose headers   age: '0',
+42 verbose headers   connection: 'keep-alive',
+42 verbose headers   'x-served-by': 'cache-cdg8735-CDG',
+42 verbose headers   'x-cache': 'MISS',
+42 verbose headers   'x-cache-hits': '0',
+42 verbose headers   'x-timer': 'S1477900742.511349,VS0,VE193',
+42 verbose headers   vary: 'Accept-Encoding' }
+43 silly get cb [ 200,
+43 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+43 silly get     etag: '"D098EN4SYLMZUBUC1S7U5PZ1V"',
+43 silly get     'content-type': 'application/json',
+43 silly get     'content-encoding': 'gzip',
+43 silly get     'cache-control': 'max-age=300',
+43 silly get     'content-length': '1983',
+43 silly get     'accept-ranges': 'bytes',
+43 silly get     date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+43 silly get     via: '1.1 varnish',
+43 silly get     age: '0',
+43 silly get     connection: 'keep-alive',
+43 silly get     'x-served-by': 'cache-cdg8735-CDG',
+43 silly get     'x-cache': 'MISS',
+43 silly get     'x-cache-hits': '0',
+43 silly get     'x-timer': 'S1477900742.511349,VS0,VE193',
+43 silly get     vary: 'Accept-Encoding' } ]
+44 verbose get saving meteor-node-stubs to /Users/jsingh/.npm/registry.npmjs.org/meteor-node-stubs/.cache.json
+45 http 304 https://registry.npmjs.org/rus-diff
+46 verbose headers { date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+46 verbose headers   via: '1.1 varnish',
+46 verbose headers   'cache-control': 'max-age=300',
+46 verbose headers   etag: '"5N78M4V1N9WRS4BIR98TWH50V"',
+46 verbose headers   age: '0',
+46 verbose headers   connection: 'keep-alive',
+46 verbose headers   'x-served-by': 'cache-cdg8732-CDG',
+46 verbose headers   'x-cache': 'MISS',
+46 verbose headers   'x-cache-hits': '0',
+46 verbose headers   'x-timer': 'S1477900742.561882,VS0,VE189',
+46 verbose headers   vary: 'Accept-Encoding' }
+47 silly get cb [ 304,
+47 silly get   { date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+47 silly get     via: '1.1 varnish',
+47 silly get     'cache-control': 'max-age=300',
+47 silly get     etag: '"5N78M4V1N9WRS4BIR98TWH50V"',
+47 silly get     age: '0',
+47 silly get     connection: 'keep-alive',
+47 silly get     'x-served-by': 'cache-cdg8732-CDG',
+47 silly get     'x-cache': 'MISS',
+47 silly get     'x-cache-hits': '0',
+47 silly get     'x-timer': 'S1477900742.561882,VS0,VE189',
+47 silly get     vary: 'Accept-Encoding' } ]
+48 verbose etag https://registry.npmjs.org/rus-diff from cache
+49 verbose get saving rus-diff to /Users/jsingh/.npm/registry.npmjs.org/rus-diff/.cache.json
+50 http 200 https://registry.npmjs.org/moment
+51 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+51 verbose headers   etag: '"A4S1H98N5YIX5ZB5HO9MAOX41"',
+51 verbose headers   'content-type': 'application/json',
+51 verbose headers   'content-encoding': 'gzip',
+51 verbose headers   'cache-control': 'max-age=300',
+51 verbose headers   'content-length': '13476',
+51 verbose headers   'accept-ranges': 'bytes',
+51 verbose headers   date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+51 verbose headers   via: '1.1 varnish',
+51 verbose headers   age: '40',
+51 verbose headers   connection: 'keep-alive',
+51 verbose headers   'x-served-by': 'cache-cdg8723-CDG',
+51 verbose headers   'x-cache': 'HIT',
+51 verbose headers   'x-cache-hits': '1',
+51 verbose headers   'x-timer': 'S1477900742.411641,VS0,VE0',
+51 verbose headers   vary: 'Accept-Encoding' }
+52 silly get cb [ 200,
+52 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+52 silly get     etag: '"A4S1H98N5YIX5ZB5HO9MAOX41"',
+52 silly get     'content-type': 'application/json',
+52 silly get     'content-encoding': 'gzip',
+52 silly get     'cache-control': 'max-age=300',
+52 silly get     'content-length': '13476',
+52 silly get     'accept-ranges': 'bytes',
+52 silly get     date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+52 silly get     via: '1.1 varnish',
+52 silly get     age: '40',
+52 silly get     connection: 'keep-alive',
+52 silly get     'x-served-by': 'cache-cdg8723-CDG',
+52 silly get     'x-cache': 'HIT',
+52 silly get     'x-cache-hits': '1',
+52 silly get     'x-timer': 'S1477900742.411641,VS0,VE0',
+52 silly get     vary: 'Accept-Encoding' } ]
+53 verbose get saving moment to /Users/jsingh/.npm/registry.npmjs.org/moment/.cache.json
+54 http 200 https://registry.npmjs.org/faker
+55 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+55 verbose headers   etag: '"7876VJGA8M2EJ9YMEXM4RQ3ZD"',
+55 verbose headers   'content-type': 'application/json',
+55 verbose headers   'content-encoding': 'gzip',
+55 verbose headers   'cache-control': 'max-age=300',
+55 verbose headers   'content-length': '7493',
+55 verbose headers   'accept-ranges': 'bytes',
+55 verbose headers   date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+55 verbose headers   via: '1.1 varnish',
+55 verbose headers   age: '0',
+55 verbose headers   connection: 'keep-alive',
+55 verbose headers   'x-served-by': 'cache-cdg8734-CDG',
+55 verbose headers   'x-cache': 'HIT',
+55 verbose headers   'x-cache-hits': '1',
+55 verbose headers   'x-timer': 'S1477900742.642815,VS0,VE106',
+55 verbose headers   vary: 'Accept-Encoding' }
+56 silly get cb [ 200,
+56 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+56 silly get     etag: '"7876VJGA8M2EJ9YMEXM4RQ3ZD"',
+56 silly get     'content-type': 'application/json',
+56 silly get     'content-encoding': 'gzip',
+56 silly get     'cache-control': 'max-age=300',
+56 silly get     'content-length': '7493',
+56 silly get     'accept-ranges': 'bytes',
+56 silly get     date: 'Mon, 31 Oct 2016 07:59:02 GMT',
+56 silly get     via: '1.1 varnish',
+56 silly get     age: '0',
+56 silly get     connection: 'keep-alive',
+56 silly get     'x-served-by': 'cache-cdg8734-CDG',
+56 silly get     'x-cache': 'HIT',
+56 silly get     'x-cache-hits': '1',
+56 silly get     'x-timer': 'S1477900742.642815,VS0,VE106',
+56 silly get     vary: 'Accept-Encoding' } ]
+57 verbose get saving faker to /Users/jsingh/.npm/registry.npmjs.org/faker/.cache.json
+58 info outdated updating [ { dep:
+58 info outdated      { package: [Object],
+58 info outdated        path: '/Users/jsingh/dev/met/intermed',
+58 info outdated        parent: [Object],
+58 info outdated        isMissing: true },
+58 info outdated     depname: 'meteor-node-stubs',
+58 info outdated     current: undefined,
+58 info outdated     wanted: '0.2.3',
+58 info outdated     latest: '0.2.3',
+58 info outdated     req: '~0.2.0',
+58 info outdated     what: 'meteor-node-stubs@0.2.3' },
+58 info outdated   { dep:
+58 info outdated      Node {
+58 info outdated        id: 4,
+58 info outdated        package: [Object],
+58 info outdated        path: '/Users/jsingh/dev/met/intermed/node_modules/moment',
+58 info outdated        realpath: '/Users/jsingh/dev/met/intermed/node_modules/moment',
+58 info outdated        parent: [Object],
+58 info outdated        isLink: false,
+58 info outdated        children: [],
+58 info outdated        error: null,
+58 info outdated        loaded: false,
+58 info outdated        requiredBy: [Object],
+58 info outdated        requires: [],
+58 info outdated        missingDeps: {},
+58 info outdated        missingDevDeps: {},
+58 info outdated        userRequired: false,
+58 info outdated        existing: false },
+58 info outdated     depname: 'moment',
+58 info outdated     current: '2.15.1',
+58 info outdated     wanted: '2.15.2',
+58 info outdated     latest: '2.15.2',
+58 info outdated     req: '^2.15.1',
+58 info outdated     what: 'moment@2.15.2' } ]
+59 silly loadCurrentTree Starting
+60 silly install loadCurrentTree
+61 silly install readLocalPackageData
+62 silly fetchPackageMetaData meteor-node-stubs@0.2.3
+63 silly fetchPackageMetaData moment@2.15.2
+64 silly fetchNamedPackageData meteor-node-stubs
+65 silly mapToRegistry name meteor-node-stubs
+66 silly mapToRegistry using default registry
+67 silly mapToRegistry registry https://registry.npmjs.org/
+68 silly mapToRegistry uri https://registry.npmjs.org/meteor-node-stubs
+69 silly fetchNamedPackageData moment
+70 silly mapToRegistry name moment
+71 silly mapToRegistry using default registry
+72 silly mapToRegistry registry https://registry.npmjs.org/
+73 silly mapToRegistry uri https://registry.npmjs.org/moment
+74 verbose get https://registry.npmjs.org/meteor-node-stubs not expired, no request
+75 verbose get https://registry.npmjs.org/moment not expired, no request
+76 silly install normalizeTree
+77 silly loadCurrentTree Finishing
+78 silly loadIdealTree Starting
+79 silly install loadIdealTree
+80 silly cloneCurrentTree Starting
+81 silly install cloneCurrentTreeToIdealTree
+82 silly cloneCurrentTree Finishing
+83 silly loadShrinkwrap Starting
+84 silly install loadShrinkwrap
+85 silly loadShrinkwrap Finishing
+86 silly loadAllDepsIntoIdealTree Starting
+87 silly install loadAllDepsIntoIdealTree
+88 silly resolveWithNewModule meteor-node-stubs@0.2.3 checking installable status
+89 silly cache add args [ 'meteor-node-stubs@0.2.3', null ]
+90 verbose cache add spec meteor-node-stubs@0.2.3
+91 silly resolveWithNewModule moment@2.15.2 checking installable status
+92 silly cache add args [ 'moment@2.15.2', null ]
+93 verbose cache add spec moment@2.15.2
+94 silly cache add parsed spec Result {
+94 silly cache add   raw: 'meteor-node-stubs@0.2.3',
+94 silly cache add   scope: null,
+94 silly cache add   name: 'meteor-node-stubs',
+94 silly cache add   rawSpec: '0.2.3',
+94 silly cache add   spec: '0.2.3',
+94 silly cache add   type: 'version' }
+95 silly addNamed meteor-node-stubs@0.2.3
+96 verbose addNamed "0.2.3" is a plain semver version for meteor-node-stubs
+97 silly mapToRegistry name meteor-node-stubs
+98 silly mapToRegistry using default registry
+99 silly mapToRegistry registry https://registry.npmjs.org/
+100 silly mapToRegistry uri https://registry.npmjs.org/meteor-node-stubs
+101 verbose addNameVersion registry:https://registry.npmjs.org/meteor-node-stubs not in flight; fetching
+102 silly cache add parsed spec Result {
+102 silly cache add   raw: 'moment@2.15.2',
+102 silly cache add   scope: null,
+102 silly cache add   name: 'moment',
+102 silly cache add   rawSpec: '2.15.2',
+102 silly cache add   spec: '2.15.2',
+102 silly cache add   type: 'version' }
+103 silly addNamed moment@2.15.2
+104 verbose addNamed "2.15.2" is a plain semver version for moment
+105 silly mapToRegistry name moment
+106 silly mapToRegistry using default registry
+107 silly mapToRegistry registry https://registry.npmjs.org/
+108 silly mapToRegistry uri https://registry.npmjs.org/moment
+109 verbose addNameVersion registry:https://registry.npmjs.org/moment not in flight; fetching
+110 verbose get https://registry.npmjs.org/meteor-node-stubs not expired, no request
+111 verbose get https://registry.npmjs.org/moment not expired, no request
+112 silly mapToRegistry name moment
+113 silly mapToRegistry using default registry
+114 silly mapToRegistry registry https://registry.npmjs.org/
+115 silly mapToRegistry uri https://registry.npmjs.org/moment
+116 verbose addRemoteTarball https://registry.npmjs.org/moment/-/moment-2.15.2.tgz not in flight; adding
+117 verbose addRemoteTarball [ 'https://registry.npmjs.org/moment/-/moment-2.15.2.tgz',
+117 verbose addRemoteTarball   '1bfdedf6a6e345f322fe956d5df5bd08a8ce84dc' ]
+118 silly cache afterAdd meteor-node-stubs@0.2.3
+119 verbose afterAdd /Users/jsingh/.npm/meteor-node-stubs/0.2.3/package/package.json not in flight; writing
+120 info retry fetch attempt 1 at 1:29:06 PM
+121 info attempt registry request try #1 at 1:29:06 PM
+122 http fetch GET https://registry.npmjs.org/moment/-/moment-2.15.2.tgz
+123 verbose afterAdd /Users/jsingh/.npm/meteor-node-stubs/0.2.3/package/package.json written
+124 silly addShrinkwrap Found shrinkwrap in meteor-node-stubs package/npm-shrinkwrap.json
+125 silly addShrinkwrap Completed reading shrinkwrap in meteor-node-stubs
+126 silly fetchPackageMetaData assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+127 silly fetchPackageMetaData browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+128 silly fetchPackageMetaData buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+129 silly fetchPackageMetaData console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+130 silly fetchPackageMetaData constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+131 silly fetchPackageMetaData crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+132 silly fetchPackageMetaData domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+133 silly fetchPackageMetaData events@https://registry.npmjs.org/events/-/events-1.1.0.tgz
+134 silly fetchPackageMetaData http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+135 silly fetchPackageMetaData https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+136 silly fetchPackageMetaData os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+137 silly fetchPackageMetaData path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+138 silly fetchPackageMetaData process@https://registry.npmjs.org/process/-/process-0.11.2.tgz
+139 silly fetchPackageMetaData punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+140 silly fetchPackageMetaData querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+141 silly fetchPackageMetaData readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+142 silly fetchPackageMetaData stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+143 silly fetchPackageMetaData string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+144 silly fetchPackageMetaData timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+145 silly fetchPackageMetaData tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+146 silly fetchPackageMetaData url@https://registry.npmjs.org/url/-/url-0.11.0.tgz
+147 silly fetchPackageMetaData util@https://registry.npmjs.org/util/-/util-0.10.3.tgz
+148 silly fetchPackageMetaData vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+149 silly fetchOtherPackageData assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+150 silly cache add args [ 'assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz',
+150 silly cache add   null ]
+151 verbose cache add spec assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+152 silly fetchOtherPackageData browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+153 silly cache add args [ 'browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz',
+153 silly cache add   null ]
+154 verbose cache add spec browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+155 silly fetchOtherPackageData buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+156 silly cache add args [ 'buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz',
+156 silly cache add   null ]
+157 verbose cache add spec buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+158 silly fetchOtherPackageData console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+159 silly cache add args [ 'console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz',
+159 silly cache add   null ]
+160 verbose cache add spec console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+161 silly fetchOtherPackageData constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+162 silly cache add args [ 'constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz',
+162 silly cache add   null ]
+163 verbose cache add spec constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+164 silly fetchOtherPackageData crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+165 silly cache add args [ 'crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz',
+165 silly cache add   null ]
+166 verbose cache add spec crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+167 silly fetchOtherPackageData domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+168 silly cache add args [ 'domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz',
+168 silly cache add   null ]
+169 verbose cache add spec domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+170 silly fetchOtherPackageData events@https://registry.npmjs.org/events/-/events-1.1.0.tgz
+171 silly cache add args [ 'events@https://registry.npmjs.org/events/-/events-1.1.0.tgz',
+171 silly cache add   null ]
+172 verbose cache add spec events@https://registry.npmjs.org/events/-/events-1.1.0.tgz
+173 silly fetchOtherPackageData http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+174 silly cache add args [ 'http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz',
+174 silly cache add   null ]
+175 verbose cache add spec http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+176 silly fetchOtherPackageData https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+177 silly cache add args [ 'https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz',
+177 silly cache add   null ]
+178 verbose cache add spec https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+179 silly fetchOtherPackageData os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+180 silly cache add args [ 'os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz',
+180 silly cache add   null ]
+181 verbose cache add spec os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+182 silly fetchOtherPackageData path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+183 silly cache add args [ 'path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz',
+183 silly cache add   null ]
+184 verbose cache add spec path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+185 silly fetchOtherPackageData process@https://registry.npmjs.org/process/-/process-0.11.2.tgz
+186 silly cache add args [ 'process@https://registry.npmjs.org/process/-/process-0.11.2.tgz',
+186 silly cache add   null ]
+187 verbose cache add spec process@https://registry.npmjs.org/process/-/process-0.11.2.tgz
+188 silly fetchOtherPackageData punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+189 silly cache add args [ 'punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz',
+189 silly cache add   null ]
+190 verbose cache add spec punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+191 silly fetchOtherPackageData querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+192 silly cache add args [ 'querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz',
+192 silly cache add   null ]
+193 verbose cache add spec querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+194 silly fetchOtherPackageData readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+195 silly cache add args [ 'readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz',
+195 silly cache add   null ]
+196 verbose cache add spec readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+197 silly fetchOtherPackageData stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+198 silly cache add args [ 'stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz',
+198 silly cache add   null ]
+199 verbose cache add spec stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+200 silly fetchOtherPackageData string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+201 silly cache add args [ 'string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz',
+201 silly cache add   null ]
+202 verbose cache add spec string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+203 silly fetchOtherPackageData timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+204 silly cache add args [ 'timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz',
+204 silly cache add   null ]
+205 verbose cache add spec timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+206 silly fetchOtherPackageData tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+207 silly cache add args [ 'tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz',
+207 silly cache add   null ]
+208 verbose cache add spec tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+209 silly fetchOtherPackageData url@https://registry.npmjs.org/url/-/url-0.11.0.tgz
+210 silly cache add args [ 'url@https://registry.npmjs.org/url/-/url-0.11.0.tgz', null ]
+211 verbose cache add spec url@https://registry.npmjs.org/url/-/url-0.11.0.tgz
+212 silly fetchOtherPackageData util@https://registry.npmjs.org/util/-/util-0.10.3.tgz
+213 silly cache add args [ 'util@https://registry.npmjs.org/util/-/util-0.10.3.tgz',
+213 silly cache add   null ]
+214 verbose cache add spec util@https://registry.npmjs.org/util/-/util-0.10.3.tgz
+215 silly fetchOtherPackageData vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+216 silly cache add args [ 'vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz',
+216 silly cache add   null ]
+217 verbose cache add spec vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+218 silly cache add parsed spec Result {
+218 silly cache add   raw: 'assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz',
+218 silly cache add   scope: null,
+218 silly cache add   name: 'assert',
+218 silly cache add   rawSpec: 'https://registry.npmjs.org/assert/-/assert-1.3.0.tgz',
+218 silly cache add   spec: 'https://registry.npmjs.org/assert/-/assert-1.3.0.tgz',
+218 silly cache add   type: 'remote' }
+219 silly mapToRegistry name assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+220 silly mapToRegistry using default registry
+221 silly mapToRegistry registry https://registry.npmjs.org/
+222 silly mapToRegistry uri https://registry.npmjs.org/assert@https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+223 verbose addRemoteTarball https://registry.npmjs.org/assert/-/assert-1.3.0.tgz not in flight; adding
+224 verbose addRemoteTarball [ 'https://registry.npmjs.org/assert/-/assert-1.3.0.tgz', null ]
+225 silly cache add parsed spec Result {
+225 silly cache add   raw: 'browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz',
+225 silly cache add   scope: null,
+225 silly cache add   name: 'browserify-zlib',
+225 silly cache add   rawSpec: 'https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz',
+225 silly cache add   spec: 'https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz',
+225 silly cache add   type: 'remote' }
+226 silly mapToRegistry name browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+227 silly mapToRegistry using default registry
+228 silly mapToRegistry registry https://registry.npmjs.org/
+229 silly mapToRegistry uri https://registry.npmjs.org/browserify-zlib@https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+230 verbose addRemoteTarball https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz not in flight; adding
+231 verbose addRemoteTarball [ 'https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz',
+231 verbose addRemoteTarball   null ]
+232 silly cache add parsed spec Result {
+232 silly cache add   raw: 'buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz',
+232 silly cache add   scope: null,
+232 silly cache add   name: 'buffer',
+232 silly cache add   rawSpec: 'https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz',
+232 silly cache add   spec: 'https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz',
+232 silly cache add   type: 'remote' }
+233 silly mapToRegistry name buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+234 silly mapToRegistry using default registry
+235 silly mapToRegistry registry https://registry.npmjs.org/
+236 silly mapToRegistry uri https://registry.npmjs.org/buffer@https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+237 verbose addRemoteTarball https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz not in flight; adding
+238 verbose addRemoteTarball [ 'https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz', null ]
+239 silly cache add parsed spec Result {
+239 silly cache add   raw: 'console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz',
+239 silly cache add   scope: null,
+239 silly cache add   name: 'console-browserify',
+239 silly cache add   rawSpec: 'https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz',
+239 silly cache add   spec: 'https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz',
+239 silly cache add   type: 'remote' }
+240 silly mapToRegistry name console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+241 silly mapToRegistry using default registry
+242 silly mapToRegistry registry https://registry.npmjs.org/
+243 silly mapToRegistry uri https://registry.npmjs.org/console-browserify@https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+244 verbose addRemoteTarball https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz not in flight; adding
+245 verbose addRemoteTarball [ 'https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz',
+245 verbose addRemoteTarball   null ]
+246 silly cache add parsed spec Result {
+246 silly cache add   raw: 'constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz',
+246 silly cache add   scope: null,
+246 silly cache add   name: 'constants-browserify',
+246 silly cache add   rawSpec: 'https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz',
+246 silly cache add   spec: 'https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz',
+246 silly cache add   type: 'remote' }
+247 silly mapToRegistry name constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+248 silly mapToRegistry using default registry
+249 silly mapToRegistry registry https://registry.npmjs.org/
+250 silly mapToRegistry uri https://registry.npmjs.org/constants-browserify@https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+251 verbose addRemoteTarball https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz not in flight; adding
+252 verbose addRemoteTarball [ 'https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz',
+252 verbose addRemoteTarball   null ]
+253 silly cache add parsed spec Result {
+253 silly cache add   raw: 'crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz',
+253 silly cache add   scope: null,
+253 silly cache add   name: 'crypto-browserify',
+253 silly cache add   rawSpec: 'https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz',
+253 silly cache add   spec: 'https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz',
+253 silly cache add   type: 'remote' }
+254 silly mapToRegistry name crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+255 silly mapToRegistry using default registry
+256 silly mapToRegistry registry https://registry.npmjs.org/
+257 silly mapToRegistry uri https://registry.npmjs.org/crypto-browserify@https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+258 verbose addRemoteTarball https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz not in flight; adding
+259 verbose addRemoteTarball [ 'https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz',
+259 verbose addRemoteTarball   null ]
+260 silly cache add parsed spec Result {
+260 silly cache add   raw: 'domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz',
+260 silly cache add   scope: null,
+260 silly cache add   name: 'domain-browser',
+260 silly cache add   rawSpec: 'https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz',
+260 silly cache add   spec: 'https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz',
+260 silly cache add   type: 'remote' }
+261 silly mapToRegistry name domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+262 silly mapToRegistry using default registry
+263 silly mapToRegistry registry https://registry.npmjs.org/
+264 silly mapToRegistry uri https://registry.npmjs.org/domain-browser@https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+265 verbose addRemoteTarball https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz not in flight; adding
+266 verbose addRemoteTarball [ 'https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz',
+266 verbose addRemoteTarball   null ]
+267 silly cache add parsed spec Result {
+267 silly cache add   raw: 'events@https://registry.npmjs.org/events/-/events-1.1.0.tgz',
+267 silly cache add   scope: null,
+267 silly cache add   name: 'events',
+267 silly cache add   rawSpec: 'https://registry.npmjs.org/events/-/events-1.1.0.tgz',
+267 silly cache add   spec: 'https://registry.npmjs.org/events/-/events-1.1.0.tgz',
+267 silly cache add   type: 'remote' }
+268 silly mapToRegistry name events@https://registry.npmjs.org/events/-/events-1.1.0.tgz
+269 silly mapToRegistry using default registry
+270 silly mapToRegistry registry https://registry.npmjs.org/
+271 silly mapToRegistry uri https://registry.npmjs.org/events@https://registry.npmjs.org/events/-/events-1.1.0.tgz
+272 verbose addRemoteTarball https://registry.npmjs.org/events/-/events-1.1.0.tgz not in flight; adding
+273 verbose addRemoteTarball [ 'https://registry.npmjs.org/events/-/events-1.1.0.tgz', null ]
+274 silly cache add parsed spec Result {
+274 silly cache add   raw: 'http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz',
+274 silly cache add   scope: null,
+274 silly cache add   name: 'http-browserify',
+274 silly cache add   rawSpec: 'https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz',
+274 silly cache add   spec: 'https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz',
+274 silly cache add   type: 'remote' }
+275 silly mapToRegistry name http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+276 silly mapToRegistry using default registry
+277 silly mapToRegistry registry https://registry.npmjs.org/
+278 silly mapToRegistry uri https://registry.npmjs.org/http-browserify@https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+279 verbose addRemoteTarball https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz not in flight; adding
+280 verbose addRemoteTarball [ 'https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz',
+280 verbose addRemoteTarball   null ]
+281 silly cache add parsed spec Result {
+281 silly cache add   raw: 'https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz',
+281 silly cache add   scope: null,
+281 silly cache add   name: 'https-browserify',
+281 silly cache add   rawSpec: 'https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz',
+281 silly cache add   spec: 'https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz',
+281 silly cache add   type: 'remote' }
+282 silly mapToRegistry name https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+283 silly mapToRegistry using default registry
+284 silly mapToRegistry registry https://registry.npmjs.org/
+285 silly mapToRegistry uri https://registry.npmjs.org/https-browserify@https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+286 verbose addRemoteTarball https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz not in flight; adding
+287 verbose addRemoteTarball [ 'https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz',
+287 verbose addRemoteTarball   null ]
+288 silly cache add parsed spec Result {
+288 silly cache add   raw: 'os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz',
+288 silly cache add   scope: null,
+288 silly cache add   name: 'os-browserify',
+288 silly cache add   rawSpec: 'https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz',
+288 silly cache add   spec: 'https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz',
+288 silly cache add   type: 'remote' }
+289 silly mapToRegistry name os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+290 silly mapToRegistry using default registry
+291 silly mapToRegistry registry https://registry.npmjs.org/
+292 silly mapToRegistry uri https://registry.npmjs.org/os-browserify@https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+293 verbose addRemoteTarball https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz not in flight; adding
+294 verbose addRemoteTarball [ 'https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz',
+294 verbose addRemoteTarball   null ]
+295 silly cache add parsed spec Result {
+295 silly cache add   raw: 'path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz',
+295 silly cache add   scope: null,
+295 silly cache add   name: 'path-browserify',
+295 silly cache add   rawSpec: 'https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz',
+295 silly cache add   spec: 'https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz',
+295 silly cache add   type: 'remote' }
+296 silly mapToRegistry name path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+297 silly mapToRegistry using default registry
+298 silly mapToRegistry registry https://registry.npmjs.org/
+299 silly mapToRegistry uri https://registry.npmjs.org/path-browserify@https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+300 verbose addRemoteTarball https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz not in flight; adding
+301 verbose addRemoteTarball [ 'https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz',
+301 verbose addRemoteTarball   null ]
+302 silly cache add parsed spec Result {
+302 silly cache add   raw: 'process@https://registry.npmjs.org/process/-/process-0.11.2.tgz',
+302 silly cache add   scope: null,
+302 silly cache add   name: 'process',
+302 silly cache add   rawSpec: 'https://registry.npmjs.org/process/-/process-0.11.2.tgz',
+302 silly cache add   spec: 'https://registry.npmjs.org/process/-/process-0.11.2.tgz',
+302 silly cache add   type: 'remote' }
+303 silly mapToRegistry name process@https://registry.npmjs.org/process/-/process-0.11.2.tgz
+304 silly mapToRegistry using default registry
+305 silly mapToRegistry registry https://registry.npmjs.org/
+306 silly mapToRegistry uri https://registry.npmjs.org/process@https://registry.npmjs.org/process/-/process-0.11.2.tgz
+307 verbose addRemoteTarball https://registry.npmjs.org/process/-/process-0.11.2.tgz not in flight; adding
+308 verbose addRemoteTarball [ 'https://registry.npmjs.org/process/-/process-0.11.2.tgz',
+308 verbose addRemoteTarball   null ]
+309 silly cache add parsed spec Result {
+309 silly cache add   raw: 'punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz',
+309 silly cache add   scope: null,
+309 silly cache add   name: 'punycode',
+309 silly cache add   rawSpec: 'https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz',
+309 silly cache add   spec: 'https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz',
+309 silly cache add   type: 'remote' }
+310 silly mapToRegistry name punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+311 silly mapToRegistry using default registry
+312 silly mapToRegistry registry https://registry.npmjs.org/
+313 silly mapToRegistry uri https://registry.npmjs.org/punycode@https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+314 verbose addRemoteTarball https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz not in flight; adding
+315 verbose addRemoteTarball [ 'https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz',
+315 verbose addRemoteTarball   null ]
+316 silly cache add parsed spec Result {
+316 silly cache add   raw: 'querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz',
+316 silly cache add   scope: null,
+316 silly cache add   name: 'querystring-es3',
+316 silly cache add   rawSpec: 'https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz',
+316 silly cache add   spec: 'https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz',
+316 silly cache add   type: 'remote' }
+317 silly mapToRegistry name querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+318 silly mapToRegistry using default registry
+319 silly mapToRegistry registry https://registry.npmjs.org/
+320 silly mapToRegistry uri https://registry.npmjs.org/querystring-es3@https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+321 verbose addRemoteTarball https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz not in flight; adding
+322 verbose addRemoteTarball [ 'https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz',
+322 verbose addRemoteTarball   null ]
+323 silly cache add parsed spec Result {
+323 silly cache add   raw: 'readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz',
+323 silly cache add   scope: null,
+323 silly cache add   name: 'readable-stream',
+323 silly cache add   rawSpec: 'https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz',
+323 silly cache add   spec: 'https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz',
+323 silly cache add   type: 'remote' }
+324 silly mapToRegistry name readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+325 silly mapToRegistry using default registry
+326 silly mapToRegistry registry https://registry.npmjs.org/
+327 silly mapToRegistry uri https://registry.npmjs.org/readable-stream@https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+328 verbose addRemoteTarball https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz not in flight; adding
+329 verbose addRemoteTarball [ 'https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz',
+329 verbose addRemoteTarball   null ]
+330 silly cache add parsed spec Result {
+330 silly cache add   raw: 'stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz',
+330 silly cache add   scope: null,
+330 silly cache add   name: 'stream-browserify',
+330 silly cache add   rawSpec: 'https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz',
+330 silly cache add   spec: 'https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz',
+330 silly cache add   type: 'remote' }
+331 silly mapToRegistry name stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+332 silly mapToRegistry using default registry
+333 silly mapToRegistry registry https://registry.npmjs.org/
+334 silly mapToRegistry uri https://registry.npmjs.org/stream-browserify@https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+335 verbose addRemoteTarball https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz not in flight; adding
+336 verbose addRemoteTarball [ 'https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz',
+336 verbose addRemoteTarball   null ]
+337 silly cache add parsed spec Result {
+337 silly cache add   raw: 'string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz',
+337 silly cache add   scope: null,
+337 silly cache add   name: 'string_decoder',
+337 silly cache add   rawSpec: 'https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz',
+337 silly cache add   spec: 'https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz',
+337 silly cache add   type: 'remote' }
+338 silly mapToRegistry name string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+339 silly mapToRegistry using default registry
+340 silly mapToRegistry registry https://registry.npmjs.org/
+341 silly mapToRegistry uri https://registry.npmjs.org/string_decoder@https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+342 verbose addRemoteTarball https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz not in flight; adding
+343 verbose addRemoteTarball [ 'https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz',
+343 verbose addRemoteTarball   null ]
+344 silly cache add parsed spec Result {
+344 silly cache add   raw: 'timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz',
+344 silly cache add   scope: null,
+344 silly cache add   name: 'timers-browserify',
+344 silly cache add   rawSpec: 'https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz',
+344 silly cache add   spec: 'https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz',
+344 silly cache add   type: 'remote' }
+345 silly mapToRegistry name timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+346 silly mapToRegistry using default registry
+347 silly mapToRegistry registry https://registry.npmjs.org/
+348 silly mapToRegistry uri https://registry.npmjs.org/timers-browserify@https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+349 verbose addRemoteTarball https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz not in flight; adding
+350 verbose addRemoteTarball [ 'https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz',
+350 verbose addRemoteTarball   null ]
+351 silly cache add parsed spec Result {
+351 silly cache add   raw: 'tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz',
+351 silly cache add   scope: null,
+351 silly cache add   name: 'tty-browserify',
+351 silly cache add   rawSpec: 'https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz',
+351 silly cache add   spec: 'https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz',
+351 silly cache add   type: 'remote' }
+352 silly mapToRegistry name tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+353 silly mapToRegistry using default registry
+354 silly mapToRegistry registry https://registry.npmjs.org/
+355 silly mapToRegistry uri https://registry.npmjs.org/tty-browserify@https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+356 verbose addRemoteTarball https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz not in flight; adding
+357 verbose addRemoteTarball [ 'https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz',
+357 verbose addRemoteTarball   null ]
+358 silly cache add parsed spec Result {
+358 silly cache add   raw: 'url@https://registry.npmjs.org/url/-/url-0.11.0.tgz',
+358 silly cache add   scope: null,
+358 silly cache add   name: 'url',
+358 silly cache add   rawSpec: 'https://registry.npmjs.org/url/-/url-0.11.0.tgz',
+358 silly cache add   spec: 'https://registry.npmjs.org/url/-/url-0.11.0.tgz',
+358 silly cache add   type: 'remote' }
+359 silly mapToRegistry name url@https://registry.npmjs.org/url/-/url-0.11.0.tgz
+360 silly mapToRegistry using default registry
+361 silly mapToRegistry registry https://registry.npmjs.org/
+362 silly mapToRegistry uri https://registry.npmjs.org/url@https://registry.npmjs.org/url/-/url-0.11.0.tgz
+363 verbose addRemoteTarball https://registry.npmjs.org/url/-/url-0.11.0.tgz not in flight; adding
+364 verbose addRemoteTarball [ 'https://registry.npmjs.org/url/-/url-0.11.0.tgz', null ]
+365 silly cache add parsed spec Result {
+365 silly cache add   raw: 'util@https://registry.npmjs.org/util/-/util-0.10.3.tgz',
+365 silly cache add   scope: null,
+365 silly cache add   name: 'util',
+365 silly cache add   rawSpec: 'https://registry.npmjs.org/util/-/util-0.10.3.tgz',
+365 silly cache add   spec: 'https://registry.npmjs.org/util/-/util-0.10.3.tgz',
+365 silly cache add   type: 'remote' }
+366 silly mapToRegistry name util@https://registry.npmjs.org/util/-/util-0.10.3.tgz
+367 silly mapToRegistry using default registry
+368 silly mapToRegistry registry https://registry.npmjs.org/
+369 silly mapToRegistry uri https://registry.npmjs.org/util@https://registry.npmjs.org/util/-/util-0.10.3.tgz
+370 verbose addRemoteTarball https://registry.npmjs.org/util/-/util-0.10.3.tgz not in flight; adding
+371 verbose addRemoteTarball [ 'https://registry.npmjs.org/util/-/util-0.10.3.tgz', null ]
+372 silly cache add parsed spec Result {
+372 silly cache add   raw: 'vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz',
+372 silly cache add   scope: null,
+372 silly cache add   name: 'vm-browserify',
+372 silly cache add   rawSpec: 'https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz',
+372 silly cache add   spec: 'https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz',
+372 silly cache add   type: 'remote' }
+373 silly mapToRegistry name vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+374 silly mapToRegistry using default registry
+375 silly mapToRegistry registry https://registry.npmjs.org/
+376 silly mapToRegistry uri https://registry.npmjs.org/vm-browserify@https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+377 verbose addRemoteTarball https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz not in flight; adding
+378 verbose addRemoteTarball [ 'https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz',
+378 verbose addRemoteTarball   null ]
+379 info retry fetch attempt 1 at 1:29:06 PM
+380 info attempt registry request try #1 at 1:29:06 PM
+381 http fetch GET https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+382 info retry fetch attempt 1 at 1:29:06 PM
+383 info attempt registry request try #1 at 1:29:06 PM
+384 http fetch GET https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+385 info retry fetch attempt 1 at 1:29:06 PM
+386 info attempt registry request try #1 at 1:29:06 PM
+387 http fetch GET https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+388 info retry fetch attempt 1 at 1:29:06 PM
+389 info attempt registry request try #1 at 1:29:06 PM
+390 http fetch GET https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+391 info retry fetch attempt 1 at 1:29:06 PM
+392 info attempt registry request try #1 at 1:29:06 PM
+393 http fetch GET https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz
+394 info retry fetch attempt 1 at 1:29:06 PM
+395 info attempt registry request try #1 at 1:29:06 PM
+396 http fetch GET https://registry.npmjs.org/crypto-browserify/-/crypto-browserify-3.11.0.tgz
+397 info retry fetch attempt 1 at 1:29:06 PM
+398 info attempt registry request try #1 at 1:29:06 PM
+399 http fetch GET https://registry.npmjs.org/events/-/events-1.1.0.tgz
+400 info retry fetch attempt 1 at 1:29:06 PM
+401 info attempt registry request try #1 at 1:29:06 PM
+402 http fetch GET https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+403 info retry fetch attempt 1 at 1:29:06 PM
+404 info attempt registry request try #1 at 1:29:06 PM
+405 http fetch GET https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+406 info retry fetch attempt 1 at 1:29:06 PM
+407 info attempt registry request try #1 at 1:29:06 PM
+408 http fetch GET https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+409 info retry fetch attempt 1 at 1:29:06 PM
+410 info attempt registry request try #1 at 1:29:06 PM
+411 http fetch GET https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+412 info retry fetch attempt 1 at 1:29:06 PM
+413 info attempt registry request try #1 at 1:29:06 PM
+414 http fetch GET https://registry.npmjs.org/process/-/process-0.11.2.tgz
+415 info retry fetch attempt 1 at 1:29:06 PM
+416 info attempt registry request try #1 at 1:29:06 PM
+417 http fetch GET https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+418 info retry fetch attempt 1 at 1:29:06 PM
+419 info attempt registry request try #1 at 1:29:06 PM
+420 http fetch GET https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+421 info retry fetch attempt 1 at 1:29:06 PM
+422 info attempt registry request try #1 at 1:29:06 PM
+423 http fetch GET https://registry.npmjs.org/querystring-es3/-/querystring-es3-0.2.1.tgz
+424 info retry fetch attempt 1 at 1:29:06 PM
+425 info attempt registry request try #1 at 1:29:06 PM
+426 http fetch GET https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+427 info retry fetch attempt 1 at 1:29:06 PM
+428 info attempt registry request try #1 at 1:29:06 PM
+429 http fetch GET https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz
+430 info retry fetch attempt 1 at 1:29:06 PM
+431 info attempt registry request try #1 at 1:29:06 PM
+432 http fetch GET https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+433 info retry fetch attempt 1 at 1:29:06 PM
+434 info attempt registry request try #1 at 1:29:06 PM
+435 http fetch GET https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz
+436 info retry fetch attempt 1 at 1:29:06 PM
+437 info attempt registry request try #1 at 1:29:06 PM
+438 http fetch GET https://registry.npmjs.org/url/-/url-0.11.0.tgz
+439 info retry fetch attempt 1 at 1:29:06 PM
+440 info attempt registry request try #1 at 1:29:06 PM
+441 http fetch GET https://registry.npmjs.org/util/-/util-0.10.3.tgz
+442 info retry fetch attempt 1 at 1:29:06 PM
+443 info attempt registry request try #1 at 1:29:06 PM
+444 http fetch GET https://registry.npmjs.org/timers-browserify/-/timers-browserify-1.4.2.tgz
+445 info retry fetch attempt 1 at 1:29:06 PM
+446 info attempt registry request try #1 at 1:29:06 PM
+447 http fetch GET https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz
+448 http fetch 200 https://registry.npmjs.org/domain-browser/-/domain-browser-1.1.7.tgz
+449 http fetch 200 https://registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+450 silly fetchAndShaCheck shasum 3f91365cabe60b77ed0ebba24b454e3e09d95a82
+451 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz not in flight; adding
+452 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+453 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/https-browserify/-/https-browserify-0.0.1.tgz
+454 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-ee11b016
+455 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-ee11b016 is being purged
+456 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-ee11b016
+457 silly gunzTarPerm modes [ '755', '644' ]
+458 silly gunzTarPerm extractEntry package.json
+459 silly gunzTarPerm extractEntry LICENSE
+460 silly gunzTarPerm extractEntry index.js
+461 silly gunzTarPerm extractEntry readme.markdown
+462 silly cache afterAdd https-browserify@0.0.1
+463 verbose afterAdd /Users/jsingh/.npm/https-browserify/0.0.1/package/package.json not in flight; writing
+464 verbose afterAdd /Users/jsingh/.npm/https-browserify/0.0.1/package/package.json written
+465 http fetch 200 https://registry.npmjs.org/events/-/events-1.1.0.tgz
+466 http fetch 200 https://registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+467 silly fetchAndShaCheck shasum 63fc4ccee5d2d7763d26bbf8601078e6c2e0044f
+468 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz not in flight; adding
+469 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+470 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/os-browserify/-/os-browserify-0.2.1.tgz
+471 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-b4e52519
+472 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-b4e52519 is being purged
+473 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-b4e52519
+474 silly gunzTarPerm modes [ '755', '644' ]
+475 silly gunzTarPerm extractEntry package.json
+476 silly gunzTarPerm extractEntry .npmignore
+477 silly gunzTarPerm extractEntry README.md
+478 silly gunzTarPerm extractEntry LICENSE
+479 silly gunzTarPerm extractEntry browser.js
+480 silly gunzTarPerm extractEntry main.js
+481 silly cache afterAdd os-browserify@0.2.1
+482 verbose afterAdd /Users/jsingh/.npm/os-browserify/0.2.1/package/package.json not in flight; writing
+483 verbose afterAdd /Users/jsingh/.npm/os-browserify/0.2.1/package/package.json written
+484 http fetch 200 https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+485 silly fetchAndShaCheck shasum a157ba402da24e9bf957f9aa69d524eed42901a6
+486 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz not in flight; adding
+487 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+488 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz
+489 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-9dfddba5
+490 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-9dfddba5 is being purged
+491 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-9dfddba5
+492 silly gunzTarPerm modes [ '755', '644' ]
+493 silly gunzTarPerm extractEntry package.json
+494 silly gunzTarPerm extractEntry LICENSE
+495 silly gunzTarPerm extractEntry index.js
+496 silly gunzTarPerm extractEntry readme.markdown
+497 silly cache afterAdd tty-browserify@0.0.0
+498 verbose afterAdd /Users/jsingh/.npm/tty-browserify/0.0.0/package/package.json not in flight; writing
+499 verbose afterAdd /Users/jsingh/.npm/tty-browserify/0.0.0/package/package.json written
+500 http fetch 200 https://registry.npmjs.org/moment/-/moment-2.15.2.tgz
+501 http fetch 200 https://registry.npmjs.org/assert/-/assert-1.3.0.tgz
+502 http fetch 200 https://registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+503 silly fetchAndShaCheck shasum f0241c45730a9fc6323b206dbf38edc741d0bb10
+504 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz not in flight; adding
+505 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+506 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/console-browserify/-/console-browserify-1.1.0.tgz
+507 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-4e8eeca0
+508 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-4e8eeca0 is being purged
+509 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-4e8eeca0
+510 silly gunzTarPerm modes [ '755', '644' ]
+511 silly gunzTarPerm extractEntry package.json
+512 silly gunzTarPerm extractEntry .npmignore
+513 silly gunzTarPerm extractEntry README.md
+514 silly gunzTarPerm extractEntry LICENCE
+515 silly gunzTarPerm extractEntry index.js
+516 silly gunzTarPerm extractEntry .testem.json
+517 silly gunzTarPerm extractEntry .travis.yml
+518 silly gunzTarPerm extractEntry test/index.js
+519 silly gunzTarPerm extractEntry test/static/test-adapter.js
+520 silly gunzTarPerm extractEntry test/static/index.html
+521 silly cache afterAdd console-browserify@1.1.0
+522 verbose afterAdd /Users/jsingh/.npm/console-browserify/1.1.0/package/package.json not in flight; writing
+523 verbose afterAdd /Users/jsingh/.npm/console-browserify/1.1.0/package/package.json written
+524 silly fetchPackageMetaData date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+525 silly fetchOtherPackageData date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+526 silly cache add args [ 'date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz',
+526 silly cache add   null ]
+527 verbose cache add spec date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+528 silly cache add parsed spec Result {
+528 silly cache add   raw: 'date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz',
+528 silly cache add   scope: null,
+528 silly cache add   name: 'date-now',
+528 silly cache add   rawSpec: 'https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz',
+528 silly cache add   spec: 'https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz',
+528 silly cache add   type: 'remote' }
+529 silly mapToRegistry name date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+530 silly mapToRegistry using default registry
+531 silly mapToRegistry registry https://registry.npmjs.org/
+532 silly mapToRegistry uri https://registry.npmjs.org/date-now@https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+533 verbose addRemoteTarball https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz not in flight; adding
+534 verbose addRemoteTarball [ 'https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz',
+534 verbose addRemoteTarball   null ]
+535 info retry fetch attempt 1 at 1:29:27 PM
+536 info attempt registry request try #1 at 1:29:27 PM
+537 http fetch GET https://registry.npmjs.org/date-now/-/date-now-0.1.4.tgz
+538 http fetch 200 https://registry.npmjs.org/browserify-zlib/-/browserify-zlib-0.1.4.tgz
+539 http fetch 200 https://registry.npmjs.org/buffer/-/buffer-4.5.1.tgz
+540 http fetch 200 https://registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+541 info retry will retry, error on last attempt: Error: read ECONNRESET
+542 silly fetchAndShaCheck shasum a0b870729aae214005b7d5032ec2cbbb0fb4451a
+543 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz not in flight; adding
+544 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+545 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/path-browserify/-/path-browserify-0.0.0.tgz
+546 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-df187a9f
+547 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-df187a9f is being purged
+548 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-df187a9f
+549 silly gunzTarPerm modes [ '755', '644' ]
+550 silly gunzTarPerm extractEntry package.json
+551 silly gunzTarPerm extractEntry LICENSE
+552 silly gunzTarPerm extractEntry index.js
+553 silly gunzTarPerm extractEntry readme.markdown
+554 silly cache afterAdd path-browserify@0.0.0
+555 verbose afterAdd /Users/jsingh/.npm/path-browserify/0.0.0/package/package.json not in flight; writing
+556 info retry will retry, error on last attempt: Error: read ECONNRESET
+557 verbose afterAdd /Users/jsingh/.npm/path-browserify/0.0.0/package/package.json written
+558 http fetch 200 https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz
+559 http fetch 200 https://registry.npmjs.org/http-browserify/-/http-browserify-1.7.0.tgz
+560 info retry will retry, error on last attempt: Error: read ECONNRESET
+561 http fetch 200 https://registry.npmjs.org/process/-/process-0.11.2.tgz
+562 silly fetchAndShaCheck shasum 8a58d1d12c573f3f890da9848a4fe8e16ca977b2
+563 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/process/-/process-0.11.2.tgz not in flight; adding
+564 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/process/-/process-0.11.2.tgz
+565 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/process/-/process-0.11.2.tgz
+566 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-7b5404d3
+567 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-7b5404d3 is being purged
+568 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-7b5404d3
+569 silly gunzTarPerm modes [ '755', '644' ]
+570 silly gunzTarPerm extractEntry package.json
+571 silly gunzTarPerm extractEntry README.md
+572 silly gunzTarPerm extractEntry LICENSE
+573 silly gunzTarPerm extractEntry browser.js
+574 silly gunzTarPerm extractEntry index.js
+575 silly gunzTarPerm extractEntry test.js
+576 silly cache afterAdd process@0.11.2
+577 verbose afterAdd /Users/jsingh/.npm/process/0.11.2/package/package.json not in flight; writing
+578 verbose afterAdd /Users/jsingh/.npm/process/0.11.2/package/package.json written
+579 http fetch 200 https://registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+580 silly fetchAndShaCheck shasum 66266ee5f9bdb9940a4e4514cafb43bb71e5c9db
+581 verbose addTmpTarball /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz not in flight; adding
+582 verbose addTmpTarball validating metadata from /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+583 verbose tar unpack /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/registry.npmjs.org/stream-browserify/-/stream-browserify-2.0.1.tgz
+584 verbose tar unpacking to /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-742b7eb8
+585 silly gentlyRm /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-742b7eb8 is being purged
+586 verbose gentlyRm don't care about contents; nuking /var/folders/m4/8lpwxvy16xdfdl_4y5tb5lwc0000gn/T/npm-28892-72ecc96e/unpack-742b7eb8
+587 silly gunzTarPerm modes [ '755', '644' ]
+588 silly gunzTarPerm extractEntry package.json
+589 silly gunzTarPerm extractEntry .npmignore
+590 silly gunzTarPerm extractEntry LICENSE
+591 silly gunzTarPerm extractEntry index.js
+592 silly gunzTarPerm extractEntry .travis.yml
+593 silly gunzTarPerm extractEntry readme.markdown
+594 silly gunzTarPerm extractEntry test/buf.js
+595 silly cache afterAdd stream-browserify@2.0.1
+596 verbose afterAdd /Users/jsingh/.npm/stream-browserify/2.0.1/package/package.json not in flight; writing
+597 verbose afterAdd /Users/jsingh/.npm/stream-browserify/2.0.1/package/package.json written
+598 silly fetchPackageMetaData inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+599 silly fetchOtherPackageData inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+600 silly cache add args [ 'inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz',
+600 silly cache add   null ]
+601 verbose cache add spec inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+602 silly cache add parsed spec Result {
+602 silly cache add   raw: 'inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz',
+602 silly cache add   scope: null,
+602 silly cache add   name: 'inherits',
+602 silly cache add   rawSpec: 'https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz',
+602 silly cache add   spec: 'https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz',
+602 silly cache add   type: 'remote' }
+603 silly mapToRegistry name inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+604 silly mapToRegistry using default registry
+605 silly mapToRegistry registry https://registry.npmjs.org/
+606 silly mapToRegistry uri https://registry.npmjs.org/inherits@https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+607 verbose addRemoteTarball https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz not in flight; adding
+608 verbose addRemoteTarball [ 'https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz',
+608 verbose addRemoteTarball   null ]
+609 info retry fetch attempt 1 at 1:29:29 PM
+610 info attempt registry request try #1 at 1:29:29 PM
+611 http fetch GET https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz
+612 verbose stack Error: read ECONNRESET
+612 verbose stack     at exports._errnoException (util.js:870:11)
+612 verbose stack     at TLSWrap.onread (net.js:544:26)
+613 verbose cwd /Users/jsingh/dev/met/intermed
+614 error Darwin 15.3.0
+615 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "upgrade"
+616 error node v4.2.5
+617 error npm  v3.5.3
+618 error code ECONNRESET
+619 error errno ECONNRESET
+620 error syscall read
+621 error network read ECONNRESET
+622 error network This is most likely not a problem with npm itself
+622 error network and is related to network connectivity.
+622 error network In most cases you are behind a proxy or have bad network settings.
+622 error network
+622 error network If you are behind a proxy, please make sure that the
+622 error network 'proxy' config is set properly.  See: 'npm help config'
+623 verbose exit [ 1, true ]

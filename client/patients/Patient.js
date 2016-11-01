@@ -55,3 +55,16 @@ Template.Patient.helpers({
     drugName: (id) => Drugs.findOne({_id: id}).name
 
 })
+
+Template.Patient.events({
+    'click .admit': function(){
+        Meteor.call('toggleMenuItem', this._id, this.inMenu);
+    },
+    'click .fa-trash': function () {
+        console.log("hi from trash")
+        Meteor.call('deleteRecipe', this._id);
+    },
+    'click .fa-pencil': function (event, template) {
+        FlowRouter.go('editPatient',{ id: FlowRouter.getParam('id')})
+    }
+});

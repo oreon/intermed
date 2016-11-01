@@ -5,6 +5,8 @@
     <button class="new-recipe">New Recipe</button>
     {{/if}}
 
+    {{> tabular table=TabularTables.PatientsTbl class="table table-striped table-bordered table-condensed"}}
+
     <section class="recipes">
         {{#if Template.subscriptionsReady}}
         {{#each patients}}

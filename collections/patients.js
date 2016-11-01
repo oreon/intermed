@@ -1,6 +1,8 @@
-import { Meteor } from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor';
+import moment from 'moment'
 
-Patients = new Mongo.Collection('patients');
+/*export const*/
+Patients = new Mongo.Collection('patients')
 Drugs = new Mongo.Collection('drugs')
 Scripts = new Mongo.Collection('scripts')
 Encounters = new Mongo.Collection('encounters')
@@ -10,41 +12,44 @@ LabTests = new Mongo.Collection('labTests')
 Facilities = new Mongo.Collection('facilities')
 ScriptTemplates = new Mongo.Collection('scriptTemplates')
 
-
-Patients.helpers({
-    encounters(){
-        return Encounters.find({patient: this._id});
-    },
-    test(){
-        return "a test string";
-    }
-})
-
-Wards = new orion.collection('wards', {
-        singularName: 'post', // The name of one of these items
-        pluralName: 'posts', // The name of more than one of these items
-        title: 'posts', // The title in the index of the collection
+//export Patients
 
 
-        /**
-         * Tabular settings for this collection
-         */
-        tabular: {
-            // here we set which data columns we want to appear on the data table
-            // in the CMS panel
-            columns: [
-                {
-                    data: "name",
-                    title: "Name"
-                },
-                {
-                    data: "created",
-                    //title: "Submitted"
-                },
-            ]
-        }
-    }
-)
+//Patients.helpers({
+//    encounters(){
+//        return Encounters.find({patient: this._id});
+//    },
+//    test(){
+//        return "a test string";
+//    }
+//})
+
+//Wards = new orion.collection('wards', {
+//        singularName: 'post', // The name of one of these items
+//        pluralName: 'posts', // The name of more than one of these items
+//        title: 'posts', // The title in the index of the collection
+//
+//
+//        /**
+//         * Tabular settings for this collection
+//         */
+//        tabular: {
+//            // here we set which data columns we want to appear on the data table
+//            // in the CMS panel
+//            columns: [
+//                {
+//                    data: "name",
+//                    title: "Name"
+//                },
+//                {
+//                    data: "created",
+//                    //title: "Submitted"
+//                },
+//            ]
+//        }
+//    }
+//)
+Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
@@ -83,9 +88,9 @@ BaseSchema = new SimpleSchema({
         optional: true,
         autoValue: function () {
             if (this.isInsert) {
-                return Meteor.userId()
+                return this.userId
             } else if (this.isUpsert) {
-                return {$setOnInsert: Meteor.userId()};
+                return {$setOnInsert: this.userId};
             } else {
                 this.unset();  // Prevent user from supplying their own value
             }
@@ -250,6 +255,10 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     dob: {
         type: Date
     },
+    gender: {
+        type: String,
+        allowedValues: [ 'F', 'M']
+    },
     chronicConditions: {
         type: [String],
         optional: true,
@@ -273,12 +282,12 @@ PatientSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
-DrugSchema = new SimpleSchema({
+DrugSchema = new SimpleSchema([BaseSchema, {
     name: {
         type: String,
         label: "Name",
     },
-})
+}])
 
 
 ScriptItem = new SimpleSchema({
@@ -286,7 +295,7 @@ ScriptItem = new SimpleSchema({
         type: String,
         optional: true,
         autoform: {
-            type: "select",
+            type: "select2",
             options: function () {
                 return Drugs.find().map(function (c) {
                     return {label: c.name, value: c._id};
@@ -311,7 +320,7 @@ ScriptItem = new SimpleSchema({
 
 })
 
-ScriptSchema = new SimpleSchema({
+ScriptSchema = new SimpleSchema([BaseSchema, {
 
     notes: {
         type: String,
@@ -324,7 +333,14 @@ ScriptSchema = new SimpleSchema({
         type: [ScriptItem],
         optional: true,
     }
-})
+}])
+
+ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {
+    name: {
+        type: String
+    }
+
+}])
 
 
 EncounterSchema = new SimpleSchema({
@@ -427,11 +443,11 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
 
     admissionNote: {
-        type: orion.attribute('summernote'),
+        type: String,//orion.attribute('summernote'),
         optional: true,
-        //autoform: {
-        //    type: "textarea"
-        //}
+        autoform: {
+            type: "textarea"
+        }
     },
     visits: {
         type: [VisitSchema],
@@ -488,7 +504,7 @@ Beds.attachSchema(BedSchema)
 
 Admissions.attachSchema(AdmissionSchema)
 
-ScriptTemplates.attachSchema(ScriptSchema)
+ScriptTemplates.attachSchema(ScriptTemplateSchema)
 
 
 Admissions.allow({
@@ -497,3 +513,61 @@ Admissions.allow({
         return !!userId
     }
 })
+
+Patients.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    }
+})
+
+
+import {Tabular} from 'meteor/aldeed:tabular';
+//import {Patients} from 'patients'
+
+Patients.helpers({
+    fullName: function () {
+        return this.firstName + ' ' + this.lastName;
+    },
+    age: function () {
+        let years = moment().diff(this.dob, 'years');
+        ret = years;
+        if(years == 0 ) {
+           ret  = moment().diff(this.dob, 'days') + ' Days';
+        }
+        return ret;
+    }
+
+})
+;
+
+new Tabular.Table({
+    name: "PatientsTbl",
+    collection: Patients,
+    search: {
+        caseInsensitive: true,
+        smart: false,
+        onEnterOnly: true,
+    },
+    columns: [
+        {data: "fullName()", title: "Full Name"},
+
+        {data: "age()", title: "Age"},
+
+        {data: "firstName",  visible:false},
+        {data: "lastName",  visible:false},
+        {data: "dob",  visible:false},
+        {
+            data: "_id",
+            render: (val, type, doc) => "<a href='patient/" + val + "'>  <i class='fa fa-map'/></a>"
+        },
+        {
+            data: "_id",
+            render: (val, type, doc) => "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>"
+        },
+        //{data: "summary", title: "Summary"},
+        //{
+        //    tmpl: Meteor.isClient && Template.bookCheckOutCell
+        //}
+    ]
+});

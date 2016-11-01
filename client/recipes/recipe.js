@@ -25,6 +25,6 @@ Template.Recipe.events({
         Meteor.call('deleteRecipe', this._id);
     },
     'click .fa-pencil': function (event, template) {
-        template.editMode.set(!template.editMode.get());
+        FlowRouter.go('editPatient',{ id: FlowRouter.getParam('id')})
     }
 });
