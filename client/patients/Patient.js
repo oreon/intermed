@@ -1,34 +1,4 @@
-//Template.Recipe.onCreated(function(){
-//    this.editMode = new ReactiveVar(false);
-//
-//});
-//
-//Template.Recipe.helpers({
-//        updateRecipeId: function() {
-//            return this._id;
-//        },
-//        editMode: function(){
-//            return Template.instance().editMode.get();
-//        },
-//        scripts: function(){
-//            return Scripts.find({patient eq this.patient});
-//        },
-//
-//        drugName : (id) =>   Drugs.findOne({_id: id}).name
-//});
-//
-//Template.Recipe.events({
-//    'click .toggle-menu': function(){
-//        Meteor.call('toggleMenuItem', this._id, this.inMenu);
-//    },
-//    'click .fa-trash': function () {
-//        console.log("hi from trash")
-//        Meteor.call('deleteRecipe', this._id);
-//    },
-//    'click .fa-pencil': function (event, template) {
-//        template.editMode.set(!template.editMode.get());
-//    }
-//});
+
 
 Template.Patient.onCreated(function () {
     var self = this;
@@ -37,6 +7,7 @@ Template.Patient.onCreated(function () {
         self.id = id;
         self.subscribe('compPt', id);
         self.subscribe('Drugs')
+        self.subscribe('compAdmissions')
         //self.subscribe('Encounters')
     });
 });
@@ -49,22 +20,40 @@ Template.Patient.helpers({
     },
 
     encounters: function () {
-        return PtEncounters.find({patient:FlowRouter.getParam('id')});
+        return PtEncounters.find({ patient: FlowRouter.getParam('id') });
     },
 
-    drugName: (id) => Drugs.findOne({_id: id}).name
+    drugName: (id) => Drugs.findOne({ _id: id }).name,
 
+    isAdmitted: function () {
+        adm = Admissions.findOne({ patient: FlowRouter.getParam('id') })
+        console.log(adm)
+        return !!adm
+    }
 })
 
 Template.Patient.events({
-    'click .admit': function(){
-        Meteor.call('toggleMenuItem', this._id, this.inMenu);
+    'click .admit': function () {
+        //.currentAdmission
+        FlowRouter.go('admitPatient', { id: FlowRouter.getParam('id') })
     },
-    'click .fa-trash': function () {
+    'click .viewAdmission': function () {
+        adm = Admissions.findOne({patient:FlowRouter.getParam('id')});
+        FlowRouter.go('viewAdmission', { id: adm._id })
+    },
+
+    'click .encounter': function (event, template) {
+        FlowRouter.go('newEncounter', { id: FlowRouter.getParam('id') })
+    },
+    'click .visit': function (event, template) {
+        adm = Admissions.findOne({patient:FlowRouter.getParam('id')});
+        FlowRouter.go('visit', { id: adm._id })
+    },
+      'click .fa-trash': function () {
         console.log("hi from trash")
         Meteor.call('deleteRecipe', this._id);
     },
     'click .fa-pencil': function (event, template) {
-        FlowRouter.go('editPatient',{ id: FlowRouter.getParam('id')})
-    }
+        FlowRouter.go('editPatient', { id: FlowRouter.getParam('id') })
+    },
 });

@@ -3,8 +3,6 @@ Meteor.subscribe('Drugs')
 Meteor.subscribe('Scripts')
 //Meteor.subscribe('Encounters')
 
-
-
 Meteor.subscribe('Facilities')
 Meteor.subscribe('ChronicDiseases')
 Meteor.subscribe('LabTests')
@@ -16,9 +14,6 @@ Meteor.subscribe('Beds')
 
 Meteor.subscribe('Admissions')
 Meteor.subscribe('ScriptTemplates')
-
-
-
 
 
 PtEncounters = new Mongo.Collection('ptEncounters');

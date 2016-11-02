@@ -1,7 +1,7 @@
-Meteor.publish('recipes', function (skip, limit) {
-    //Counts.publish(this, 'total_recipes', Recipes.find())
-    return Recipes.find({author: this.userId}, {limit: 5});
-});
+// Meteor.publish('recipes', function (skip, limit) {
+//     //Counts.publish(this, 'total_recipes', Recipes.find())
+//     return Recipes.find({author: this.userId}, {limit: 5});
+// });
 
 
 Meteor.publish('recipes-paginated', function (skip, limit) {
@@ -18,14 +18,14 @@ Meteor.publish('recipes-paginated', function (skip, limit) {
     return Recipes.find({author: this.userId}, options);
 });
 
-Meteor.publish('AllProducts', function () {
-    return Products.find();
-});
+// Meteor.publish('AllProducts', function () {
+//     return Products.find();
+// });
 
-Meteor.publish('SingleRecipe', function (id) {
-    //check(id, String);
-    return Recipes.find({_id: id});
-});
+// Meteor.publish('SingleRecipe', function (id) {
+//     //check(id, String);
+//     return Recipes.find({_id: id});
+// });
 
 
 //Meteor.publish('SingleProduct', function(id){
@@ -68,6 +68,10 @@ Meteor.publish('Wards', function () {
 
 Meteor.publish('Rooms', function () {
     return Rooms.find();
+});
+
+Meteor.publish('Beds', function () {
+    return Beds.find();
 });
 
 

@@ -15,7 +15,9 @@ Template.ViewAdmission.onCreated(function () {
 
         var id = FlowRouter.getParam('id');
         self.subscribe('compAdmission', id);
-
+        self.subscribe('Rooms')
+        self.subscribe('Beds')
+        
         //adm = Admissions.findOne({_id: FlowRouter.getParam('id')});
        // self.entity = new ReactiveVar(adm);
 

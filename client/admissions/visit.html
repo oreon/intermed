@@ -1,0 +1,5 @@
+<template name="Visit">
+<h3> {{admission.patientObj.fullName}}  </h3>
+    {{> quickForm id="insertVisitForm" type="update-pushArray" collection="Admissions" 
+      doc=admission scope="visits"}}
+</template>

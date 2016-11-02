@@ -24,31 +24,7 @@ ScriptTemplates = new Mongo.Collection('scriptTemplates')
 //    }
 //})
 
-//Wards = new orion.collection('wards', {
-//        singularName: 'post', // The name of one of these items
-//        pluralName: 'posts', // The name of more than one of these items
-//        title: 'posts', // The title in the index of the collection
-//
-//
-//        /**
-//         * Tabular settings for this collection
-//         */
-//        tabular: {
-//            // here we set which data columns we want to appear on the data table
-//            // in the CMS panel
-//            columns: [
-//                {
-//                    data: "name",
-//                    title: "Name"
-//                },
-//                {
-//                    data: "created",
-//                    //title: "Submitted"
-//                },
-//            ]
-//        }
-//    }
-//)
+
 Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
@@ -374,6 +350,20 @@ EncounterSchema = new SimpleSchema({
     }
 })
 
+ImagingSchema = new SimpleSchema({
+    type: { 
+        type: String,
+        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
+    },
+    details:{
+        type:String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    }
+})
+
 VisitSchema = new SimpleSchema([BaseSchema, {
     note: {
         type: String,
@@ -386,7 +376,10 @@ VisitSchema = new SimpleSchema([BaseSchema, {
         type: [String],
         optional: true,
         autoform: {
-            type: "select-checkbox",
+            type: "select2",
+            afFieldInput: {
+                multiple: true
+            },
             options: function () {
                 return LabTests.find().map(function (c) {
                     return {label: c.name, value: c.name};
@@ -394,10 +387,16 @@ VisitSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    imaging: {
-        type: String,
+    imagings: { 
+        type: [ImagingSchema],
         optional: true,
-        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
+    },
+    createdBy: {
+        type: String,
+        autoValue: function () {return this.userId },
+        autoform: {
+            type: "hidden"
+        }
     },
 }])
 
@@ -527,7 +526,7 @@ import {Tabular} from 'meteor/aldeed:tabular';
 
 Patients.helpers({
     fullName: function () {
-        return this.firstName + ' ' + this.lastName;
+        return this.firstName + ' ' + this.lastName +  ' ' + this.gender + ' ' + this.age();
     },
     age: function () {
         let years = moment().diff(this.dob, 'years');
@@ -536,10 +535,51 @@ Patients.helpers({
            ret  = moment().diff(this.dob, 'days') + ' Days';
         }
         return ret;
+    },
+    currentBed : function(){
+        adm =  this.currentAdmisson();
+        if(adm){
+            console.log("found bed " + adm.currentBedStay.bed)
+            return Beds.findOne(adm.currentBedStay.bed);
+        }
+        return null
+    },
+    encounters: function(){
+		//console.log(this._id)
+		return PtEncounters.find({patient: this._id});
+	},
+	isAdmitted:function(){ return !!this.currentAdmisson() },
+    currentAdmisson:function(){
+        return Admissions.findOne({patient:this._id});
     }
-
 })
-;
+
+Admissions.helpers({
+    currentBed : function(){
+        if(this.currentBedStay){
+            return Beds.findOne(this.currentBedStay.bed);
+        }
+        return null
+    },
+    patientObj: function(){
+        return Patients.findOne({_id:this.patient})
+    }
+})
+
+Beds.helpers({
+    fullName: function () {
+        return this.roomObj().fullName() + '-' + this.name;
+    },
+    roomObj: function() { return  Rooms.findOne({_id:this.room}) }
+})
+Rooms.helpers({
+    fullName: function () {
+        return this.wardObj().name + '-'  + this.name;
+    },
+    wardObj: function() { return Wards.findOne({_id:this.ward}) }
+})
+
+
 
 new Tabular.Table({
     name: "PatientsTbl",
@@ -553,7 +593,8 @@ new Tabular.Table({
         {data: "fullName()", title: "Full Name"},
 
         {data: "age()", title: "Age"},
-
+        {data: "gender", title: "Gender"},
+        
         {data: "firstName",  visible:false},
         {data: "lastName",  visible:false},
         {data: "dob",  visible:false},
