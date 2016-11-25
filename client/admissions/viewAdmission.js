@@ -38,13 +38,18 @@ Template.ViewAdmission.helpers({
         return Patients.findOne();
     },
     fromDatef: function () {
-        return moment(this.created).format('D MMM YY hh:mm');
+        return moment(this.fromDate).format('D MMM YY hh:mm');
     },
     toDatef: function () {
-        return moment(this.created).format('D MMM YY hh:mm');
+        return moment(this.toDate).format('D MMM YY hh:mm');
     }
     ,
-
+    vistDatef: function (visitDt) {
+        return moment(visitDt).format('D MMM YY hh:mm');
+    },
+    visitCreator: function(){
+        return Meteor.users.findOne(this.createdBy).profile.firstName 
+    }
     //prdName: (id) => Products.findOne({_id: id}).name
 });
 

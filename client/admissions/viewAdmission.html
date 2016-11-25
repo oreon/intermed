@@ -21,11 +21,12 @@
 		<br/> From : {{admission.currentBedStay.fromDate}} To: {{admission.currentBedStay.toDate}}
 		<br/>
 
-		<button class="btn visit">New Visit</button> {{#each admission.visits}}
+		<button class="btn visit">New Visit</button> 
+        {{#each admission.visits}}
 		<section>
 			{{note}}
-            <! TODO: updatedAt should be created -->
-			<p> {{createdBy}} - {{updatedAt}} </p>
+			<!-- TODO: updatedAt should be created -->
+			<p> {{visitCreator}} - {{vistDatef updatedAt}} </p>
 		</section>
 		{{/each}}
 

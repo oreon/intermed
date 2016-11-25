@@ -1,0 +1,9 @@
+<template name="LoginModal">
+	{{#if $not currentUser}}
+		<div class="regform">
+			{{> atForm}}
+		</div>
+	{{else}}
+	ALREADY SIGNED IN 
+	{{/if}}
+</template>

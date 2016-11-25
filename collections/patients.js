@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+//import {Roles} from 'alanning/roles'
 import moment from 'moment'
 
 /*export const*/
@@ -233,7 +234,10 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     },
     gender: {
         type: String,
-        allowedValues: [ 'F', 'M']
+        allowedValues: [ 'F', 'M'],
+         autoform: {
+            type: "select-radio"
+         }
     },
     chronicConditions: {
         type: [String],
@@ -604,7 +608,8 @@ new Tabular.Table({
         },
         {
             data: "_id",
-            render: (val, type, doc) => "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>"
+            render: (val, type, doc) => Roles.userIsInRole(Meteor.userId(), ['admin' ,'physician'] ) ?
+                "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>":""
         },
         //{data: "summary", title: "Summary"},
         //{
