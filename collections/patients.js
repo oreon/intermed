@@ -13,6 +13,8 @@ LabTests = new Mongo.Collection('labTests')
 Facilities = new Mongo.Collection('facilities')
 ScriptTemplates = new Mongo.Collection('scriptTemplates')
 
+TestResults = new Mongo.Collection('testResults')
+
 //export Patients
 
 
@@ -198,11 +200,53 @@ BedStaySchema = new SimpleSchema({
 
 TestResultValue = new SimpleSchema({
     name: {type: String},
-    value: {type: Number, decimal: true}
+    value: {type: Number, decimal: true},
+     createdAt: {
+        type: Date,
+        optional: true,
+        autoValue: function () {
+            if (this.isInsert) {
+                return new Date();
+            } else if (this.isUpsert) {
+                return {$setOnInsert: new Date()};
+            } else {
+                this.unset();  // Prevent user from supplying their own value
+            }
+        },
+        autoform: {
+            type: "hidden"
+        }
+    },
 
 })
 
-TestResults = new SimpleSchema([BaseSchema, {
+TestResultsSchema = new SimpleSchema([BaseSchema, {
+    patient: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select",
+            options: function () {
+                return Patients.find().map(function (c) {
+                    return {label: c.fullName(), value: c._id};
+                });
+            }
+        }
+    },
+
+    admission: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select",
+            options: function () {
+                return Admissions.find().map(function (c) {
+                    return {label: c.reason, value: c._id};
+                });
+            }
+        }
+    },
+
     labTest: {
         type: String,
         optional: false,
@@ -215,6 +259,9 @@ TestResults = new SimpleSchema([BaseSchema, {
             }
         }
     },
+
+    mainValue:{type: Number, optional: true},
+
     values: {type: [TestResultValue], optional: true}
 }
 
@@ -349,7 +396,7 @@ EncounterSchema = new SimpleSchema({
         optional: true,
     },
     tests: {
-        type: [TestResults],
+        type: [TestResultsSchema],
         optional: true,
     }
 })
@@ -390,6 +437,25 @@ VisitSchema = new SimpleSchema([BaseSchema, {
                 });
             }
         }
+    },
+    testResults:{
+        type: String,
+        optional: true,
+        autoValue: function () {
+            let content = this.field("tests");
+            if (content.isSet) {
+                let tests =  content.value;
+                _.forEach(tests, function(element) {
+                    console.log(element);
+                    let labTest = LabTests.findOne({name:element});
+                    console.log(labTest)
+                    TestResults.insert({"labTest":labTest})
+                });
+                return "";
+            } else {
+                this.unset();
+            }
+        }    
     },
     imagings: { 
         type: [ImagingSchema],
@@ -444,7 +510,11 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         }
 
     },
-
+    reason:{
+        type: String,//orion.attribute('summernote'),
+        optional: true,
+    }
+    ,
     admissionNote: {
         type: String,//orion.attribute('summernote'),
         optional: true,
@@ -491,25 +561,6 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
 }])
 
 
-Patients.attachSchema(PatientSchema)
-Drugs.attachSchema(DrugSchema)
-Scripts.attachSchema(ScriptSchema)
-Encounters.attachSchema(EncounterSchema)
-
-ChronicDiseases.attachSchema(ChronicDiseaseSchema)
-LabTests.attachSchema(LabTestSchema)
-Facilities.attachSchema(FacilitySchema);
-
-Wards.attachSchema(WardSchema)
-Rooms.attachSchema(RoomSchema)
-Beds.attachSchema(BedSchema)
-
-
-Admissions.attachSchema(AdmissionSchema)
-
-ScriptTemplates.attachSchema(ScriptTemplateSchema)
-
-
 Admissions.allow({
     insert: (userId, doc) => !!userId,
     update: function (userId, doc) {
@@ -549,9 +600,11 @@ Patients.helpers({
         return null
     },
     encounters: function(){
-		//console.log(this._id)
 		return PtEncounters.find({patient: this._id});
 	},
+    testResults:function(){
+        TestResults.find({patient: this._id});
+    },
 	isAdmitted:function(){ return !!this.currentAdmisson() },
     currentAdmisson:function(){
         return Admissions.findOne({patient:this._id});
@@ -617,3 +670,23 @@ new Tabular.Table({
         //}
     ]
 });
+
+
+Patients.attachSchema(PatientSchema)
+Drugs.attachSchema(DrugSchema)
+Scripts.attachSchema(ScriptSchema)
+Encounters.attachSchema(EncounterSchema)
+
+ChronicDiseases.attachSchema(ChronicDiseaseSchema)
+LabTests.attachSchema(LabTestSchema)
+Facilities.attachSchema(FacilitySchema);
+
+Wards.attachSchema(WardSchema)
+Rooms.attachSchema(RoomSchema)
+Beds.attachSchema(BedSchema)
+
+
+Admissions.attachSchema(AdmissionSchema)
+
+ScriptTemplates.attachSchema(ScriptTemplateSchema)
+TestResults.attachSchema(TestResultsSchema)

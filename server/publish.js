@@ -74,6 +74,10 @@ Meteor.publish('Beds', function () {
     return Beds.find();
 });
 
+Meteor.publish('TestResults', function() { 
+    return TestResults.find();
+})
+
 
 //Meteor.publish('Roles', function () {
 //    return Meteor.roles.find({})
@@ -96,17 +100,19 @@ Meteor.publish('FullPatient', function (id) {
 Meteor.publishComposite('compPt', function (id) {
     return {
         find: function () {
-            // Find top ten highest scoring posts
-
-            return Patients.find({_id: id}, {sort: {score: -1}, limit: 1});
+             return Patients.find({_id: id}, {sort: {score: -1}, limit: 1});
         },
         children: [
             {
-                collectionName: "ptEncounters",
-
                 find: function (pt) {
-
                     return Encounters.find(
+                        {patient: pt._id},
+                        {limit: 1000/*, fields: {profile: 1}*/});
+                }
+            },
+            {
+                find: function (pt) {
+                    return TestResults.find(
                         {patient: pt._id},
                         {limit: 1000/*, fields: {profile: 1}*/});
                 }

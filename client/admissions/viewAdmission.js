@@ -74,7 +74,11 @@ Template.ViewAdmission.events({
     },
     'click .fa-pencil': function (event, template) {
         template.editMode.set(!template.editMode.get());
-    }
+    },
+    'click .visit': function (event, template) {
+        //adm = Admissions.findOne({patient:});
+        FlowRouter.go('visit', { id: FlowRouter.getParam('id') })
+    },
 });
 
 
