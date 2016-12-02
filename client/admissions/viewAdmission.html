@@ -2,27 +2,31 @@
 {{#if Template.subscriptionsReady}}
 
 	<article class="recipe">
-		<h4> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h4>
+		<h2> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h2>
+		<h3> {{admission.reason }} </h3>
+		{{#if editMode}} 
+			{{> updateAdmissionForm var=admission }} 
+		{{else}} 
+		{{#if admission.eligibleForDischarge}}
+			<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
 
-		{{#if editMode}} {{> quickForm collection="Admissions" id='updateAdmission' type="update" doc=admission }} {{else}} {{#if
-		admission.eligibleForDischarge}}
-		<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+			<button class="btn-deny discharge">Discharge</button> {{else}}
+			<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
+		{{/if}}
 
-		<button class="btn-deny discharge">Discharge</button> {{else}}
-		<button class="btn-primary toggleDischarge">Make eligible for discharge</button> {{/if}}
-
+		{{> updateScriptForm var=admission}}
 
 		<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
 
 		<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
 
-		<br/> Admission: {{admission.admissionNote}} <br/> {{admission.created}} <br/>
+		<br/> Admission: {{admission.admissionNote}} <br/>  Admitted on: {{datef admission.created}} <br/>
 
 		<button class="btn visit">New Visit</button> {{#each admission.visits}}
 		<section>
 			{{note}}
 			<!-- TODO: updatedAt should be created -->
-			<p> {{visitCreator}} - {{vistDatef updatedAt}} </p>
+			<p> {{visitCreator}} - {{datef updatedAt}} </p>
 		</section>
 		{{/each}}
 
@@ -71,7 +75,19 @@
 
 </template>
 
-
+<template name="updateAdmissionForm">
+	{{#autoForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var}}
+	<fieldset>
+		<legend>Update Admission</legend>
+		{{> afQuickField name='reason'}}
+		{{> afQuickField name='admissionNote'}}
+		{{#if doc.eligibleForDischarge}}
+		{{> afQuickField name='dischargeNote'}}
+		{{/if}}
+	</fieldset>
+	<button type="submit" class="btn btn-primary">Update</button>
+	 {{/autoForm}}
+</template>
 
 <template name="updateScriptForm">
 	{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var}}
@@ -79,7 +95,5 @@
 		<legend>Update Script</legend>
 		{{> afQuickField name='script'}}
 	</fieldset>
-
-	Total {{total}}
 	<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 </template>

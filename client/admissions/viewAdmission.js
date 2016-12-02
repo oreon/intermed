@@ -37,7 +37,7 @@ Template.ViewAdmission.helpers({
         return getAdmission();
     },
     patient: function () {
-        return Patients.findOne();
+        return Patients.findOne(getAdmission().patient);
     },
     fromDatef: function () {
         return moment(this.fromDate).format('D MMM YY hh:mm');
@@ -46,8 +46,8 @@ Template.ViewAdmission.helpers({
         return moment(this.toDate).format('D MMM YY hh:mm');
     }
     ,
-    vistDatef: function (visitDt) {
-        return moment(visitDt).format('D MMM YY hh:mm');
+    datef:function(dt){
+        return moment(dt).format('D MMM YY hh:mm');
     },
     visitCreator: function () {
         try {
@@ -75,38 +75,18 @@ Template.ViewAdmission.helpers({
         var formType = Template.instance().formType.get();
         return formType;
     },
-    
-    fldval: function () {
-        val = AutoForm.getFieldValue("items");
-        if (val) {
-            //console.log(val[0].service)
-            svc = Services.findOne({ name: val[0].service })
-            //AutoForm.setFieldValue("comments", svc.price);
-            val[0].appliedPrice = svc.price
-            console.log(svc.price)
-            return svc.price;
-        }
-    },
-    total: function () {
-        val = AutoForm.getFieldValue("items");
-        if (val) {
-
-            total = _.reduce(val, function (sum, item) {
-                return sum + (item.appliedPrice * item.units);
-            }, 0);
-            return total;
-        }
-    },
     grandTotal:function(){
         adm = getAdmission()
+        bedStayTotal = adm.bedStaysObj().total;
         //console.log(adm)
         if (adm) {
             let inv = adm.invoice()
             if(inv){
-                return adm.bedStaysObj().total + inv.total;
-            }
-        }     
-        return adm.bedStaysObj.total;
+                return bedStayTotal  + inv.total;
+            }else
+                return bedStayTotal;
+        }    
+        return 0;
     }
 
 
@@ -151,11 +131,7 @@ Template.ViewAdmission.events({
 
 AutoForm.hooks({
     editInvoiceForm: {
-        onSubmit: function (insertDoc, updateDoc, currentDoc) {
-            console.log("in editinv")
-            console.log(FlowRouter.getParam('id'))
-            insertDoc.admission = FlowRouter.getParam('id');
-        },
+        
         formToDoc: function (doc) {
             console.log(doc)
             doc.admission = FlowRouter.getParam('id');
