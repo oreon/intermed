@@ -74,9 +74,18 @@ Meteor.publish('Beds', function () {
     return Beds.find();
 });
 
+Meteor.publish('Services', function () {
+    return Services.find();
+});
+
 Meteor.publish('TestResults', function() { 
     return TestResults.find();
 })
+
+Meteor.publish('Invoices', function() { 
+    return Invoices.find();
+})
+
 
 
 //Meteor.publish('Roles', function () {

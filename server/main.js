@@ -17,6 +17,10 @@ Meteor.startup(() => {
             LabTests.insert({"name": "Thyroid Panel"})
             LabTests.insert({"name": "Blood Chemistry"})
         }
+         if (Services.find().count() == 0) {
+            Services.insert({"name": "Abdominal Surgery" , price:5000 })
+            LabTests.insert({"name": "Laproscopy" , price:3000})
+        }
     }
 )
 ;

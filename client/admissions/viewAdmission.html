@@ -1,5 +1,5 @@
 <template name="ViewAdmission">
-	{{#if Template.subscriptionsReady}}
+{{#if Template.subscriptionsReady}}
 
 	<article class="recipe">
 		<h4> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h4>
@@ -18,12 +18,7 @@
 
 		<br/> Admission: {{admission.admissionNote}} <br/> {{admission.created}} <br/>
 
-		<br/> From : {{admission.currentBedStay.fromDate}} To: {{admission.currentBedStay.toDate}}
-		<br/>
-
-		<button class="btn visit">New Visit</button> 
-		
-        {{#each admission.visits}}
+		<button class="btn visit">New Visit</button> {{#each admission.visits}}
 		<section>
 			{{note}}
 			<!-- TODO: updatedAt should be created -->
@@ -37,24 +32,43 @@
 				<th>Bed</th>
 				<th> From</th>
 				<th> To</th>
+				<th> Days</th>
+				<th> Price</th>
+				<th> Total</th>
 			</tr>
 
-			{{#each admission.bedStays}}
+			{{#each admission.bedStaysObj.stays}}
 			<tr>
-				<td>{{bed}}</td>
+				<td>{{bed.fullName}}</td>
 				<td> {{fromDatef}} </td>
 				<td> {{toDatef}} </td>
+				<td> {{days}} </td>
+				<td> {{price}} </td>
+				<td> {{total}} </td>
 			</tr>
 			{{/each}}
-
+			<tr>
+				<td colspan="6">
+					<b> Total : {{ admission.bedStaysObj.total }}</b>
+				</td>
+			</tr>
 		</table>
 
 		<i class="fa fa-trash"></i>
 		<i class="fa fa-pencil"></i> {{/if}}
 
-
 	</article>
-	{{/if}}
+
+
+	{{> quickForm collection="Invoices" id="editInvoiceForm" type=formType 
+		doc=currentInv autosave=true }}
+
+		Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
+		<br/>
+		Grand Total : <b> Rs {{ grandTotal  }} </b>
+	
+{{/if}} 
+
 </template>
 
 
@@ -65,5 +79,7 @@
 		<legend>Update Script</legend>
 		{{> afQuickField name='script'}}
 	</fieldset>
+
+	Total {{total}}
 	<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 </template>

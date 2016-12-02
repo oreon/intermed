@@ -3,6 +3,8 @@ Meteor.subscribe('Patients')
 Meteor.subscribe('Scripts')
 //Meteor.subscribe('Encounters')
 
+Meteor.subscribe('Services')
+
 Meteor.subscribe('Facilities')
 Meteor.subscribe('ChronicDiseases')
 Meteor.subscribe('LabTests')

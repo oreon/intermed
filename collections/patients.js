@@ -15,6 +15,9 @@ ScriptTemplates = new Mongo.Collection('scriptTemplates')
 
 TestResults = new Mongo.Collection('testResults')
 
+Invoices = new Mongo.Collection('invoices')
+Services = new Mongo.Collection('services')
+
 //export Patients
 
 
@@ -52,7 +55,7 @@ BaseSchema = new SimpleSchema({
             if (this.isInsert) {
                 return new Date();
             } else if (this.isUpsert) {
-                return {$setOnInsert: new Date()};
+                return { $setOnInsert: new Date() };
             } else {
                 this.unset();  // Prevent user from supplying their own value
             }
@@ -69,7 +72,7 @@ BaseSchema = new SimpleSchema({
             if (this.isInsert) {
                 return this.userId
             } else if (this.isUpsert) {
-                return {$setOnInsert: this.userId};
+                return { $setOnInsert: this.userId };
             } else {
                 this.unset();  // Prevent user from supplying their own value
             }
@@ -99,12 +102,85 @@ BaseSchema = new SimpleSchema({
 
 })
 
-ChronicDiseaseSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true}}])
-LabTestSchema = new SimpleSchema([BaseSchema, {name: {type: String, unique: true}}])
+ChronicDiseaseSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
+LabTestSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
 
+ServiceSchema = new SimpleSchema([BaseSchema, {
+    name: { type: String },
+    price: { type: Number }
+}])
+
+LineItemSchema = new SimpleSchema([BaseSchema, {
+    service: {
+        type: String,
+        autoform: {
+            type: "select",
+            options: function () {
+                return Services.find().map(function (c) {
+                    return { label: c.name + " " + c.price, value: c.name };
+                });
+            }
+        }
+    },
+    appliedPrice: {
+        type: Number,
+        decimal: true,
+        // autoValue: function () {
+        //     let service = this.field("service");
+        //     if (service.isSet) {
+        //         return  20; //service.value.price;
+        //     }
+        //     return 0.0;
+        // },
+
+    },
+    units: { type: Number },
+    total: {
+        type: Number,
+        autoform: {
+            readonly: true
+        }
+    }
+
+}])
+
+InvoiceSchema = new SimpleSchema([BaseSchema, {
+    admission: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    comments: { type: String , optional:true},
+    items: { type: [LineItemSchema], optional:true },
+    total: {
+        type: Number,
+        //defaultValue: 0 ,
+        optional:true,
+        autoValue: function () {
+            let items = this.field("items");
+            if (items.isSet) {
+               // console.log(items)
+                let itemsVal = items["value"];
+               total =  _.reduce(itemsVal, function (sum, item) {
+
+                    item.total = item.appliedPrice * item.units
+                    return sum + (item.total?item.total:0);
+                }, 0);
+                return total;
+            }
+            return 0;
+        },
+        autoform: {
+            readonly: true
+        }
+    },
+
+}])
 
 BedSchema = new SimpleSchema([BaseSchema, {
-    name: {type: String},
+    name: { type: String },
     //patient: {
     //    type: String,
     //    optional: true,
@@ -141,7 +217,7 @@ BedSchema = new SimpleSchema([BaseSchema, {
             type: "select",
             options: function () {
                 return Rooms.find().map(function (c) {  //TODO:  wards should belong to current faciltiy
-                    return {label: c.name, value: c._id};
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -150,9 +226,9 @@ BedSchema = new SimpleSchema([BaseSchema, {
 ])
 
 RoomSchema = new SimpleSchema([BaseSchema, {
-    name: {type: String},
-    type: {type: String, optional: true},
-    beds: {type: [BedSchema]},
+    name: { type: String },
+    type: { type: String, optional: true },
+    beds: { type: [BedSchema] },
     ward: {
         type: String,
         optional: false,
@@ -160,7 +236,7 @@ RoomSchema = new SimpleSchema([BaseSchema, {
             type: "select",
             options: function () {
                 return Wards.find().map(function (c) {  //TODO:  wards should belong to current faciltiy
-                    return {label: c.name, value: c._id};
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -170,8 +246,8 @@ RoomSchema = new SimpleSchema([BaseSchema, {
 
 
 WardSchema = new SimpleSchema([BaseSchema, {
-    name: {type: String},
-    price: {type: Number, decimal: true, optional: true},
+    name: { type: String },
+    price: { type: Number, decimal: true, optional: true },
     //rooms: {type: [RoomSchema]},
     //beds: {type: [BedSchema], optional:true },
     facility: {
@@ -185,30 +261,44 @@ WardSchema = new SimpleSchema([BaseSchema, {
 
 
 FacilitySchema = new SimpleSchema([BaseSchema, {
-    name: {type: String}
+    name: { type: String }
 }
 ])
 
 
 BedStaySchema = new SimpleSchema({
-    bed: {type: String},
-    fromDate: {type: Date, optional: true},
-    toDate: {type: Date, optional: true}
-
+    bed: { type: String },
+    fromDate: { type: Date, optional: true },
+    toDate: { type: Date, optional: true },
+    // price: {
+    //     type: Number,
+    //     optional: true
+    // },
+    // days: {
+    //     type: Number,
+    //     optional: true
+    // },
+    // total: {
+    //     type: Number,
+    //     autoValue: function () {
+    //         console.log(this)
+    //         return 25; //
+    //     }
+    // }
 })
 
 
 TestResultValue = new SimpleSchema({
-    name: {type: String},
-    value: {type: Number, decimal: true},
-     createdAt: {
+    name: { type: String },
+    value: { type: Number, decimal: true },
+    createdAt: {
         type: Date,
         optional: true,
         autoValue: function () {
             if (this.isInsert) {
                 return new Date();
             } else if (this.isUpsert) {
-                return {$setOnInsert: new Date()};
+                return { $setOnInsert: new Date() };
             } else {
                 this.unset();  // Prevent user from supplying their own value
             }
@@ -228,7 +318,7 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             type: "select",
             options: function () {
                 return Patients.find().map(function (c) {
-                    return {label: c.fullName(), value: c._id};
+                    return { label: c.fullName(), value: c._id };
                 });
             }
         }
@@ -241,7 +331,7 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             type: "select",
             options: function () {
                 return Admissions.find().map(function (c) {
-                    return {label: c.reason, value: c._id};
+                    return { label: c.reason, value: c._id };
                 });
             }
         }
@@ -254,15 +344,15 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             type: "select",
             options: function () {
                 return LabTests.find().map(function (c) {
-                    return {label: c.name, value: c._id};
+                    return { label: c.name, value: c._id };
                 });
             }
         }
     },
 
-    mainValue:{type: Number, optional: true},
+    mainValue: { type: Number, optional: true },
 
-    values: {type: [TestResultValue], optional: true}
+    values: { type: [TestResultValue], optional: true }
 }
 
 ])
@@ -281,10 +371,10 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     },
     gender: {
         type: String,
-        allowedValues: [ 'F', 'M'],
-         autoform: {
+        allowedValues: ['F', 'M'],
+        autoform: {
             type: "select-radio"
-         }
+        }
     },
     chronicConditions: {
         type: [String],
@@ -293,7 +383,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             type: "select-checkbox",
             options: function () {
                 return ChronicDiseases.find().map(function (c) {
-                    return {label: c.name, value: c.name};
+                    return { label: c.name, value: c.name };
                 });
             }
         }
@@ -325,7 +415,7 @@ ScriptItem = new SimpleSchema({
             type: "select2",
             options: function () {
                 return Drugs.find().map(function (c) {
-                    return {label: c.name, value: c._id};
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -343,7 +433,7 @@ ScriptItem = new SimpleSchema({
         type: String,
         label: "Frequency",
     },
-    quantity: {type: Number, defaultValue: 1}
+    quantity: { type: Number, defaultValue: 1 }
 
 })
 
@@ -379,7 +469,7 @@ EncounterSchema = new SimpleSchema({
             type: "select",
             options: function () {
                 return Patients.find().map(function (c) {
-                    return {label: c.firstName, value: c._id};
+                    return { label: c.firstName, value: c._id };
                 });
             }
         }
@@ -402,12 +492,12 @@ EncounterSchema = new SimpleSchema({
 })
 
 ImagingSchema = new SimpleSchema({
-    type: { 
+    type: {
         type: String,
         allowedValues: ['XRay', 'CT', 'MRI', 'Other']
     },
-    details:{
-        type:String,
+    details: {
+        type: String,
         optional: true,
         autoform: {
             type: "textarea"
@@ -433,37 +523,36 @@ VisitSchema = new SimpleSchema([BaseSchema, {
             },
             options: function () {
                 return LabTests.find().map(function (c) {
-                    return {label: c.name, value: c.name};
+                    return { label: c.name, value: c.name };
                 });
             }
         }
     },
-    testResults:{
-        type: String,
-        optional: true,
-        autoValue: function () {
-            let content = this.field("tests");
-            if (content.isSet) {
-                let tests =  content.value;
-                _.forEach(tests, function(element) {
-                    console.log(element);
-                    let labTest = LabTests.findOne({name:element});
-                    console.log(labTest)
-                    TestResults.insert({"labTest":labTest})
-                });
-                return "";
-            } else {
-                this.unset();
-            }
-        }    
-    },
-    imagings: { 
+    // testResults:{
+    //     type: String,
+    //     optional: true,
+    //     autoValue: function () {
+    //         let content = this.field("tests");
+    //         if (content.isSet) {
+    //             let tests =  content.value;
+    //             _.forEach(tests, function(element) {
+    //                 console.log(element);
+    //                 let labTest = LabTests.findOne({name:element});
+    //                 console.log(labTest)
+    //                 TestResults.insert({"labTest":labTest})
+    //             });
+    //             return "";
+    //         } else {
+    //             this.unset();
+    //         }
+    //     }    
+    imagings: {
         type: [ImagingSchema],
         optional: true,
     },
     createdBy: {
         type: String,
-        autoValue: function () {return this.userId },
+        autoValue: function () { return this.userId },
         autoform: {
             type: "hidden"
         }
@@ -510,7 +599,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         }
 
     },
-    reason:{
+    reason: {
         type: String,//orion.attribute('summernote'),
         optional: true,
     }
@@ -568,6 +657,13 @@ Admissions.allow({
     }
 })
 
+Invoices.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    }
+})
+
 Patients.allow({
     insert: (userId, doc) => !!userId,
     update: function (userId, doc) {
@@ -576,50 +672,83 @@ Patients.allow({
 })
 
 
-import {Tabular} from 'meteor/aldeed:tabular';
+import { Tabular } from 'meteor/aldeed:tabular';
 //import {Patients} from 'patients'
 
 Patients.helpers({
     fullName: function () {
-        return this.firstName + ' ' + this.lastName +  ' ' + this.gender + ' ' + this.age();
+        return this.firstName + ' ' + this.lastName + ' ' + this.gender + ' ' + this.age();
     },
     age: function () {
         let years = moment().diff(this.dob, 'years');
         ret = years;
-        if(years == 0 ) {
-           ret  = moment().diff(this.dob, 'days') + ' Days';
+        if (years == 0) {
+            ret = moment().diff(this.dob, 'days') + ' Days';
         }
         return ret;
     },
-    currentBed : function(){
-        adm =  this.currentAdmisson();
-        if(adm){
+    currentBed: function () {
+        adm = this.currentAdmisson();
+        if (adm) {
             console.log("found bed " + adm.currentBedStay.bed)
             return Beds.findOne(adm.currentBedStay.bed);
         }
         return null
     },
-    encounters: function(){
-		return PtEncounters.find({patient: this._id});
-	},
-    testResults:function(){
-        TestResults.find({patient: this._id});
+    encounters: function () {
+        return PtEncounters.find({ patient: this._id });
     },
-	isAdmitted:function(){ return !!this.currentAdmisson() },
-    currentAdmisson:function(){
-        return Admissions.findOne({patient:this._id});
+    testResults: function () {
+        TestResults.find({ patient: this._id });
+    },
+    isAdmitted: function () { return !!this.currentAdmisson() },
+    currentAdmisson: function () {
+        return Admissions.findOne({ patient: this._id });
     }
 })
 
 Admissions.helpers({
-    currentBed : function(){
-        if(this.currentBedStay){
+    currentBed: function () {
+        if (this.currentBedStay) {
             return Beds.findOne(this.currentBedStay.bed);
         }
         return null
     },
-    patientObj: function(){
-        return Patients.findOne({_id:this.patient})
+    patientObj: function () {
+        return Patients.findOne({ _id: this.patient })
+    },
+    invoice: function(){
+        inv =   Invoices.findOne({admission:this._id}); //, { $set: {admission:this._id} });
+        return inv;
+    },
+    bedStaysObj: function () {
+        stays = []
+        total = 0;
+
+        tempStays = this.bedStays;
+        tempStays.push(this.currentBedStay)
+
+        _.forEach(tempStays, function (stay) {
+            let bed = Beds.findOne({ _id: stay.bed });
+            stay.price = bed.roomObj().wardObj().price
+            stay.bed = bed
+
+            if(!stay.toDate){
+                stay.toDate = new Date();
+            }
+
+            let a = moment(stay.toDate);
+            let b = moment(stay.fromDate);
+            days = a.diff(b, 'days')
+            stay.days =  days == 0 ? 1 : days;
+
+            stay.total = stay.days * stay.price
+
+            total += stay.total 
+            stays.push(stay)
+        });
+
+        return {"stays":stays, "total":total};
     }
 })
 
@@ -627,13 +756,13 @@ Beds.helpers({
     fullName: function () {
         return this.roomObj().fullName() + '-' + this.name;
     },
-    roomObj: function() { return  Rooms.findOne({_id:this.room}) }
+    roomObj: function () { return Rooms.findOne({ _id: this.room }) }
 })
 Rooms.helpers({
     fullName: function () {
-        return this.wardObj().name + '-'  + this.name;
+        return this.wardObj().name + '-' + this.name;
     },
-    wardObj: function() { return Wards.findOne({_id:this.ward}) }
+    wardObj: function () { return Wards.findOne({ _id: this.ward }) }
 })
 
 
@@ -647,22 +776,22 @@ new Tabular.Table({
         onEnterOnly: true,
     },
     columns: [
-        {data: "fullName()", title: "Full Name"},
+        { data: "fullName()", title: "Full Name" },
 
-        {data: "age()", title: "Age"},
-        {data: "gender", title: "Gender"},
-        
-        {data: "firstName",  visible:false},
-        {data: "lastName",  visible:false},
-        {data: "dob",  visible:false},
+        { data: "age()", title: "Age" },
+        { data: "gender", title: "Gender" },
+
+        { data: "firstName", visible: false },
+        { data: "lastName", visible: false },
+        { data: "dob", visible: false },
         {
             data: "_id",
             render: (val, type, doc) => "<a href='patient/" + val + "'>  <i class='fa fa-map'/></a>"
         },
         {
             data: "_id",
-            render: (val, type, doc) => Roles.userIsInRole(Meteor.userId(), ['admin' ,'physician'] ) ?
-                "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>":""
+            render: (val, type, doc) => Roles.userIsInRole(Meteor.userId(), ['admin', 'physician']) ?
+                "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>" : ""
         },
         //{data: "summary", title: "Summary"},
         //{
@@ -690,3 +819,6 @@ Admissions.attachSchema(AdmissionSchema)
 
 ScriptTemplates.attachSchema(ScriptTemplateSchema)
 TestResults.attachSchema(TestResultsSchema)
+
+Invoices.attachSchema(InvoiceSchema)
+Services.attachSchema(ServiceSchema)
