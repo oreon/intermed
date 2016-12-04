@@ -1,77 +1,59 @@
 <template name="ViewAdmission">
-{{#if Template.subscriptionsReady}}
+	{{#if Template.subscriptionsReady}}
 
-	<article class="recipe">
-		<h2> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h2>
-		<h3> {{admission.reason }} </h3>
-		{{#if editMode}} 
-			{{> updateAdmissionForm var=admission }} 
-		{{else}} 
-		{{#if admission.eligibleForDischarge}}
-			<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+	<ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#script">Visits</a></li>
+		<li><a data-toggle="tab" href="#visits">Script</a></li>
+		<li><a data-toggle="tab" href="#invoice">Invoice</a></li>
+	</ul>
 
-			<button class="btn-deny discharge">Discharge</button> {{else}}
-			<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
-		{{/if}}
+	<div class="tab-content">
+		<div id="script" class="tab-pane fade in active">
+			<h3>Current Order </h3>
+			{{> updateScriptForm var=admission}}
+		</div>
 
-		{{> updateScriptForm var=admission}}
+		<div id="visits" class="tab-pane fade">
+			<h3>Admission Details</h3>
+			{{>main admission=admission patient=patient}}
+		</div>
 
-		<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+		<div id="invoice" class="tab-pane fade">
+			<br/>
+			<table class="table table-striped">
+				<tr style="background:#88a; color: #ffd">
+					<th>Bed</th>
+					<th> From</th>
+					<th> To</th>
+					<th> Days</th>
+					<th> Price</th>
+					<th> Total</th>
+				</tr>
 
-		<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
+				{{#each admission.bedStaysObj.stays}}
+				<tr>
+					<td>{{bed.fullName}}</td>
+					<td> {{datef fromDate}} </td>
+					<td> {{datef toDate}} </td>
+					<td> {{days}} </td>
+					<td> {{price}} </td>
+					<td> {{total}} </td>
+				</tr>
+				{{/each}}
+				<tr>
+					<td colspan="6">
+						<b> Total : {{ admission.bedStaysObj.total }}</b>
+					</td>
+				</tr>
+			</table>
 
-		<br/> Admission: {{admission.admissionNote}} <br/>  Admitted on: {{datef admission.created}} <br/>
+			{{> quickForm collection="Invoices" id="editInvoiceForm" type=formType doc=currentInv autosave=true }} Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
+			<br/> Grand Total : <b> Rs {{ grandTotal admission }} </b>
+		</div>
 
-		<button class="btn visit">New Visit</button> {{#each admission.visits}}
-		<section>
-			{{note}}
-			<!-- TODO: updatedAt should be created -->
-			<p> {{visitCreator}} - {{datef updatedAt}} </p>
-		</section>
-		{{/each}}
+	</div>
 
-
-		<table border="1">
-			<tr>
-				<th>Bed</th>
-				<th> From</th>
-				<th> To</th>
-				<th> Days</th>
-				<th> Price</th>
-				<th> Total</th>
-			</tr>
-
-			{{#each admission.bedStaysObj.stays}}
-			<tr>
-				<td>{{bed.fullName}}</td>
-				<td> {{fromDatef}} </td>
-				<td> {{toDatef}} </td>
-				<td> {{days}} </td>
-				<td> {{price}} </td>
-				<td> {{total}} </td>
-			</tr>
-			{{/each}}
-			<tr>
-				<td colspan="6">
-					<b> Total : {{ admission.bedStaysObj.total }}</b>
-				</td>
-			</tr>
-		</table>
-
-		<i class="fa fa-trash"></i>
-		<i class="fa fa-pencil"></i> {{/if}}
-
-	</article>
-
-
-	{{> quickForm collection="Invoices" id="editInvoiceForm" type=formType 
-		doc=currentInv autosave=true }}
-
-		Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
-		<br/>
-		Grand Total : <b> Rs {{ grandTotal  }} </b>
-	
-{{/if}} 
+	{{/if}}
 
 </template>
 
@@ -79,14 +61,10 @@
 	{{#autoForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var}}
 	<fieldset>
 		<legend>Update Admission</legend>
-		{{> afQuickField name='reason'}}
-		{{> afQuickField name='admissionNote'}}
-		{{#if doc.eligibleForDischarge}}
-		{{> afQuickField name='dischargeNote'}}
-		{{/if}}
+		{{> afQuickField name='reason'}} {{> afQuickField name='admissionNote'}} {{#if doc.eligibleForDischarge}} {{> afQuickField
+		name='dischargeNote'}} {{/if}}
 	</fieldset>
-	<button type="submit" class="btn btn-primary">Update</button>
-	 {{/autoForm}}
+	<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 </template>
 
 <template name="updateScriptForm">
@@ -96,4 +74,44 @@
 		{{> afQuickField name='script'}}
 	</fieldset>
 	<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
+</template>
+
+
+<template name="main">
+	<article class="recipe">
+		<h2> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h2>
+		<h3> {{admission.reason }} </h3>
+
+		{{#if isEditMode }} {{> updateAdmissionForm var=admission }} {{else}} {{#if admission.eligibleForDischarge}}
+		<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+
+		<button class="btn-deny discharge">Discharge</button> {{else}}
+		<button class="btn-primary toggleDischarge">Make eligible for discharge</button> {{/if}}
+
+
+		<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+
+		<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
+
+		<br/> Admission: {{admission.admissionNote}} <br/> Admitted on: {{datef admission.created}} <br/>
+
+		<button class="btn visit">New Visit</button> {{#each admission.visits}}
+		<well>
+			{{note}}
+			<!-- TODO: updatedAt should be created -->
+			<h6> {{visitCreator}} - {{datef updatedAt}} </h6>
+		</well>
+		{{/each}}
+
+		<i class="fa fa-trash"></i>
+		<i class="fa fa-pencil"></i> {{/if}}
+
+	</article>
+</template>
+
+
+
+<template name="invoice">
+	{{#if Template.subscriptionsReady}} {{/if}}
+
 </template>

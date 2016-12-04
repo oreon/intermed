@@ -214,9 +214,26 @@ Meteor.publishComposite('compAdmission', function (id) {
                         {sort: {name: -1}, limit: 1/*, fields: {profile: 1}*/});
                 },
             },
+            {
+                find: function (adm) {
+                    return Invoices.find(
+                        {admission: adm._id},
+                        { limit: 1/*, fields: {profile: 1}*/});
+                },
+            },
+            //  {
+            //     find: function (adm) {
+            //         return Beds.find(
+            //             {_id: adm.currentBedStay.bed},
+            //             { limit: 1/*, fields: {profile: 1}*/});
+            //     },
+            // },
         ]
     }
 })
+
+
+//TODO publish rooms and wards 
 
 
 //Meteor.publish('Scripts', function () {

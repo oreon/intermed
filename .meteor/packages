@@ -82,5 +82,6 @@ xolvio:cleaner
 #orionjs:relationships
 #orionjs:summernote
 
-#twbs:bootstrap
+twbs:bootstrap
+mpowaga:autoform-summernote
 #orionjs:bootstrap

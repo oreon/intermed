@@ -4,13 +4,16 @@ export function getAdmission() {
     return Admissions.findOne({ _id: FlowRouter.getParam('id') });
 }
 
+var gloablEdit = {};
 
 Template.ViewAdmission.onCreated(function () {
 
     //self.editMode = new ReactiveVar(false);
     this.editMode = new ReactiveVar(false);
+    globalEdit = this.editMode;
 
     this.formType = new ReactiveVar('insert');
+    Session.set("editAdmissionForm",false)
 
     var self = this;
     self.autorun(function () {
@@ -19,11 +22,7 @@ Template.ViewAdmission.onCreated(function () {
         self.subscribe('compAdmission', id);
         self.subscribe('Rooms')
         self.subscribe('Beds')
-        self.subscribe('Invoices')
-
-        //adm = Admissions.findOne({_id: FlowRouter.getParam('id')});
-        // self.entity = new ReactiveVar(adm);
-
+       // self.subscribe('Invoices')
     });
 });
 
@@ -39,16 +38,7 @@ Template.ViewAdmission.helpers({
     patient: function () {
         return Patients.findOne(getAdmission().patient);
     },
-    fromDatef: function () {
-        return moment(this.fromDate).format('D MMM YY hh:mm');
-    },
-    toDatef: function () {
-        return moment(this.toDate).format('D MMM YY hh:mm');
-    }
-    ,
-    datef:function(dt){
-        return moment(dt).format('D MMM YY hh:mm');
-    },
+ 
     visitCreator: function () {
         try {
             return Meteor.users.findOne(this.createdBy).profile.firstName
@@ -75,8 +65,10 @@ Template.ViewAdmission.helpers({
         var formType = Template.instance().formType.get();
         return formType;
     },
-    grandTotal:function(){
-        adm = getAdmission()
+ 
+    isEditMode :function (){ return Session.get("editAdmissionForm") },
+   
+   grandTotal:function(adm){
         bedStayTotal = adm.bedStaysObj().total;
         //console.log(adm)
         if (adm) {
@@ -87,12 +79,10 @@ Template.ViewAdmission.helpers({
                 return bedStayTotal;
         }    
         return 0;
-    }
-
-
-
-    //prdName: (id) => Products.findOne({_id: id}).name
+    },
 });
+
+
 
 Template.ViewAdmission.events({
 
@@ -114,6 +104,7 @@ Template.ViewAdmission.events({
         });
     },
     'click .fa-pencil': function (event, template) {
+        Session.set( "editAdmissionForm", true );
         template.editMode.set(!template.editMode.get());
     },
     'click .visit': function (event, template) {
@@ -126,6 +117,33 @@ Template.ViewAdmission.events({
     // }
 });
 
+
+Template.invoice.onCreated(function () {
+    var self = this;
+    self.autorun(function () {
+         var id = FlowRouter.getParam('id');
+        self.subscribe('Rooms')
+        self.subscribe('Beds')
+        //self.subscribe('compAdmission', id);
+    });
+});
+
+Template.invoice.helpers({
+
+    grandTotal:function(adm){
+
+        // bedStayTotal = adm.bedStaysObj().total;
+        // //console.log(adm)
+        // if (adm) {
+        //     let inv = adm.invoice()
+        //     if(inv){
+        //         return bedStayTotal  + inv.total;
+        //     }else
+        //         return bedStayTotal;
+        // }    
+        return 0;
+    },
+})
 
 
 
@@ -143,12 +161,10 @@ AutoForm.hooks({
             //this.template.parent().editMode.set(false);
         },
     },
-
-    updateAdmission: {
+    updateAdmissionForm: {
         onSuccess: function (operation, result) {
-            console.log(result)
-            console.log(this.template.parent())
-            //this.template.parent().editMode.set(false);
+            Session.set( "editAdmissionForm", false );
+            globalEdit.set(false)
         },
     }
 });

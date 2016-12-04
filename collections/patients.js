@@ -152,21 +152,21 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    comments: { type: String , optional:true},
-    items: { type: [LineItemSchema], optional:true },
+    comments: { type: String, optional: true },
+    items: { type: [LineItemSchema], optional: true },
     total: {
         type: Number,
         //defaultValue: 0 ,
-        optional:true,
+        optional: true,
         autoValue: function () {
             let items = this.field("items");
             if (items.isSet) {
-               // console.log(items)
+                // console.log(items)
                 let itemsVal = items["value"];
-               total =  _.reduce(itemsVal, function (sum, item) {
+                total = _.reduce(itemsVal, function (sum, item) {
 
                     item.total = item.appliedPrice * item.units
-                    return sum + (item.total?item.total:0);
+                    return sum + (item.total ? item.total : 0);
                 }, 0);
                 return total;
             }
@@ -357,6 +357,41 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
 
 ])
 
+DrugAllergySchema = new SimpleSchema([BaseSchema, {
+    drug: {
+        type: [String],
+        autoform: {
+            type: "select",
+            options: function () {
+                return Drugs.find().map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+    severity: {
+        type: String,
+        allowedValues: ['Severe', 'Moderate', 'Mild'],
+        autoform: {
+            type: "select-radio"
+        }
+    }
+}])
+
+Immunizations = new SimpleSchema([BaseSchema, {
+    drug: {
+        type: [String],
+        autoform: {
+            type: "select",
+            options: function () {
+                return Drugs.find().map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+}])
+
 PatientSchema = new SimpleSchema([BaseSchema, {
     firstName: {
         type: String,
@@ -387,8 +422,8 @@ PatientSchema = new SimpleSchema([BaseSchema, {
                 });
             }
         }
-
     },
+    drugAllergies: { type: [DrugAllergySchema] },
     bed: {
         type: String,
         optional: true,
@@ -443,7 +478,9 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true,
         autoform: {
-            rows: 5,
+         afFieldInput: {
+            type: 'summernote',
+         }
         }
     },
     items: {
@@ -707,51 +744,6 @@ Patients.helpers({
     }
 })
 
-Admissions.helpers({
-    currentBed: function () {
-        if (this.currentBedStay) {
-            return Beds.findOne(this.currentBedStay.bed);
-        }
-        return null
-    },
-    patientObj: function () {
-        return Patients.findOne({ _id: this.patient })
-    },
-    invoice: function(){
-        inv =   Invoices.findOne({admission:this._id}); //, { $set: {admission:this._id} });
-        return inv;
-    },
-    bedStaysObj: function () {
-        stays = []
-        total = 0;
-
-        tempStays = this.bedStays;
-        tempStays.push(this.currentBedStay)
-
-        _.forEach(tempStays, function (stay) {
-            let bed = Beds.findOne({ _id: stay.bed });
-            stay.price = bed.roomObj().wardObj().price
-            stay.bed = bed
-
-            if(!stay.toDate){
-                stay.toDate = new Date();
-            }
-
-            let a = moment(stay.toDate);
-            let b = moment(stay.fromDate);
-            days = a.diff(b, 'days')
-            stay.days =  days == 0 ? 1 : days;
-
-            stay.total = stay.days * stay.price
-
-            total += stay.total 
-            stays.push(stay)
-        });
-
-        return {"stays":stays, "total":total};
-    }
-})
-
 Beds.helpers({
     fullName: function () {
         return this.roomObj().fullName() + '-' + this.name;
@@ -764,6 +756,55 @@ Rooms.helpers({
     },
     wardObj: function () { return Wards.findOne({ _id: this.ward }) }
 })
+
+Admissions.helpers({
+    currentBed: function () {
+        if (this.currentBedStay) {
+            return Beds.findOne(this.currentBedStay.bed);
+        }
+        return null
+    },
+    patientObj: function () {
+        return Patients.findOne({ _id: this.patient })
+    },
+    invoice: function () {
+        inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
+        return inv;
+    },
+    bedStaysObj: function () {
+        stays = []
+        total = 0;
+
+        tempStays = this.bedStays;
+        tempStays.push(this.currentBedStay)
+
+        _.forEach(tempStays, function (stay) {
+            //if(stay.bed)
+            let bed = Beds.findOne({ _id: stay.bed });
+            stay.price = bed.roomObj().wardObj().price
+
+            stay.bed = bed
+
+            if (!stay.toDate) {
+                stay.toDate = new Date();
+            }
+
+            let a = moment(stay.toDate);
+            let b = moment(stay.fromDate);
+            days = a.diff(b, 'days')
+            stay.days = days == 0 ? 1 : days;
+
+            stay.total = stay.days * stay.price
+
+            total += stay.total
+            stays.push(stay)
+        });
+
+        return { "stays": stays, "total": total };
+    }
+})
+
+
 
 
 
