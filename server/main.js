@@ -18,8 +18,14 @@ Meteor.startup(() => {
             LabTests.insert({"name": "Blood Chemistry"})
         }
          if (Services.find().count() == 0) {
-            Services.insert({"name": "Abdominal Surgery" , price:5000 })
-            LabTests.insert({"name": "Laproscopy" , price:3000})
+            Services.insert({"name": "Lab Tests" , price:0, autoCreated:true})
+            Services.insert({"name": "Room Stay" , price:0, autoCreated:true})
+            
+            Services.insert({"name": "Abdominal Surgery" , price:5000 , autoCreated:false})
+            Services.insert({"name": "Laproscopy" , price:3000, autoCreated:false})
+            Services.insert({"name": "Angiography" , price:8400, autoCreated:false})
+            Services.insert({"name": "Gastrectocomy" , price:7800, autoCreated:false})
+            
         }
     }
 )

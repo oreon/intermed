@@ -18,6 +18,11 @@ Meteor.publish('recipes-paginated', function (skip, limit) {
     return Recipes.find({author: this.userId}, options);
 });
 
+Meteor.publish('userData', function () { 
+    return Meteor.users.find({}, {fields: {profile: 1}}); 
+}); 
+
+
 // Meteor.publish('AllProducts', function () {
 //     return Products.find();
 // });
@@ -85,6 +90,18 @@ Meteor.publish('TestResults', function() {
 Meteor.publish('Invoices', function() { 
     return Invoices.find();
 })
+
+Meteor.publish('MyTodos', function() { 
+    return Todos.find({for:this.userId});
+})
+
+Meteor.publish('TodosCreatedByMe', function() { 
+    return Todos.find({createdBy:this.userId});
+})
+
+
+
+
 
 
 

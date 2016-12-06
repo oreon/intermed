@@ -17,5 +17,7 @@ Meteor.subscribe('Beds')
 Meteor.subscribe('Admissions')
 Meteor.subscribe('ScriptTemplates')
 
+Meteor.subscribe('userData')
+
 
 PtEncounters = new Mongo.Collection('ptEncounters');

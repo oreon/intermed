@@ -22,6 +22,8 @@ Template.ViewAdmission.onCreated(function () {
         self.subscribe('compAdmission', id);
         self.subscribe('Rooms')
         self.subscribe('Beds')
+        
+        
        // self.subscribe('Invoices')
     });
 });
@@ -161,6 +163,14 @@ AutoForm.hooks({
             //this.template.parent().editMode.set(false);
         },
     },
+
+    newTodoForm:{
+        formToDoc: function (doc) {
+            doc.patient = getAdmission().patient
+            return doc;
+        },
+    },
+
     updateAdmissionForm: {
         onSuccess: function (operation, result) {
             Session.set( "editAdmissionForm", false );
