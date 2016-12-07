@@ -19,9 +19,13 @@
 </template>
 
 <template name="doneCell">
+	{{#if show}}
   <button type="button" class="btn btn-xs done">Mark Done</button>
+	{{/if}}
 </template>
 
 <template name="removeTodoCell">
+	{{#if show}}
   <button type="button" class="btn btn-xs remove">Remove</button>
+	{{/if}}
 </template>

@@ -14,6 +14,21 @@ Template.doneCell.events({
   }
 });
 
+Template.doneCell.helpers({
+  show: function () {
+    console.log(Meteor.userId())
+    console.log(this.forUser)
+    return (this.forUser == Meteor.userId());
+  }
+});
+
+Template.removeTodoCell.helpers({
+  show: function () {
+    // console.log(Meteor.userId())
+      return (this.createdBy == Meteor.userId());
+  }
+});
+
 Template.removeTodoCell.events({
   'click .remove': function () {
        Todos.remove(this._id);

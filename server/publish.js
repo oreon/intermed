@@ -95,6 +95,10 @@ Meteor.publish('Todos', function() {
     return Todos.find({});
 })
 
+Meteor.publish('Specializations', function() { 
+    return Specializations.find({});
+})
+
 Meteor.publish('TodosCreatedByMe', function() { 
     return Todos.find({createdBy:this.userId});
 })

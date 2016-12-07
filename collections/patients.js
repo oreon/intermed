@@ -985,12 +985,19 @@ mycols.push({
     }
 );
 
-bymeCols = mycols =  _.cloneDeep(commonTodoCols);
+bymeCols  =  _.cloneDeep(commonTodoCols);
 //mycols.push ({ data: "description" , title:"Description"});
 bymeCols.push({
       tmpl: Meteor.isClient && Template.removeTodoCell
     }
 );
+
+ptTodoCols =   _.cloneDeep(bymeCols);
+ptTodoCols.push({
+      tmpl: Meteor.isClient && Template.doneCell
+    }
+);
+
 
 // mycols =  _.cloneDeep(commonTodoCols);
 // mycols.push ({ data: "description" , title:"Description"});
@@ -1026,6 +1033,21 @@ new Tabular.Table({
     },
     columns: bymeCols
 })    
+
+new Tabular.Table({
+    name: "TodosPtTbl",
+    collection: Todos,
+    selector() {
+        return {   completed: false};
+    },
+    search: {
+        caseInsensitive: true,
+        smart: true,
+        onEnterOnly: true,
+    },
+    columns: ptTodoCols,
+    extraFields: ['forUser']
+})  
 
 
 Patients.attachSchema(PatientSchema)

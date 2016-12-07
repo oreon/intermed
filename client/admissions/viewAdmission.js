@@ -14,6 +14,7 @@ Template.ViewAdmission.onCreated(function () {
 
     this.formType = new ReactiveVar('insert');
     Session.set("editAdmissionForm",false)
+    
 
     var self = this;
     self.autorun(function () {
@@ -22,6 +23,7 @@ Template.ViewAdmission.onCreated(function () {
         self.subscribe('compAdmission', id);
         self.subscribe('Rooms')
         self.subscribe('Beds')
+        Session.set('adm', getAdmission())
         
         
        // self.subscribe('Invoices')
@@ -177,4 +179,10 @@ AutoForm.hooks({
             globalEdit.set(false)
         },
     }
+});
+
+Template.todosPt.helpers({
+  selector() {
+    return {patient: Session.get('adm').patient}; 
+  }
 });
