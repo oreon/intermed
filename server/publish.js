@@ -91,8 +91,8 @@ Meteor.publish('Invoices', function() {
     return Invoices.find();
 })
 
-Meteor.publish('MyTodos', function() { 
-    return Todos.find({for:this.userId});
+Meteor.publish('Todos', function() { 
+    return Todos.find({});
 })
 
 Meteor.publish('TodosCreatedByMe', function() { 

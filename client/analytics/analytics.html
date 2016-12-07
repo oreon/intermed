@@ -1,0 +1,36 @@
+<template name="Analytics">
+
+	<ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#inv">Invoices</a></li>
+		<li><a data-toggle="tab" href="#pat">Patients</a></li>
+        <li><a data-toggle="tab" href="#adm">Admissions</a></li>
+        <li><a data-toggle="tab" href="#opd">OutPatient</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="inv" class="tab-pane fade in active">
+			<div id="invDaily">{{invoicesChart}}</div>
+			<br/>
+			<br/>
+			<div id="invMth">{{invoicesMonthly}}</div>
+		</div>
+
+		<div id="pat" class="tab-pane fade">
+			<div id="todoschart">{{todosChart}}</div>
+		</div>
+
+        <div id="adm" class="tab-pane fade">
+			XXX
+		</div>
+
+        <div id="opd" class="tab-pane fade">
+            YYY
+			<div id="todoschart">{{todosChart}}</div>
+		</div>
+	</div>
+
+
+
+
+
+</template>

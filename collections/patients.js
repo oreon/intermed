@@ -18,6 +18,8 @@ TestResults = new Mongo.Collection('testResults')
 Invoices = new Mongo.Collection('invoices')
 Services = new Mongo.Collection('services')
 
+Specializations = new Mongo.Collection('specializations') 
+
 //export Patients
 
 
@@ -104,6 +106,11 @@ BaseSchema = new SimpleSchema({
 
 ChronicDiseaseSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
 LabTestSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
+
+
+SpecializationsSchema = new SimpleSchema([BaseSchema, {
+    name: { type: String },
+}])
 
 ServiceSchema = new SimpleSchema([BaseSchema, {
     name: { type: String },
@@ -809,6 +816,9 @@ Todos.allow({
     insert: (userId, doc) => !!userId,
     update: function(userId, doc) {
         return !!userId
+    },
+    remove: function(userId, doc) {
+        return userId == doc.createdBy
     }
 })
 
@@ -957,53 +967,65 @@ new Tabular.Table({
     ]
 });
 
+commonTodoCols = [
+        { data: "title", title: "Title" },
+        { data: "patientName()", title: "Patient"},
+        { data: "patient", visible: false },
+        { data: "createdBy", visible: false},
+         { data: "creator()", title: "Creator"},
+        { data: "createdAt", title:'Created At', 
+        render: function (val, type, doc) {return moment(val).calendar();}
+        }
+    ]
+
+mycols =  _.cloneDeep(commonTodoCols);
+mycols.push ({ data: "description" , title:"Description"});
+mycols.push({
+      tmpl: Meteor.isClient && Template.doneCell
+    }
+);
+
+bymeCols = mycols =  _.cloneDeep(commonTodoCols);
+//mycols.push ({ data: "description" , title:"Description"});
+bymeCols.push({
+      tmpl: Meteor.isClient && Template.removeTodoCell
+    }
+);
+
+// mycols =  _.cloneDeep(commonTodoCols);
+// mycols.push ({ data: "description" , title:"Description"});
+// mycols.push({
+//       tmpl: Meteor.isClient && Template.doneCell
+//     }
+// );
 
 new Tabular.Table({
     name: "MyTodosTbl",
     collection: Todos,
     selector(userId) {
-        return { forUser: userId };
+        return { forUser: userId , completed: false};
     },
     search: {
         caseInsensitive: true,
         smart: false,
         onEnterOnly: true,
     },
-    columns: [
-        { data: "title", title: "Title" },
-        { data: "patientName()", title: "Patient"},
-        { data: "patient", visible: false },
-        { data: "createdBy", visible: false},
-         { data: "creator()", title: "Creator"},
-        { data: "createdAt", title:'created', 
-        render: function (val, type, doc) {return moment(val).calendar();}
-        }
-       
-    ]
-})    ;
+    columns: mycols
+})    
 
 new Tabular.Table({
     name: "TodosByMeTbl",
     collection: Todos,
     selector(userId) {
-        return { createdBy: userId };
+        return { createdBy: userId , completed: false};
     },
     search: {
         caseInsensitive: true,
         smart: false,
         onEnterOnly: true,
     },
-    columns: [
-        { data: "title", title: "Title" },
-        { data: "patientName()", title: "Patient"},
-        { data: "patient", visible: false },
-        { data: "createdBy", visible: false},
-         { data: "creator()", title: "Creator"},
-         { data: "createdAt", title:'created', 
-        render: function (val, type, doc) {return moment(val).calendar();}
-        }
-    ]
-})    ;
+    columns: bymeCols
+})    
 
 
 Patients.attachSchema(PatientSchema)
@@ -1029,3 +1051,4 @@ Invoices.attachSchema(InvoiceSchema)
 Services.attachSchema(ServiceSchema)
 
 Todos.attachSchema(TodoSchema);
+Specializations.attachSchema(SpecializationsSchema);
