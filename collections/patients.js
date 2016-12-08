@@ -322,34 +322,33 @@ TestResultValue = new SimpleSchema({
             type: "hidden"
         }
     },
-
 })
 
 TestResultsSchema = new SimpleSchema([BaseSchema, {
     patient: {
         type: String,
         optional: true,
-        autoform: {
-            type: "select",
-            options: function() {
-                return Patients.find().map(function(c) {
-                    return { label: c.fullName(), value: c._id };
-                });
-            }
-        }
+         autoform: {
+            type: "hidden",
+        },
+        //  autoValue: function() {
+        //     if (this.isInsert) {
+        //         return Session.get('patient');
+        //     }
+        //  }
     },
 
     admission: {
         type: String,
         optional: true,
         autoform: {
-            type: "select",
-            options: function() {
-                return Admissions.find().map(function(c) {
-                    return { label: c.reason, value: c._id };
-                });
-            }
-        }
+            type: "hidden",
+        },
+        //  autoValue: function() {
+        //     if (this.isInsert) {
+        //         return Session.get('adm')._id;
+        //     }
+        //  }
     },
 
     labTest: {
@@ -812,6 +811,13 @@ Patients.allow({
     }
 })
 
+TestResults.allow({
+    insert: (userId, doc) => !!userId,
+    update: function(userId, doc) {
+        return !!userId
+    }
+})
+
 Todos.allow({
     insert: (userId, doc) => !!userId,
     update: function(userId, doc) {
@@ -881,6 +887,15 @@ Todos.helpers({
         return user.profile.firstName + " " + user.profile.lastName;
     }
 
+})
+
+TestResults.helpers({
+    labTestObj:function(){
+        return LabTests.findOne(this.labTest)
+    },
+    labTestName:function(){
+        return this.labTestObj().name
+    }
 })
 
 Admissions.helpers({
@@ -1048,6 +1063,24 @@ new Tabular.Table({
     columns: ptTodoCols,
     extraFields: ['forUser']
 })  
+
+new Tabular.Table({
+    name: "TestResultsAdmTbl",
+    collection: TestResults,
+    // selector() {
+    //     return {   completed: false};
+    // },
+    search: {
+        caseInsensitive: true,
+        smart: true,
+        onEnterOnly: true,
+    },
+    columns: [
+        { data: "labTestName()", title: "Lab Test"},
+        { data: "mainValue", title: "Value " },
+    ],
+    extraFields: ['labTest']
+}) 
 
 
 Patients.attachSchema(PatientSchema)

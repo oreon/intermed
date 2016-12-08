@@ -13,8 +13,8 @@ Template.ViewAdmission.onCreated(function () {
     globalEdit = this.editMode;
 
     this.formType = new ReactiveVar('insert');
-    Session.set("editAdmissionForm",false)
-    
+    Session.set("editAdmissionForm", false)
+
 
     var self = this;
     self.autorun(function () {
@@ -23,10 +23,13 @@ Template.ViewAdmission.onCreated(function () {
         self.subscribe('compAdmission', id);
         self.subscribe('Rooms')
         self.subscribe('Beds')
-        Session.set('adm', getAdmission())
-        
-        
-       // self.subscribe('Invoices')
+        adm = getAdmission()
+        if (adm) {
+            Session.set('adm', adm)
+            Session.set('patient', adm.patient)
+        }
+
+        // self.subscribe('Invoices')
     });
 });
 
@@ -42,7 +45,7 @@ Template.ViewAdmission.helpers({
     patient: function () {
         return Patients.findOne(getAdmission().patient);
     },
- 
+
     visitCreator: function () {
         try {
             return Meteor.users.findOne(this.createdBy).profile.firstName
@@ -69,19 +72,19 @@ Template.ViewAdmission.helpers({
         var formType = Template.instance().formType.get();
         return formType;
     },
- 
-    isEditMode :function (){ return Session.get("editAdmissionForm") },
-   
-   grandTotal:function(adm){
+
+    isEditMode: function () { return Session.get("editAdmissionForm") },
+
+    grandTotal: function (adm) {
         bedStayTotal = adm.bedStaysObj().total;
         //console.log(adm)
         if (adm) {
             let inv = adm.invoice()
-            if(inv){
-                return bedStayTotal  + inv.total;
-            }else
+            if (inv) {
+                return bedStayTotal + inv.total;
+            } else
                 return bedStayTotal;
-        }    
+        }
         return 0;
     },
 });
@@ -108,7 +111,7 @@ Template.ViewAdmission.events({
         });
     },
     'click .fa-pencil': function (event, template) {
-        Session.set( "editAdmissionForm", true );
+        Session.set("editAdmissionForm", true);
         template.editMode.set(!template.editMode.get());
     },
     'click .visit': function (event, template) {
@@ -125,7 +128,7 @@ Template.ViewAdmission.events({
 Template.invoice.onCreated(function () {
     var self = this;
     self.autorun(function () {
-         var id = FlowRouter.getParam('id');
+        var id = FlowRouter.getParam('id');
         self.subscribe('Rooms')
         self.subscribe('Beds')
         //self.subscribe('compAdmission', id);
@@ -134,7 +137,7 @@ Template.invoice.onCreated(function () {
 
 Template.invoice.helpers({
 
-    grandTotal:function(adm){
+    grandTotal: function (adm) {
 
         // bedStayTotal = adm.bedStaysObj().total;
         // //console.log(adm)
@@ -153,7 +156,7 @@ Template.invoice.helpers({
 
 AutoForm.hooks({
     editInvoiceForm: {
-        
+
         formToDoc: function (doc) {
             console.log(doc)
             doc.admission = FlowRouter.getParam('id');
@@ -166,23 +169,37 @@ AutoForm.hooks({
         },
     },
 
-    newTodoForm:{
+    newTodoForm: {
         formToDoc: function (doc) {
             doc.patient = getAdmission().patient
             return doc;
         },
     },
 
+    newTestResultsForm:{
+        formToDoc: function (doc) {
+            doc.patient = getAdmission().patient
+            doc.admission = getAdmission()._id;
+            return doc;
+        },
+    },    
+
     updateAdmissionForm: {
         onSuccess: function (operation, result) {
-            Session.set( "editAdmissionForm", false );
+            Session.set("editAdmissionForm", false);
             globalEdit.set(false)
         },
     }
 });
 
 Template.todosPt.helpers({
-  selector() {
-    return {patient: Session.get('adm').patient}; 
-  }
+    selector() {
+        return { patient: Session.get('adm').patient };
+    }
+});
+
+Template.testResults.helpers({
+    selector() {
+        return { admission: Session.get('adm')._id };
+    }
 });
