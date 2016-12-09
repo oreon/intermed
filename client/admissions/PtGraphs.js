@@ -1,4 +1,5 @@
 import Highcharts from 'Highcharts'
+import moment from 'moment'
 
 Template.PtGraphs.onCreated(function () {
     var self = this;
@@ -30,7 +31,8 @@ Template.PtGraphs.helpers({
 
             _.forEach(val, function (elem) {
                 if (elem.mainValue) {
-                    arr.push([elem.createdAt.getTime(), elem.mainValue])
+                    //format();
+                    arr.push([moment(elem.createdAt).format("DD-MM-YY hh:mm" ), elem.mainValue])
                     Template.instance().mapResults.get().set(key, arr);
                 }
                 else {
@@ -50,7 +52,7 @@ Template.PtGraphs.helpers({
             arr = []
             console.log("chart si " + key);
             _.forEach(vals, function (elem) {
-                arr.push([elem.createdAt.getTime(), elem.value])
+                arr.push([moment(elem.createdAt).format("DD-MM-YY hh:mm" ), elem.value])
             })
             Template.instance().mapResults.get().set(key, arr);
         })
@@ -66,25 +68,42 @@ Template.PtGraphs.helpers({
 
         Meteor.defer(function () {
 
+            data = mapResults.get(key)
+            cats = []
+
+            _.forEach(data, function (elem) {
+                cats.push(elem[0])
+            })
+
             //console.log(`${key}: ${value}`) 
             Highcharts.chart(key, {
                 title: {
                     text: key
                 },
                 xAxis: {
-                    type: 'datetime',
+                    categories: cats,
                     labels: {
-                        format: '{value:%Y-%m-%d %H:%M}',
-                        //rotation: 45,
+                        //format: '{value:%Y-%m-%d %H:%M}',
+                        rotation: 35,
                         align: 'left'
                     },
+                    //type: 'datetime',
+                    // labels: {
+                    //     format: '{value:%Y-%m-%d %H:%M}',
+                    //     rotation: 35,
+                    //     align: 'left'
+                    // },
+                    // dateTimeLabelFormats: { // don't display the dummy year
+                    //     month: '%e. %b',
+                    //     year: '%b'
+                    // },
                     title: {
-                        text: 'Date'
+                        text: 'Date Uploaded'
                     }
                 },
                 series: [{
                     type: 'line',
-                    data: mapResults.get(key)
+                    data: data
                 }]
             });
             //}
