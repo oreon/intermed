@@ -28,39 +28,7 @@ Template.Patient.helpers({
 
     isAdmitted: function () {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') })
-        console.log(adm)
-
-        let testResults = TestResults.find({ patient: FlowRouter.getParam('id') }).fetch();
-        //console.log(testResults)
-        testsByType = _.groupBy(testResults, function (a) { return a.labTest })
-        // console.log(testsByType)
-        let subTests = [];
-
-        _.forOwn(testsByType, function (val, key) {
-
-            _.forEach(val, function (elem) {
-                if(elem.mainValue) {
-                    console.log(elem.mainValue + " " + elem.createdAt)
-                }
-                else{ 
-                    subTests.push( elem.values);
-                }
-            })
-
-        });
-        subTests = _.flatten(subTests)
-        console.log(subTests)
-
-        testsByType = _.groupBy(subTests, function (a) { return a.name }) 
-
-         _.forOwn(testsByType, function (vals, key) {
-             console.log("chart si " + key);
-            _.forEach(vals, function (elem) {
-                console.log(elem.value + " " +  elem.createdAt)
-            })   
-        })    
-             
-
+        //console.log(adm)
         return !!adm
     },
 

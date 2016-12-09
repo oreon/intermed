@@ -33,6 +33,7 @@ dataMonthlyPd = [
 ]
 
 Template.Analytics.helpers({
+    
     invoicesChart: function () {
         Meteor.defer(function () {
             Highcharts.chart('invDaily', {

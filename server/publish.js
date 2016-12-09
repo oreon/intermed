@@ -242,6 +242,13 @@ Meteor.publishComposite('compAdmission', function (id) {
                         { limit: 1/*, fields: {profile: 1}*/});
                 },
             },
+            {
+                find: function (adm) {
+                    return TestResults.find(
+                        {admission: adm._id},
+                        { limit: 1000/*, fields: {profile: 1}*/});
+                },
+            },
             //  {
             //     find: function (adm) {
             //         return Beds.find(

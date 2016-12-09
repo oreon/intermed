@@ -10,6 +10,7 @@
 		
 		<li><a data-toggle="tab" href="#todos">Todos</a></li>
 		<li><a data-toggle="tab" href="#testResults">Tests</a></li>
+		<li><a data-toggle="tab" href="#ptGraphs">Graphs</a></li>
 
 		<li><a data-toggle="tab" href="#invoice">Invoice</a></li>
 	</ul>
@@ -91,6 +92,10 @@
 			{{> testResults var=admission}}
 		</div>
 
+		<div id="ptGraphs" class="tab-pane fade">
+			{{> PtGraphs admission=admission}}
+		</div>
+
 	</div>
 
 	{{/if}}
@@ -139,4 +144,13 @@
 	{{> tabular table=TabularTables.TestResultsAdmTbl selector=selector class="table table-striped table-bordered table-condensed"}}
 
 	{{> quickForm collection="TestResults" id="newTestResultsForm" type="insert" }} 
+</template>
+
+<template name="PtGraphs">
+	{{createChartData admission}}
+	{{#each chartNames}}
+		<div id={{.}}>{{drawChart .}}</div>
+		<hr/>
+		<br/>
+	{{/each}}
 </template>

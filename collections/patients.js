@@ -912,6 +912,9 @@ Admissions.helpers({
         inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
         return inv;
     },
+    testResults: function(){
+        return TestResults.find({ admission: this._id });
+    },
     bedStaysObj: function() {
         stays = []
         total = 0;
