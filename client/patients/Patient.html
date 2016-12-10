@@ -1,32 +1,46 @@
 <template name="Patient">
 
-    <article class="recipe">
-        <h3> {{patient.fullName}}  </h3>
+	<article class="recipe">
+		<h3> {{patient.fullName}} </h3>
 
-            <p>
-                {{#each encounters}}
+		{{> quickForm collection="Encounters" id="newEncounterForm" type="insert" }} 
+
+
+         {{#if isAdmitted}}
+		<button class="btn-deny viewAdmission">Go to Admission</button>
+		<button class="btn-deny visit">Visit</button> 
+        {{else}}
+		<button class="btn-primary admit">Admit</button>
+         {{/if}}
+
+         {{#if isSet  'editEncounterForm'}} 
+            {{> quickForm collection="Encounters" id="newEncounterForm" type="insert" }} 
+		 {{else}} 
+            <button class="btn-primary encounter">New Encounter</button>
+			<p>
+			{{#each encounters}} 
                 {{reason}}
-                {{script.notes}} <br/>
-                {{#each script.items}}
-                {{ drugName(drug) }} {{frequency}} - {{amount}}
-                {{/each}}
-                <br/>
-                {{/each}}
-            </p>
-            <a href="recipe/{{_id}}"> Viw Details</a>
+                {{> scriptTbl script = script}}
+                <br/> 
+            {{/each}}
+		    </p>
+         {{/if}}
 
-            {{#if isAdmitted}}
-                <button class="btn-deny viewAdmission">Go to Admission</button>
+		<i class="fa fa-trash"></i>
+		<i class="fa fa-pencil"></i>
+	</article>
 
-                <button class="btn-deny visit">Visit</button>                
-            {{else}}
-                <button class="btn-primary admit">Admit</button>
+</template>
 
-                <button class="btn-primary encounter">Encounter</button>
-            {{/if}}
-        
-        <i class="fa fa-trash"></i>
-        <i class="fa fa-pencil"></i>
-    </article>
-
+<template name="scriptTbl">
+	{{script.notes}} <br/>
+	<table class="table table-condensed">
+		{{#each script.items}}
+		<tr>
+			<td>{{ drugName(drug) }}</td>
+			<td> {{frequency}}</td>
+			<td> {{amount}} </td>
+		</tr>
+		{{/each}}
+	</table>
 </template>

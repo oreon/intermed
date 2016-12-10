@@ -5,8 +5,8 @@
 	<h4> {{admission.reason }} </h4>
 
 	<ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#script">Visits</a></li>
-		<li><a data-toggle="tab" href="#visits">Script</a></li>
+		<li class="active"><a data-toggle="tab" href="#visits">Visits</a></li>
+		<li><a data-toggle="tab" href="#script">Script</a></li>
 		
 		<li><a data-toggle="tab" href="#todos">Todos</a></li>
 		<li><a data-toggle="tab" href="#testResults">Tests</a></li>
@@ -24,29 +24,35 @@
 		<div id="visits" class="tab-pane fade">
 			<article class="recipe">
 
-				{{#if isEditMode }} {{> updateAdmissionForm var=admission }} {{else}} {{#if admission.eligibleForDischarge}}
-				<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+				{{#if isEditMode }} 
+					{{> updateAdmissionForm var=admission }} 
+				{{else}} 
+					{{#if admission.eligibleForDischarge}}
+						<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
+						<button class="btn-deny discharge">Discharge</button> 
+					{{else}}
+						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
+					{{/if}}
 
-				<button class="btn-deny discharge">Discharge</button> {{else}}
-				<button class="btn-primary toggleDischarge">Make eligible for discharge</button> {{/if}}
+					<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
 
+					<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
 
-				<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+					<br/> Admission: {{admission.admissionNote}} <br/> Admitted on: {{datef admission.created}} <br/>
 
-				<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
+					<button class="btn visit">New Visit</button> 
 
-				<br/> Admission: {{admission.admissionNote}} <br/> Admitted on: {{datef admission.created}} <br/>
+					{{#each admission.visits}}
+					<well>
+						{{note}}
+						<!-- TODO: updatedAt should be created -->
+						<h6> {{visitCreator}} - {{datef updatedAt}} </h6>
+					</well>
+					{{/each}}
 
-				<button class="btn visit">New Visit</button> {{#each admission.visits}}
-				<well>
-					{{note}}
-					<!-- TODO: updatedAt should be created -->
-					<h6> {{visitCreator}} - {{datef updatedAt}} </h6>
-				</well>
-				{{/each}}
-
-				<i class="fa fa-trash"></i>
-				<i class="fa fa-pencil"></i> {{/if}}
+					<i class="fa fa-trash"></i>
+					<i class="fa fa-pencil"></i> 
+				{{/if}}
 
 			</article>
 		</div>

@@ -157,6 +157,7 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
+
 InvoiceSchema = new SimpleSchema([BaseSchema, {
     admission: {
         type: String,
@@ -240,6 +241,46 @@ BedSchema = new SimpleSchema([BaseSchema, {
     },
 }
 ])
+
+
+ImagingSchema = new SimpleSchema({
+    type: {
+        type: String,
+        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
+    },
+    details: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    }
+})
+
+LabsAndImagingSchema = new SimpleSchema({
+    tests: {
+        type: [String],
+        optional: true,
+        autoform: {
+            type: "select2",
+            afFieldInput: {
+                multiple: true
+            },
+            options: function () {
+                return LabTests.find().map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+    imagings: {
+        type: [ImagingSchema],
+        optional: true,
+    },
+})
+
+
+/////// facility schema //////
 
 RoomSchema = new SimpleSchema([BaseSchema, {
     name: { type: String },
@@ -538,14 +579,8 @@ EncounterSchema = new SimpleSchema({
 
     patient: {
         type: String,
-        optional: true,
         autoform: {
-            type: "select",
-            options: function () {
-                return Patients.find().map(function (c) {
-                    return { label: c.firstName, value: c._id };
-                });
-            }
+            type: "hidden",
         }
     },
     reason: {
@@ -559,25 +594,13 @@ EncounterSchema = new SimpleSchema({
         type: ScriptSchema,
         optional: true,
     },
-    tests: {
-        type: [TestResultsSchema],
+    labsAndImages: {
+        type: [LabsAndImagingSchema],
         optional: true,
-    }
+    },
 })
 
-ImagingSchema = new SimpleSchema({
-    type: {
-        type: String,
-        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
-    },
-    details: {
-        type: String,
-        optional: true,
-        autoform: {
-            type: "textarea"
-        }
-    }
-})
+
 
 VisitSchema = new SimpleSchema([BaseSchema, {
     note: {
@@ -587,21 +610,9 @@ VisitSchema = new SimpleSchema([BaseSchema, {
             type: "textarea"
         }
     },
-    tests: {
-        type: [String],
-        optional: true,
-        autoform: {
-            type: "select2",
-            afFieldInput: {
-                multiple: true
-            },
-            options: function () {
-                return LabTests.find().map(function (c) {
-                    return { label: c.name, value: c.name };
-                });
-            }
-        }
-    },
+
+
+ 
     // testResults:{
     //     type: String,
     //     optional: true,
@@ -620,10 +631,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     //             this.unset();
     //         }
     //     }    
-    imagings: {
-        type: [ImagingSchema],
-        optional: true,
-    },
+    
     createdBy: {
         type: String,
         autoValue: function () { return this.userId },
@@ -698,6 +706,10 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
     script: {
         type: ScriptSchema,
+        optional: true,
+    },
+    labsAndImages: {
+        type: [LabsAndImagingSchema],
         optional: true,
     },
     tests: {
@@ -854,7 +866,7 @@ Patients.helpers({
         return null
     },
     encounters: function () {
-        return PtEncounters.find({ patient: this._id });
+        return Encounters.find({ patient: this._id });
     },
     testResults: function () {
         TestResults.find({ patient: this._id });

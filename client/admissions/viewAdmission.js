@@ -182,7 +182,20 @@ AutoForm.hooks({
             doc.admission = getAdmission()._id;
             return doc;
         },
+         
     },    
+
+    newEncounterForm:{
+        formToDoc: function (doc) {
+            console.log(getCurrentPatient());
+            doc.patient = getCurrentPatient();
+            return doc;
+        },
+         onSuccess: function (operation, result) {
+            Session.set("editEncounterForm", false);
+        },
+        
+    }, 
 
     updateAdmissionForm: {
         onSuccess: function (operation, result) {

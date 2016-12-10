@@ -10,18 +10,18 @@ Template.Patient.onCreated(function () {
         self.subscribe('compAdmissions')
         // self.subscribe('TestResults')
         //self.subscribe('Encounters')
+        Session.set('patient', id)
     });
 });
 
 Template.Patient.helpers({
 
     patient: function () {
-        //console.log(this)
         return Patients.findOne(FlowRouter.getParam('id'));
     },
 
     encounters: function () {
-        return PtEncounters.find({ patient: FlowRouter.getParam('id') });
+        return Encounters.find({ patient: FlowRouter.getParam('id') });
     },
 
     drugName: (id) => Drugs.findOne({ _id: id }).name,
@@ -32,35 +32,6 @@ Template.Patient.helpers({
         return !!adm
     },
 
-    createChart: function () {
-        //     let testResults = TestResults.find({patient:FlowRouter.getParam('id')}).fetch();
-        //    // let testResults = patient.testResults()
-        //     testsByType = _.groupBy(testResults, function (a) { return a.labTest })
-        //     console.log(testsByType)
-        // _.forEach(){
-        //     testsByType,
-        //         function (result) {
-        //             let tasksData = [{
-        //                 y: result.,
-        //                 name: "Value"
-        //             }, {
-        //                 x: allTasks - incompleteTask,
-        //                 name: "Date"
-        //             }];
-        //             // Use Meteor.defer() to craete chart after DOM is ready:
-        //             Meteor.defer(function () {
-        //                 // Create standard Highcharts chart with options:
-        //                 Highcharts.chart('chart', {
-        //                     series: [{
-        //                         type: 'line',
-        //                         data: tasksData
-        //                     }]
-        //                 });
-        //             });
-        //         }
-
-        // }
-    }
 })
 
 Template.Patient.events({
@@ -74,7 +45,8 @@ Template.Patient.events({
     },
 
     'click .encounter': function (event, template) {
-        FlowRouter.go('newEncounter', { id: FlowRouter.getParam('id') })
+        Session.set('editEncounterForm', true)
+        //FlowRouter.go('newEncounter', { id: FlowRouter.getParam('id') })
     },
     'click .visit': function (event, template) {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') });
