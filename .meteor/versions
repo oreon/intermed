@@ -46,6 +46,7 @@ erasaur:meteor-lodash@4.0.0
 es5-shim@4.6.15
 fastclick@1.0.13
 fortawesome:fontawesome@4.7.0
+forwarder:autoform-wizard@0.9.1
 fourseven:scss@3.8.1
 geojson-utils@1.0.10
 gwendall:auth-client-callbacks@0.1.0

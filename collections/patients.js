@@ -263,12 +263,9 @@ LabsAndImagingSchema = new SimpleSchema({
         optional: true,
         autoform: {
             type: "select2",
-            afFieldInput: {
-                multiple: true
-            },
             options: function () {
                 return LabTests.find().map(function (c) {
-                    return { label: c.name, value: c.name };
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -373,11 +370,6 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "hidden",
         },
-        //  autoValue: function() {
-        //     if (this.isInsert) {
-        //         return Session.get('patient');
-        //     }
-        //  }
     },
 
     admission: {
@@ -386,11 +378,6 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "hidden",
         },
-        //  autoValue: function() {
-        //     if (this.isInsert) {
-        //         return Session.get('adm')._id;
-        //     }
-        //  }
     },
 
     labTest: {
@@ -415,12 +402,12 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
 
 DrugAllergySchema = new SimpleSchema([BaseSchema, {
     drug: {
-        type: [String],
+        type: String,
         autoform: {
             type: "select",
             options: function () {
                 return Drugs.find().map(function (c) {
-                    return { label: c.name, value: c.name };
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -434,17 +421,13 @@ DrugAllergySchema = new SimpleSchema([BaseSchema, {
     }
 }])
 
-Immunizations = new SimpleSchema([BaseSchema, {
-    drug: {
-        type: [String],
-        autoform: {
-            type: "select",
-            options: function () {
-                return Drugs.find().map(function (c) {
-                    return { label: c.name, value: c.name };
-                });
-            }
-        }
+ImmunizationSchema = new SimpleSchema([BaseSchema, {
+    vaccine: {
+        type: String,
+        allowedValues: ['BCG','DPT', 'HepA&B','HPV', 'Flu',  'Tetanus Toxoid', 'Pneumonia'],
+        // autoform: {
+        //     type: "select2"
+        // }
     },
 }])
 
@@ -480,13 +463,8 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         }
     },
     drugAllergies: { type: [DrugAllergySchema] },
-    bed: {
-        type: String,
-        optional: true,
-        autoform: {
-            type: "hidden",
-        }
-    },
+    immunizations: {type: [ImmunizationSchema]},
+    orderedLabsAndImages:{type:LabsAndImagingSchema},
 
 }])
 
@@ -501,7 +479,7 @@ DrugSchema = new SimpleSchema([BaseSchema, {
 FrequencySchema = new SimpleSchema({
     every: {
         type: Number,
-        label: "Once Every"
+        label: "Numbers"
     },
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
@@ -674,8 +652,6 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     dischargeDate: {
         type: Date,
         optional: true,
-
-
         autoform: {
             type: "hidden"
         }
@@ -801,7 +777,12 @@ TodoSchema = new SimpleSchema([BaseSchema, {
 
 
 
-
+Patients.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    }
+})
 
 Admissions.allow({
     insert: (userId, doc) => !!userId,
@@ -825,6 +806,13 @@ Patients.allow({
 })
 
 TestResults.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    }
+})
+
+Encounters.allow({
     insert: (userId, doc) => !!userId,
     update: function (userId, doc) {
         return !!userId
@@ -899,8 +887,21 @@ Todos.helpers({
         user = Meteor.users.findOne({ _id: this.createdBy })
         return user.profile.firstName + " " + user.profile.lastName;
     }
-
 })
+
+
+Encounters.helpers({
+    patientName: function () {
+        pt = Patients.findOne({ _id: this.patient })
+        return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
+    },
+    creator: function () {
+        user = Meteor.users.findOne({ _id: this.createdBy })
+        return user.profile.firstName + " " + user.profile.lastName;
+    },
+})
+
+
 
 TestResults.helpers({
     labTestObj: function () {

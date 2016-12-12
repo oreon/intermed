@@ -18,7 +18,7 @@
 	<div class="tab-content">
 		<div id="script" class="tab-pane fade in active">
 			<h3>Current Order </h3>
-			{{> updateScriptForm var=admission}}
+			{{> updateScriptForm var=admission }} 
 		</div>
 
 		<div id="visits" class="tab-pane fade">
@@ -122,12 +122,18 @@
 </template>
 
 <template name="updateScriptForm">
-	<article class="recipe">
-		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var template="plain"}} {{> afQuickField
+
+	{{>scriptTbl script=var.script}}
+		<hr/>
+	
+		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var 
+			template="plain"}}
+		 {{> afQuickField
 		name='script'}}
 
-		<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
-	</article>
+		<button type="submit" class="btn btn-primary">Update</button> 
+		{{/autoForm}}
+	
 </template>
 
 

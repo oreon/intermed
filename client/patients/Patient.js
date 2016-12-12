@@ -6,11 +6,13 @@ Template.Patient.onCreated(function () {
         var id = FlowRouter.getParam('id');
         self.id = id;
         self.subscribe('compPt', id);
-        self.subscribe('Drugs')
+        //self.subscribe('Drugs')
         self.subscribe('compAdmissions')
         // self.subscribe('TestResults')
         //self.subscribe('Encounters')
         Session.set('patient', id)
+        Session.set('adm',  null)
+        Session.set('editEncounterForm', false)
     });
 });
 
@@ -23,8 +25,6 @@ Template.Patient.helpers({
     encounters: function () {
         return Encounters.find({ patient: FlowRouter.getParam('id') });
     },
-
-    drugName: (id) => Drugs.findOne({ _id: id }).name,
 
     isAdmitted: function () {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') })
@@ -43,11 +43,14 @@ Template.Patient.events({
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') });
         FlowRouter.go('viewAdmission', { id: adm._id })
     },
-
     'click .encounter': function (event, template) {
         Session.set('editEncounterForm', true)
         //FlowRouter.go('newEncounter', { id: FlowRouter.getParam('id') })
     },
+      'click .cancelEditEncounter': function (event, template) {
+        Session.set('editEncounterForm', false)
+    },
+    
     'click .visit': function (event, template) {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') });
         FlowRouter.go('visit', { id: adm._id })
@@ -59,5 +62,43 @@ Template.Patient.events({
     'click .fa-pencil': function (event, template) {
         FlowRouter.go('editPatient', { id: FlowRouter.getParam('id') })
     },
+    'click .deleteAllergy': function (event, template) {
+        event.preventDefault();
+        drg = event.currentTarget.name ;
+        console.log(drg)
+        Patients.update( 
+            {"_id": FlowRouter.getParam('id') },
+            {"$pull": { "drugAllergies" : {"drug": drg} } } ,
+            function (success) {
+               console.log(error);
+            },
+            function (error) {
+               console.log(error);
+            }
+        );
+        
+       
+        //db.patients.update( {"_id": 'kTQ4Enhhy6P8MHdCP' },{"$pull": { "drugAllergies" : {"drug": 'SdtFYTYnuxMkkPFAE'} } } );
+ 
+    } 
+   
 
+});
+
+
+Template.basicWizard.helpers({
+  steps: function() {
+    return [{
+      id: 'script',
+      title: 'script',
+      schema: ScriptSchema
+    },{
+      id: 'labs',
+      title: 'Labs And Images',
+      schema: LabsAndImagingSchema,
+      onSubmit: function(data, wizard) {
+        console.log(wizard)
+      }
+    }]
+  }
 });

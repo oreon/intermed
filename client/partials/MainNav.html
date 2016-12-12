@@ -1,15 +1,19 @@
 <template name="MainNav">
-	
-		<ul>
+
+	<div class="collapse navbar-collapse" >
+
+		<ul class="nav navbar-nav">
 			{{#if currentUser}}
 			<li><a href="/patients"><i class="fa fa-list"></i>Patients</a></li>
 			<li><a href="/admissions"><i class="fa fa-map-o"></i>Admissions</a></li>
 			<li><a href="/mytodos"><i class="fa fa-shopping-cart"></i>My Todos</a></li>
 
-			<li class="logout"><i class="fa fa-pencil"></i>Logout {{user}}</li>
+		
 			{{else}}
-			<li class="login-toggle"><a href="/login">Login/Sign-up </a></li>
+			<li ><a href="/login">Login/Sign-up </a></li>
 			{{/if}}
 		</ul>
-	
+	</div>
+
+
 </template>

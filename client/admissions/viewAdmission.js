@@ -176,26 +176,29 @@ AutoForm.hooks({
         },
     },
 
-    newTestResultsForm:{
+    newTestResultsForm: {
+        
         formToDoc: function (doc) {
-            doc.patient = getAdmission().patient
-            doc.admission = getAdmission()._id;
+             adm = Session.get('adm');
+            patient = Session.get('patient')
+            doc.patient = patient
+            if(!!adm)
+                doc.admission = adm._id;
             return doc;
         },
-         
-    },    
+    },
 
-    newEncounterForm:{
+    newEncounterForm22: {
         formToDoc: function (doc) {
-            console.log(getCurrentPatient());
-            doc.patient = getCurrentPatient();
+            //console.log(getCurrentPatient());
+            doc.patient = FlowRouter.getParam('id') //getCurrentPatient();
             return doc;
         },
-         onSuccess: function (operation, result) {
+        onSuccess: function (operation, result) {
             Session.set("editEncounterForm", false);
         },
-        
-    }, 
+
+    },
 
     updateAdmissionForm: {
         onSuccess: function (operation, result) {
@@ -213,6 +216,12 @@ Template.todosPt.helpers({
 
 Template.testResults.helpers({
     selector() {
-        return { admission: Session.get('adm')._id };
+        adm = Session.get('adm');
+        patient = Session.get('patient')
+        if (adm && adm != null)
+            return { admission: adm._id };
+        else
+            return { patient: patient };
+
     }
 });
