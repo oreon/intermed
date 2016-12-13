@@ -192,9 +192,11 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     },
     amountPaid: { type: Number, optional: true },
     datePaid: { type: Date, optional: true },
-    paymentType: { type: String, 
+    paymentType: { 
+        type: String, 
         allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], 
-        optional: true }
+        optional: true 
+    }
 
 }])
 
@@ -798,7 +800,6 @@ TodoSchema = new SimpleSchema([BaseSchema, {
     },
     title: {
         type: String,
-        label: "Name",
     },
     description: {
         type: String,

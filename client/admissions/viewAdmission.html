@@ -2,13 +2,15 @@
 	{{#if Template.subscriptionsReady}}
 
 	<h3> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h3>
-	<h4> {{admission.reason }} </h4>
+	<h4> {{admission.reason }}   Admitted on: {{datef admission.created}} </h4> 
+	<button class="btn visit">New Visit</button> 
+	<button class="btn btn-primary" 
+				data-toggle="collapse" data-target="#editCondition">{{admission.condition}}</button>
 
-	{{#autoForm collection="Admissions" id="updateMyConditionForm" type="update" doc=admission 
-	autosave="false"}}
-		{{> afQuickField name='condition' options="allowed" }} 
-		<button type="submit" class="btn btn-primary">Update</button> 
-	{{/autoForm}}
+	<div class="collapse" id="editCondition">
+	{{> quickForm collection="Admissions" id="editConditionForm" type="update" doc=admission 
+	autosave=true fields="condition"}} 
+	</div>
 			 
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#visits">Visits</a></li>
@@ -27,7 +29,7 @@
 
 		<div id="visits" class="tab-pane fade in active">
 			<article class="recipe">
-
+				<br/>
 				{{#if isEditMode }} 
 					{{> updateAdmissionForm var=admission }} 
 				{{else}} 
@@ -42,17 +44,17 @@
 
 					<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
 
-					<br/> Admission: {{admission.admissionNote}} <br/> Admitted on: {{datef admission.created}} <br/>
-
-					<button class="btn visit">New Visit</button> 
-
-					{{#each admission.visits}}
-					<well>
-						{{note}}
-						<!-- TODO: updatedAt should be created -->
-						<h6> {{visitCreator}} - {{datef updatedAt}} </h6>
-					</well>
-					{{/each}}
+					<br/> <b>Admission Note</b> {{{admission.admissionNote}}}
+					<hr/>
+					<div class="panel-group">
+						{{#each admission.visits}}
+						
+						<div class="panel panel-default">
+							<div class="panel-body">{{{note}}}</div>
+							<div class="panel-footer">{{visitCreator}} - {{datef updatedAt}}</div>
+						</div>
+						{{/each}}
+					</div>
 
 					<i class="fa fa-trash"></i>
 					<i class="fa fa-pencil"></i> 
@@ -73,7 +75,7 @@
 		<div id="invoice" class="tab-pane fade">
 			<br/>
 			<table class="table table-striped table-bordered table-condensed">
-				<tr style="background:#88a; color: #ffd">
+				<tr style="background:navy; color: #ffd">
 					<th>Bed</th>
 					<th> From</th>
 					<th> To</th>
@@ -99,7 +101,41 @@
 				</tr>
 			</table>
 
-			{{> quickForm collection="Invoices" id="editInvoiceForm" type=formType doc=currentInv autosave=true }} Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
+			<table class="table table-striped table-bordered table-condensed">
+				<tr style="background:navy; color: #ffe">
+					<th>Service</th>
+					<th> Units</th>
+					<th> Price</th>
+					<th> Date </th>
+					<th> Total</th>
+				</tr>
+				{{#each admission.invoice.items}}
+				<tr>
+					<td>{{service}}</td>
+					<td> {{units}} </td>
+					<td> {{appliedPrice}} </td>
+					<td> {{datef updatedAt}} </td>
+					<td> {{total}} </td>
+				</tr>
+				{{/each}}
+				<tr>
+					<td colspan="6">
+						<b> Total : {{ admission.invoice.total }}</b>
+					</td>
+				</tr>
+			</table>
+
+			{{formType}}
+
+			<button class="btn btn-primary" 
+				data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
+
+			<div class="collapse" id="editInvoice">
+				{{> quickForm collection="Invoices" id="editInvoiceForm" type=formType doc=currentInv 
+			autosave=true omitFields="amountPaid, datePaid, paymentType"}} 
+			</div>
+			<br/>
+			Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
 			<br/> Grand Total : <b> Rs {{ grandTotal admission }} </b>
 		</div>
 
@@ -162,7 +198,7 @@
 <template name="todosPt">
 	{{> tabular table=TabularTables.TodosPtTbl selector=selector class="table table-striped table-bordered table-condensed"}}
 
-	{{> quickForm collection="Todos" id="newTodoForm" type="insert" }} 
+	{{> quickForm collection="Todos" id="newTodoForm" type="insert" fields="title, description, forUser"}} 
 </template>
 
 <template name="testResults">

@@ -58,15 +58,13 @@ Template.ViewAdmission.helpers({
 
     currentInv: function () {
         adm = getAdmission()
-        //console.log(adm)
-        if (adm) {
-            let currentSchedule = adm.invoice()
-            if (currentSchedule) {
-                Template.instance().formType.set('update');
-                //console.log(currentSchedule)
-                return currentSchedule;
-            }
 
+        if (adm) {
+            let current = adm.invoice()
+            if (current) {
+                Template.instance().formType.set('update');
+                return current;
+            }
         }
     },
 
