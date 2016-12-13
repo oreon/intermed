@@ -26,7 +26,6 @@ Template.PtGraphs.helpers({
 
         _.forOwn(testsByType, function (val, key) {
 
-            console.log(key);
             arr = []
 
             _.forEach(val, function (elem) {
@@ -42,20 +41,40 @@ Template.PtGraphs.helpers({
         });
 
         //console.log(Template.instance().mapResults.get())
-
         subTests = _.flatten(subTests)
-        console.log(subTests)
+        //console.log(subTests)
 
         testsByType = _.groupBy(subTests, function (a) { return a.name })
 
         _.forOwn(testsByType, function (vals, key) {
             arr = []
-            console.log("chart si " + key);
+            //console.log("chart si " + key);
             _.forEach(vals, function (elem) {
                 arr.push([moment(elem.createdAt).format("DD-MM-YY hh:mm" ), elem.value])
             })
             Template.instance().mapResults.get().set(key, arr);
         })
+
+
+         msmts = _.groupBy(adm.measurements, function (a) { return a.measurement })
+    
+        _.forOwn(msmts, function (val, key) {
+
+            arr = []
+
+            _.forEach(val, function (elem) {
+                if (elem.mainValue) {
+                    //format();
+                    arr.push([moment(elem.updatedAt).format("DD-MM-YY hh:mm" ), elem.mainValue])
+                    Template.instance().mapResults.get().set(key, arr);
+                }
+                // else {
+                //     subTests.push(elem.values);
+                // }
+            })
+
+            Template.instance().mapResults.get().set(key, arr);
+        });
     },
 
     chartNames: function () {
@@ -103,7 +122,8 @@ Template.PtGraphs.helpers({
                 },
                 series: [{
                     type: 'line',
-                    data: data
+                    data: data,
+                    name: key,
                 }]
             });
             //}

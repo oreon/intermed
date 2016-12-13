@@ -4,24 +4,28 @@
 	<h3> <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{patient.currentBed.fullName}} </h3>
 	<h4> {{admission.reason }} </h4>
 
+	{{#autoForm collection="Admissions" id="updateMyConditionForm" type="update" doc=admission 
+	autosave="false"}}
+		{{> afQuickField name='condition' options="allowed" }} 
+		<button type="submit" class="btn btn-primary">Update</button> 
+	{{/autoForm}}
+			 
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#visits">Visits</a></li>
 		<li><a data-toggle="tab" href="#script">Script</a></li>
 		
 		<li><a data-toggle="tab" href="#todos">Todos</a></li>
 		<li><a data-toggle="tab" href="#testResults">Tests</a></li>
-		<li><a data-toggle="tab" href="#ptGraphs">Graphs</a></li>
+		<li><a data-toggle="tab" href="#measurements">Measurements</a></li>
 
+		<li><a data-toggle="tab" href="#ptGraphs">Graphs</a></li>
 		<li><a data-toggle="tab" href="#invoice">Invoice</a></li>
 	</ul>
 
 	<div class="tab-content">
-		<div id="script" class="tab-pane fade in active">
-			<h3>Current Order </h3>
-			{{> updateScriptForm var=admission }} 
-		</div>
+		
 
-		<div id="visits" class="tab-pane fade">
+		<div id="visits" class="tab-pane fade in active">
 			<article class="recipe">
 
 				{{#if isEditMode }} 
@@ -55,6 +59,15 @@
 				{{/if}}
 
 			</article>
+		</div>
+
+		<div id="script" class="tab-pane fade ">
+			<h3>Current Order </h3>
+			{{> updateScriptForm var=admission }} 
+		</div>
+
+		<div id="measurements" class="tab-pane fade ">
+			{{> measurementTmpl admission=admission }} 
 		</div>
 
 		<div id="invoice" class="tab-pane fade">
@@ -156,6 +169,32 @@
 	{{> tabular table=TabularTables.TestResultsAdmTbl selector=selector class="table table-striped table-bordered table-condensed"}}
 
 	{{> quickForm collection="TestResults" id="newTestResultsForm" type="insert" }} 
+</template>
+
+<template name="measurementTmpl">
+    {{#if admission.measurements}} 
+        <table class="table table-striped table-bordered table-condensed">
+            <tr style="background:#88a; color: #ffd">
+                <th>Name</th>
+                <th>Value</th>
+				<th>Created</th>
+				<th> </th>
+            </tr>
+            {{#each admission.measurements}}
+            <tr>
+                <td>{{measurement}}</td>
+                <td> {{mainValue}} </td>
+				 <td> {{datef updatedAt}} </td>
+                <td> <button class="btn btn-deny deleteAllergy" name='{{drug}}' > Delete </button> </td>
+            </tr>
+            {{/each}} 
+        </table>
+    {{else}}
+        <h3> No Measurements recorded yet. </h3>
+    {{/if}}
+
+    {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
+      doc=admission scope="measurements"}}
 </template>
 
 <template name="PtGraphs">

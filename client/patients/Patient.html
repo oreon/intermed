@@ -2,13 +2,27 @@
 
 	<article class="recipe">
 		<h3> {{patient.fullName}} </h3>
-
-        {{#if isAdmitted}}
+        <h5> 
+        {{#each patient.chronicConditions}}
+            {{name}}
+        {{/each}} 
+        </h5>
+         {{#if isAdmitted}}
 		<button class="btn-deny viewAdmission">Go to Admission</button>
 		<button class="btn-deny visit">Visit</button> 
         {{else}}
 		<button class="btn-primary admit">Admit</button>
          {{/if}}
+        <br/>
+        <panel>
+            Social History : {{patient.socialHistory}}
+         </panel> 
+         <br/>
+         <well>
+            Medical History : {{patient.pastMedicalHistory}}
+         </well>  
+
+       
 
     <ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#enc">Encounters</a></li>
@@ -72,26 +86,47 @@
 
 
 <template name="scriptTbl">
+    
     {{# if script.items}} 
+    <div class="table-responsive">
 	{{script.notes}} <br/>
 
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table">
 		<tr style="background:#88a; color: #ffd">
-			<th>Drug</th>
+			<th> Drug</th>
+            <th> Amount</th>
 			<th> Frequency</th>
-			<th> Amount</th>
-
+            <th> Duration </th>
+ 			<th> Instructions </th>
+            <th> End Date </th>
+            <th> Units </th>
 		</tr>
-        
         {{#each script.items}}
         <tr>
             <td>{{ drugName drug }}</td>
-            <td> {{frequency.every}} / {{frequency.type}}</td>
             <td> {{amount}} </td>
+            <td> {{frequency.every}} / {{frequency.type}}</td>
+            <td> {{duration.for}} {{duration.type}}(s)</td>
+            <td> {{instructions}}</td>
+            <td> {{ endDate . }}</td>
+            <td> {{unitsNeeded . }}</td>
         </tr>
         {{/each}} 
        
 	</table>
+    </div>
+
+    {{#each script.items}}
+    {{ drugName drug }}
+    {{#with item}}  
+    <ul>
+    {{#each calcSchedule .}}
+    <li> {{ drugName item.drug }} {{.}} </li>    
+    {{/each}} 
+    </ul>
+    {{/with}}
+    {{/each}}
+
      {{/if}}
 </template>
 

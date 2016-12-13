@@ -66,6 +66,7 @@ localstorage@1.0.12
 logging@1.1.16
 matb33:bootstrap-base@10.0.0
 matb33:bootstrap-glyphicons@10.0.0
+matb33:collection-hooks@0.8.4
 mdg:validated-method@1.1.0
 mdg:validation-error@0.5.1
 meteor@1.6.0
@@ -142,6 +143,7 @@ templating-runtime@1.2.15
 templating-tools@1.0.5
 themeteorchef:bert@2.1.1
 tmeasday:test-reporter-helpers@0.2.1
+todda00:collection-revisions@0.2.1
 tracker@1.1.1
 twbs:bootstrap@3.3.6
 ui@1.0.12

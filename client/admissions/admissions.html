@@ -3,20 +3,14 @@
     {{#if Template.subscriptionsReady}}
         {{# each wards }}
             <article class="recipe">
-                <h2> {{name}} </h2>
-
+                <h2> Ward {{name}} </h2>
+                <hr/>
                 {{#each rooms}}
-
                     <h3> {{name}} </h3>
-
                     {{#each rbeds}}
-
                         {{> Admitted }}
-
                     {{/each}}
-
                     <hr/>
-
                 {{/each}}
             </article>
         {{/each}}
@@ -27,10 +21,13 @@
 
 <template name="Admitted">
     {{#if bedHasPatient}}
-        <span style="background-color: #ffdddd">
-             BED {{name}} {{bedpatient.firstName}}
+        <div style="background-color: {{color}} ; padding:5px;  border:1px solid red">
+             <h4> {{bedpatient.fullName}}  -  BED {{name}} </h4>
+              <br/>
+             {{admission.reason}}
+             <br/>
             <a href="viewAdmission/{{admission._id}}"> View </a>
-        </span>
+        </div>
         &nbsp;
     {{/if}}
 </template>

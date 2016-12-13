@@ -192,7 +192,9 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     },
     amountPaid: { type: Number, optional: true },
     datePaid: { type: Date, optional: true },
-    paymentType: { type: String, allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], optional: true }
+    paymentType: { type: String, 
+        allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], 
+        optional: true }
 
 }])
 
@@ -262,7 +264,7 @@ LabsAndImagingSchema = new SimpleSchema({
         type: [String],
         optional: true,
         autoform: {
-            type: "select2",
+            type: "select-checkbox",
             options: function () {
                 return LabTests.find().map(function (c) {
                     return { label: c.name, value: c._id };
@@ -371,7 +373,6 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             type: "hidden",
         },
     },
-
     admission: {
         type: String,
         optional: true,
@@ -379,7 +380,6 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             type: "hidden",
         },
     },
-
     labTest: {
         type: String,
         optional: false,
@@ -392,13 +392,20 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-
     mainValue: { type: Number, optional: true },
-
     values: { type: [TestResultValue], optional: true }
 }
-
 ])
+
+MeasurementSchema = new SimpleSchema([BaseSchema, {
+    measurement: {
+        type: String,
+        optional: false,
+        allowedValues:['BP', 'Temperature', 'PO2', 'Blood Sugar' , 'Pulse', 'Breaths Per Minute' ]
+    },
+    mainValue: { type: Number, optional: true },
+    values: { type: [TestResultValue], optional: true }
+}])
 
 DrugAllergySchema = new SimpleSchema([BaseSchema, {
     drug: {
@@ -450,6 +457,10 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             type: "select-radio"
         }
     },
+    contactPhone:{
+        type: String,
+        optional: true
+    },
     chronicConditions: {
         type: [String],
         optional: true,
@@ -462,9 +473,27 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    drugAllergies: { type: [DrugAllergySchema] },
-    immunizations: {type: [ImmunizationSchema]},
-    orderedLabsAndImages:{type:LabsAndImagingSchema},
+    pastMedicalHistory:{
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea",
+        }
+    },
+     socialHistory:{
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea",
+        }
+    },
+    permanentMeds:{
+        type: [String],
+        optional: true,
+    },
+    drugAllergies: { type: [DrugAllergySchema] , optional: true},
+    immunizations: {type: [ImmunizationSchema], optional: true},
+    orderedLabsAndImages:{type:LabsAndImagingSchema, optional: true},
 
 }])
 
@@ -498,7 +527,7 @@ DurationSchema = new SimpleSchema({
 })
 
 
-ScriptItem = new SimpleSchema({
+ScriptItem = new SimpleSchema([BaseSchema,{
     drug: {
         type: String,
         optional: true,
@@ -526,8 +555,28 @@ ScriptItem = new SimpleSchema({
     quantity: { type: Number, defaultValue: 1 },
     duration: { type: DurationSchema },
     prn: { type: Boolean, optional: true, label: 'PRN (as needed) ' },
-    instructions: { type: String, optional: true }
-})
+
+    instructions: { type: String, optional: true },
+     endDate: {
+        type: Date,
+        optional: true,
+        autoValue: function () {
+         let content = this.field("duration");
+          if (content.isSet) {
+              dur = content.value;
+              Console.log(dur);
+              enddt =  new moment().add(4, 'day');
+              Console.log(enddt);
+              return enddt;
+          }else{
+              console.log("No duration")
+          }
+        },
+        autoform: {
+            readonly: true
+        }
+    },
+}])
 
 ScriptSchema = new SimpleSchema([BaseSchema, {
     notes: {
@@ -585,11 +634,9 @@ VisitSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true,
         autoform: {
-            type: "textarea"
+            type: "summernote"
         }
     },
-
-
  
     // testResults:{
     //     type: String,
@@ -655,18 +702,32 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "hidden"
         }
-
     },
     reason: {
-        type: String,//orion.attribute('summernote'),
+        type: String,
         optional: true,
-    }
-    ,
+    },
+    route: {
+        type: String,
+        label: "Route",
+        defaultValue: 'PO',
+        allowedValues: ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
+    },
+    condition:{
+        type:String,
+        //allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], 
+        allowedValues:['Recovering','Stable', 'Critical'],
+        defaultValue:'Stable',
+         autoform: {
+            type: "select-radio",
+           // options:   ['Recovering','Stable', 'Critical']
+        }
+    },
     admissionNote: {
         type: String,//orion.attribute('summernote'),
         optional: true,
         autoform: {
-            type: "textarea"
+            type: "summernote"
         }
     },
     visits: {
@@ -690,6 +751,10 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
     tests: {
         type: [TestResults],
+        optional: true,
+    },
+    measurements:{
+        type: [MeasurementSchema],
         optional: true,
     },
     eligibleForDischarge: {
@@ -744,7 +809,7 @@ TodoSchema = new SimpleSchema([BaseSchema, {
     forUser: {
         type: String,
         autoform: {
-            type: "select",
+            type: "select2",
             options: function () {
                 return Meteor.users.find().map(function (c) {
                     let name = "XXX"

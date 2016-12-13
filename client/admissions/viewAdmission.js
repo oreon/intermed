@@ -45,7 +45,9 @@ Template.ViewAdmission.helpers({
     patient: function () {
         return Patients.findOne(getAdmission().patient);
     },
-
+    conditonOpts: function(){
+        return ['Recovering','Stable', 'Critical']
+    },
     visitCreator: function () {
         try {
             return Meteor.users.findOne(this.createdBy).profile.firstName

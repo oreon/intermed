@@ -1,4 +1,10 @@
+import moment from 'moment';
+require('moment-recur');
+//var later = require('later');
 
+
+
+//import moment-recur from 'moment-recur';
 
 Template.Patient.onCreated(function () {
     var self = this;
@@ -11,7 +17,7 @@ Template.Patient.onCreated(function () {
         // self.subscribe('TestResults')
         //self.subscribe('Encounters')
         Session.set('patient', id)
-        Session.set('adm',  null)
+        Session.set('adm', null)
         Session.set('editEncounterForm', false)
     });
 });
@@ -47,10 +53,10 @@ Template.Patient.events({
         Session.set('editEncounterForm', true)
         //FlowRouter.go('newEncounter', { id: FlowRouter.getParam('id') })
     },
-      'click .cancelEditEncounter': function (event, template) {
+    'click .cancelEditEncounter': function (event, template) {
         Session.set('editEncounterForm', false)
     },
-    
+
     'click .visit': function (event, template) {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') });
         FlowRouter.go('visit', { id: adm._id })
@@ -64,41 +70,90 @@ Template.Patient.events({
     },
     'click .deleteAllergy': function (event, template) {
         event.preventDefault();
-        drg = event.currentTarget.name ;
+        drg = event.currentTarget.name;
         console.log(drg)
-        Patients.update( 
-            {"_id": FlowRouter.getParam('id') },
-            {"$pull": { "drugAllergies" : {"drug": drg} } } ,
+        Patients.update(
+            { "_id": FlowRouter.getParam('id') },
+            { "$pull": { "drugAllergies": { "drug": drg } } },
             function (success) {
-               console.log(error);
+                console.log(error);
             },
             function (error) {
-               console.log(error);
+                console.log(error);
             }
         );
-        
-       
+
+
         //db.patients.update( {"_id": 'kTQ4Enhhy6P8MHdCP' },{"$pull": { "drugAllergies" : {"drug": 'SdtFYTYnuxMkkPFAE'} } } );
- 
-    } 
-   
+
+    }
+
 
 });
 
 
+export function calcHours(type) {
+    hrs = 1;
+    if (type === 'Day')
+        hrs = 24;
+    if (type === 'Week')
+        hrs = 24 * 7;
+    if (type === 'Month')
+        hrs = 24 * 7 * 30;
+    return hrs;
+}
+
+export function findUnits(item){
+    let durationHrs = item.duration.for * calcHours(item.duration.type)
+    //console.log(durationHrs)
+    let oncePerX = calcHours(item.frequency.type) / item.frequency.every
+
+    return  durationHrs / oncePerX
+}
+
+
+Template.scriptTbl.helpers({
+
+    endDate: function (item) {
+        //TODO calculate duration from the actual start date  
+        dt =  new moment().add(item.duration.for, item.duration.type.toLowerCase());
+        return dt.format('D MMM YY hh:mm a')
+    },
+    unitsNeeded: function (item) {
+       return findUnits(item)
+    },
+    calcSchedule: function (item) {
+        total = findUnits(item)
+        listRetDates = []
+        let oncePerX = calcHours(item.frequency.type) / item.frequency.every
+
+        for (j = 0; j < total; j++) {
+            let occurence = new moment().add(oncePerX * j, 'hour')
+            listRetDates.push(occurence.format('D MMM YY hh:mm'))
+        }//
+
+        // var s = later.parse.text('every ' + oncePerX + "  hours");
+        // occurences = later.schedule(s).next(total);
+        console.log(listRetDates)
+
+        return listRetDates;
+    }
+
+})
+
 Template.basicWizard.helpers({
-  steps: function() {
-    return [{
-      id: 'script',
-      title: 'script',
-      schema: ScriptSchema
-    },{
-      id: 'labs',
-      title: 'Labs And Images',
-      schema: LabsAndImagingSchema,
-      onSubmit: function(data, wizard) {
-        console.log(wizard)
-      }
-    }]
-  }
+    steps: function () {
+        return [{
+            id: 'script',
+            title: 'script',
+            schema: ScriptSchema
+        }, {
+            id: 'labs',
+            title: 'Labs And Images',
+            schema: LabsAndImagingSchema,
+            onSubmit: function (data, wizard) {
+                console.log(wizard)
+            }
+        }]
+    }
 });
