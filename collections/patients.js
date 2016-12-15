@@ -28,6 +28,7 @@ Images = new FS.Collection("images", {
     stores: [new FS.Store.GridFS("images", {})]
 });
 
+//TODO set rules on image security
 Images.allow({
     insert: function (userId, doc) {
         return true;
@@ -37,7 +38,10 @@ Images.allow({
     },
     download: function (userId) {
         return true;
-    }
+    },
+    remove: function (userId) {
+        return true;
+    },
 });
 
 // PatientFiles.allow({
@@ -401,7 +405,7 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    mainValue: { type: Number, optional: true },
+    mainValue: { type: Number, decimal: true, optional: true },
     values: { type: [TestResultValue], optional: true }
 }
 ])
@@ -683,16 +687,16 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
     orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
-    files: {
-        type: String,
-        optional:true,
-        autoform: {
-            afFieldInput: {
-                type: 'fileUpload',
-                collection: 'Images'
-            }
-        }
-    }
+    // files: {
+    //     type: String,
+    //     optional:true,
+    //     autoform: {
+    //         afFieldInput: {
+    //             type: 'fileUpload',
+    //             collection: 'Images'
+    //         }
+    //     }
+    // }
 
 
 }])
@@ -1115,10 +1119,8 @@ new Tabular.Table({
     },
     columns: [
         { data: "fullName()", title: "Full Name" },
-
         { data: "age()", title: "Age" },
         { data: "gender", title: "Gender" },
-
         { data: "firstName", visible: false },
         { data: "lastName", visible: false },
         { data: "dob", visible: false },
@@ -1230,6 +1232,7 @@ new Tabular.Table({
     },
     columns: [
         { data: "labTestName()", title: "Lab Test" },
+        { data: "labTest", visible: false },
         {
             data: "valueStr()", title: "Value "
         },
@@ -1238,7 +1241,7 @@ new Tabular.Table({
             render: function (val, type, doc) { return moment(val).calendar(); }
         }
     ],
-    extraFields: ['labTest', 'mainValue', 'values']
+    extraFields: [ 'mainValue', 'values']
 })
 
 

@@ -1,9 +1,12 @@
 <template name="imageUploader">
-  <h2>Picture</h2>
   <p>
   {{#each images}}
-          <img src="{{url}}" alt="">
+  <ul class="list-group">
+    <li class="list-group-item">
+          <img src="{{url}}" alt="{{name}}" class="img-responsive">
           <input type="button" value="remove" class="btnRemove"/>
+    </li>
+  </ul>
       {{else}}
           No files uploaded.
   {{/each}}

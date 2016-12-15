@@ -34,7 +34,7 @@ Meteor.startup(() => {
         //                 Beds.insert({"name": "B" + i , room:res})
         //         })
         //     })
-        }
+        //}
     }
 )
 ;

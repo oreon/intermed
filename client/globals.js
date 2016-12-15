@@ -25,8 +25,6 @@ Template.registerHelper('drugName', (id) => {
 })
 
 Template.registerHelper('arrayify',function(obj){
-    console.log('in arrayify')
-    console.log(obj)
     var result = [];
     for (var key in obj) {
       result.push({name:key,value:obj[key]});

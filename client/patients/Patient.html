@@ -1,7 +1,5 @@
 <template name="Patient">
 
-     <img alt="{{patient.files.name}}" src="{{patient.files.url}}">
-
 	<article class="recipe">
 		 {{> patInfo patient=patient}}
          {{#if isAdmitted}}
@@ -11,7 +9,12 @@
 		<button class="btn-primary admit">Admit</button>
          {{/if}}
         <br/>
+        
+	<button class="btn btn-primary" 
+				data-toggle="collapse" data-target="#morePtInfo">More Info</button>
 
+	<div class="collapse" id="morePtInfo">
+	
         <div class="panel panel-primary">
             <div class="panel-heading">Social History</div>
             <div class="panel-body">{{patient.socialHistory}}</div>
@@ -21,6 +24,7 @@
             <div class="panel-heading">Medical History</div>
             <div class="panel-body">{{patient.pastMedicalHistory}}</div>
         </div>
+	</div>    
         
        
     <ul class="nav nav-tabs">
@@ -32,7 +36,7 @@
 		<li><a data-toggle="tab" href="#testResults">Test Results</a></li>
 		<li><a data-toggle="tab" href="#ptGraphs">Graphs</a></li>
 
-		<li><a data-toggle="tab" href="#invoice">Invoice</a></li>
+		<li><a data-toggle="tab" href="#docs">Documents</a></li>
 	</ul>
 
 	<div class="tab-content">
@@ -60,6 +64,10 @@
 		<div id="ptGraphs" class="tab-pane fade">
 			wisdom
 		</div>
+
+        <div id="docs" class="tab-pane fade">
+            {{> imageUploader}}
+        </div>
 	</div>
 		<i class="fa fa-trash"></i>
 		<a href="/editPatient/{{patient._id}}"><i class="fa fa-pencil"></i></a>

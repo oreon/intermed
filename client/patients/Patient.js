@@ -18,7 +18,7 @@ Template.Patient.onCreated(function () {
         Session.set('patient', id)
         Session.set('adm', null)
         Session.set('editEncounterForm', false)
-        Meteor.subscribe('images')
+        self.subscribe('PtImages', id)
         //console.log(result)
     });
 });
@@ -38,6 +38,10 @@ Template.Patient.helpers({
         //console.log(adm)
         return !!adm
     },
+    images:function(){
+        console.log(Images.find().count())
+        return Images.find()
+    }
 
 })
 

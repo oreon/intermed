@@ -2,6 +2,17 @@
 
     <button class="new-recipe">Add Patient</button>
 
-    {{> tabular table=TabularTables.PatientsTbl class="table table-striped table-bordered table-condensed"}}
+    <ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#all">All Patients</a></li>
+		<li><a data-toggle="tab" href="#current">Currently Admitted</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="all" class="tab-pane fade in active">
+		 {{> tabular table=TabularTables.PatientsTbl class="table table-striped table-bordered table-condensed"}}
+		</div>
+        <div id="current" class="tab-pane fade ">
+    	</div>
+	</div>
 
 </template>

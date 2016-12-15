@@ -5,6 +5,10 @@ Template.Patients.helpers({
         //console.log(this)
         return Patients.findOne(FlowRouter.getParam('id'));
     },
+
+    selector: function(){
+        
+    }
 })
 
 Template.Patients.events({

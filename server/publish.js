@@ -274,8 +274,12 @@ Meteor.publish('ScriptTemplates', function (skip, limit) {
 });
 
 //Find images for a given patient
-Meteor.publish('images', function(id) {
-   return images.find({ 'metadata.owner': id });
+Meteor.publish('PtImages', function(id) {
+   return Images.find({ 'metadata.owner': id });
+});
+
+Meteor.publish('Images', function() {
+   return Images.find();
 });
 
 

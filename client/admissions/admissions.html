@@ -6,10 +6,12 @@
                 <h2> Ward {{name}} </h2>
                 <hr/>
                 {{#each rooms}}
-                 <div class="panel-group">
+                 <div class="row">
                     <h3> {{name}} </h3>
                     {{#each rbeds}}
+                    <div class="col-sm-6">
                         {{> Admitted }}
+                    </div>
                     {{/each}}
                     <hr/>
                  </div>
@@ -35,14 +37,9 @@
                            <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
                         {{/each}}
                     </ul>
-                    <hr/>
                 {{/each}}
-                <hr/>
-            </div>
-            <div class="panel-footer">
                 
             </div>
         </div>
-
     {{/if}}
 </template>
