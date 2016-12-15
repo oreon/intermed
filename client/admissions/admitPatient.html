@@ -1,6 +1,11 @@
 <template name="AdmitPatient">
     {{#if Template.subscriptionsReady}}
-        {{#if currentBed}} Move from {{currentBed.name}} {{else }}Admit {{/if}} {{patient.firstName}}
+    
+        {{#if currentBed}} 
+            Move {{patient.firstName}} from {{currentBed.name}} 
+        {{else }}
+            Admit {{patient.firstName}}
+        {{/if}} 
 
         {{# each wards }}
             <article class="recipe">

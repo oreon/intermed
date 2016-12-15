@@ -54,6 +54,51 @@ AccountsTemplates.addFields([
 				value: 'other'
 			}
 		]
+	},
+
+		{
+		_id: 'specialization',
+		type: 'select',
+		displayName: 'Specialization',
+		select: [
+			{
+				text:'General Practitioner',
+				value: 'physician'
+			}, 
+			{
+				text:'Cardiologist',
+			 	value: 'Cardiologist'
+			 }, 
+			 {
+				text:'Gyanecologist',
+			 	value: 'Gyanecologist'
+			 },
+			 // {
+			// 	value: 'Dermatologist'
+			// }, 
+			// {
+			// 	value: 'Internal Medicine'
+			// }, 
+			// {
+			// 	value: 'Chest & TB'
+			// }, 
+			// {
+			// 	value: 'Surgeon'
+			// }, 
+			// {
+			// 	value: 'Rheumatologist'
+			// }, 
+			// {
+			// 	value: 'Kidney Specialist'
+			// }, 
+			// {
+			// 	value: 'Urologist'
+			// }, 
+			{
+				text: 'Other',
+				value: 'other'
+			}
+		]
 	}
 
 ]);

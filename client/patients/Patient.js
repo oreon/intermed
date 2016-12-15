@@ -1,10 +1,9 @@
 import moment from 'moment';
 require('moment-recur');
 //var later = require('later');
+//import result from 'myfunctional'
 
 
-
-//import moment-recur from 'moment-recur';
 
 Template.Patient.onCreated(function () {
     var self = this;
@@ -19,6 +18,8 @@ Template.Patient.onCreated(function () {
         Session.set('patient', id)
         Session.set('adm', null)
         Session.set('editEncounterForm', false)
+        Meteor.subscribe('images')
+        //console.log(result)
     });
 });
 
@@ -65,9 +66,6 @@ Template.Patient.events({
         console.log("hi from trash")
         Meteor.call('deleteRecipe', this._id);
     },
-    'click .fa-pencil': function (event, template) {
-        FlowRouter.go('editPatient', { id: FlowRouter.getParam('id') })
-    },
     'click .deleteAllergy': function (event, template) {
         event.preventDefault();
         drg = event.currentTarget.name;
@@ -82,10 +80,6 @@ Template.Patient.events({
                 console.log(error);
             }
         );
-
-
-        //db.patients.update( {"_id": 'kTQ4Enhhy6P8MHdCP' },{"$pull": { "drugAllergies" : {"drug": 'SdtFYTYnuxMkkPFAE'} } } );
-
     }
 
 
@@ -103,12 +97,12 @@ export function calcHours(type) {
     return hrs;
 }
 
-export function findUnits(item){
+export function findUnits(item) {
     let durationHrs = item.duration.for * calcHours(item.duration.type)
     //console.log(durationHrs)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
 
-    return  durationHrs / oncePerX
+    return durationHrs / oncePerX
 }
 
 
@@ -116,11 +110,11 @@ Template.scriptTbl.helpers({
 
     endDate: function (item) {
         //TODO calculate duration from the actual start date  
-        dt =  new moment().add(item.duration.for, item.duration.type.toLowerCase());
+        dt = new moment().add(item.duration.for, item.duration.type.toLowerCase());
         return dt.format('D MMM YY hh:mm a')
     },
     unitsNeeded: function (item) {
-       return findUnits(item)
+        return findUnits(item)
     },
     calcSchedule: function (item) {
         total = findUnits(item)
@@ -155,5 +149,13 @@ Template.basicWizard.helpers({
                 console.log(wizard)
             }
         }]
+    }
+});
+
+
+Template.imageView.helpers({
+    images: function () {
+        console.log(PatientFiles.find().count())
+        return PatientFiles.find(); // Where Images is an FS.Collection instance
     }
 });

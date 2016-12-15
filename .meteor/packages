@@ -60,7 +60,7 @@ alanning:roles
 #yogiben:autoform-modals
 #fix of yogiben modals
 #noahsw:fix-contains-reference
-#yogiben:autoform-file
+yogiben:autoform-file
 #materialize:materialize
 
 reywood:publish-composite
@@ -93,3 +93,9 @@ twbs:bootstrap
 mpowaga:autoform-summernote
 forwarder:autoform-wizard
 #orionjs:bootstrap
+#file uploads
+cfs:gridfs
+raix:ui-dropped-event
+cfs:filesystem 
+cfs:standard-packages
+#cfs:autoform

@@ -20,17 +20,32 @@ Services = new Mongo.Collection('services')
 
 Specializations = new Mongo.Collection('specializations')
 
-//export Patients
+PatientFiles = new FS.Collection("patientFiles", {
+    stores: [new FS.Store.GridFS("filesStore", {})]
+});
 
+Images = new FS.Collection("images", {
+    stores: [new FS.Store.GridFS("images", {})]
+});
 
-//Patients.helpers({
-//    encounters(){
-//        return Encounters.find({patient: this._id});
-//    },
-//    test(){
-//        return "a test string";
-//    }
-//})
+Images.allow({
+    insert: function (userId, doc) {
+        return true;
+    },
+    update: function (userId, doc, fieldNames, modifier) {
+        return true;
+    },
+    download: function (userId) {
+        return true;
+    }
+});
+
+// PatientFiles.allow({
+//     download: function () {
+//         return true;
+//     },
+//     fetch: null
+// });
 
 
 Wards = new Mongo.Collection('wards')
@@ -38,15 +53,7 @@ Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
 
-//
-//Wards.helpers({
-//    fullName(){
-//        return '${this.firstName} ${this.lastName}';
-//    },
-//    rooms() {
-//        return Rooms.find({ ward: this._id });
-//    }
-//});
+
 
 BaseSchema = new SimpleSchema({
 
@@ -192,10 +199,10 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     },
     amountPaid: { type: Number, optional: true },
     datePaid: { type: Date, optional: true },
-    paymentType: { 
-        type: String, 
-        allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], 
-        optional: true 
+    paymentType: {
+        type: String,
+        allowedValues: ['Cheque', 'Cash', 'Card', 'Other'],
+        optional: true
     }
 
 }])
@@ -403,7 +410,7 @@ MeasurementSchema = new SimpleSchema([BaseSchema, {
     measurement: {
         type: String,
         optional: false,
-        allowedValues:['BP', 'Temperature', 'PO2', 'Blood Sugar' , 'Pulse', 'Breaths Per Minute' ]
+        allowedValues: ['BP', 'Temperature', 'PO2', 'Blood Sugar', 'Pulse', 'Breaths Per Minute']
     },
     mainValue: { type: Number, optional: true },
     values: { type: [TestResultValue], optional: true }
@@ -433,71 +440,13 @@ DrugAllergySchema = new SimpleSchema([BaseSchema, {
 ImmunizationSchema = new SimpleSchema([BaseSchema, {
     vaccine: {
         type: String,
-        allowedValues: ['BCG','DPT', 'HepA&B','HPV', 'Flu',  'Tetanus Toxoid', 'Pneumonia'],
+        allowedValues: ['BCG', 'DPT', 'HepA&B', 'HPV', 'Flu', 'Tetanus Toxoid', 'Pneumonia'],
         // autoform: {
         //     type: "select2"
         // }
     },
 }])
 
-PatientSchema = new SimpleSchema([BaseSchema, {
-    firstName: {
-        type: String,
-        label: "First Name",
-    },
-    lastName: {
-        type: String,
-        label: "Last Name",
-    },
-    dob: {
-        type: Date
-    },
-    gender: {
-        type: String,
-        allowedValues: ['F', 'M'],
-        autoform: {
-            type: "select-radio"
-        }
-    },
-    contactPhone:{
-        type: String,
-        optional: true
-    },
-    chronicConditions: {
-        type: [String],
-        optional: true,
-        autoform: {
-            type: "select-checkbox",
-            options: function () {
-                return ChronicDiseases.find().map(function (c) {
-                    return { label: c.name, value: c.name };
-                });
-            }
-        }
-    },
-    pastMedicalHistory:{
-        type: String,
-        optional: true,
-        autoform: {
-            type: "textarea",
-        }
-    },
-     socialHistory:{
-        type: String,
-        optional: true,
-        autoform: {
-            type: "textarea",
-        }
-    },
-    permanentMeds:{
-        type: [String],
-        optional: true,
-    },
-    drugAllergies: { type: [DrugAllergySchema] , optional: true},
-    immunizations: {type: [ImmunizationSchema], optional: true},
-    orderedLabsAndImages:{type:LabsAndImagingSchema, optional: true},
-
-}])
 
 DrugSchema = new SimpleSchema([BaseSchema, {
     name: {
@@ -529,7 +478,7 @@ DurationSchema = new SimpleSchema({
 })
 
 
-ScriptItem = new SimpleSchema([BaseSchema,{
+ScriptItem = new SimpleSchema([BaseSchema, {
     drug: {
         type: String,
         optional: true,
@@ -559,20 +508,20 @@ ScriptItem = new SimpleSchema([BaseSchema,{
     prn: { type: Boolean, optional: true, label: 'PRN (as needed) ' },
 
     instructions: { type: String, optional: true },
-     endDate: {
+    endDate: {
         type: Date,
         optional: true,
         autoValue: function () {
-         let content = this.field("duration");
-          if (content.isSet) {
-              dur = content.value;
-              Console.log(dur);
-              enddt =  new moment().add(4, 'day');
-              Console.log(enddt);
-              return enddt;
-          }else{
-              console.log("No duration")
-          }
+            let content = this.field("duration");
+            if (content.isSet) {
+                dur = content.value;
+                Console.log(dur);
+                enddt = new moment().add(4, 'day');
+                Console.log(enddt);
+                return enddt;
+            } else {
+                console.log("No duration")
+            }
         },
         autoform: {
             readonly: true
@@ -604,7 +553,7 @@ ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {
 }])
 
 
-EncounterSchema = new SimpleSchema({
+EncounterSchema = new SimpleSchema([BaseSchema, {
 
     patient: {
         type: String,
@@ -612,9 +561,12 @@ EncounterSchema = new SimpleSchema({
             type: "hidden",
         }
     },
+    preliminaryDiagnosis: {
+        type: String,
+        optional: true,
+    },
     reason: {
         type: String,
-        label: "reason",
         autoform: {
             type: "textarea"
         }
@@ -627,7 +579,7 @@ EncounterSchema = new SimpleSchema({
         type: [LabsAndImagingSchema],
         optional: true,
     },
-})
+}])
 
 
 
@@ -639,7 +591,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
             type: "summernote"
         }
     },
- 
+
     // testResults:{
     //     type: String,
     //     optional: true,
@@ -658,7 +610,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     //             this.unset();
     //         }
     //     }    
-    
+
     createdBy: {
         type: String,
         autoValue: function () { return this.userId },
@@ -666,6 +618,83 @@ VisitSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
+
+}])
+
+
+
+PatientSchema = new SimpleSchema([BaseSchema, {
+    firstName: {
+        type: String,
+        label: "First Name",
+    },
+    lastName: {
+        type: String,
+        label: "Last Name",
+    },
+    dob: {
+        type: Date
+    },
+    gender: {
+        type: String,
+        allowedValues: ['F', 'M'],
+        autoform: {
+            type: "select-radio"
+        }
+    },
+    contactPhone: {
+        type: String,
+        optional: true
+    },
+    chronicConditions: {
+        type: [String],
+        optional: true,
+        autoform: {
+            type: "select-checkbox",
+            options: function () {
+                return ChronicDiseases.find().map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+    pregnant:{
+        type: Boolean,
+        optional: true,
+    },
+    pastMedicalHistory: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea",
+        }
+    },
+    socialHistory: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea",
+        }
+    },
+    permanentMeds: {
+        type: [String],
+        optional: true,
+    },
+    drugAllergies: { type: [DrugAllergySchema], optional: true },
+    immunizations: { type: [ImmunizationSchema], optional: true },
+    orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
+    files: {
+        type: String,
+        optional:true,
+        autoform: {
+            afFieldInput: {
+                type: 'fileUpload',
+                collection: 'Images'
+            }
+        }
+    }
+
+
 }])
 
 AdmissionSchema = new SimpleSchema([BaseSchema, {
@@ -715,14 +744,14 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         defaultValue: 'PO',
         allowedValues: ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
     },
-    condition:{
-        type:String,
+    condition: {
+        type: String,
         //allowedValues: ['Cheque', 'Cash', 'Card', 'Other'], 
-        allowedValues:['Recovering','Stable', 'Critical'],
-        defaultValue:'Stable',
-         autoform: {
+        allowedValues: ['Recovering', 'Stable', 'Critical'],
+        defaultValue: 'Stable',
+        autoform: {
             type: "select-radio",
-           // options:   ['Recovering','Stable', 'Critical']
+            // options:   ['Recovering','Stable', 'Critical']
         }
     },
     admissionNote: {
@@ -755,7 +784,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         type: [TestResults],
         optional: true,
     },
-    measurements:{
+    measurements: {
         type: [MeasurementSchema],
         optional: true,
     },
@@ -871,6 +900,16 @@ Patients.allow({
     }
 })
 
+PatientFiles.allow({
+    insert: (userId, doc) => !!userId,
+    update: function (userId, doc) {
+        return !!userId
+    },
+    download: function (userId, fileObj) {
+        return true
+    }
+})
+
 TestResults.allow({
     insert: (userId, doc) => !!userId,
     update: function (userId, doc) {
@@ -976,15 +1015,15 @@ TestResults.helpers({
     labTestName: function () {
         return this.labTestObj().name
     },
-    valueStr: function(){
-        if(this.mainValue)
+    valueStr: function () {
+        if (this.mainValue)
             return this.mainValue
-        else{
+        else {
             let ret = '';
-             _.forEach(this.values, function (elem) {
-               ret += `${elem.name}: ${elem.value} `  
+            _.forEach(this.values, function (elem) {
+                ret += `${elem.name}: ${elem.value} `
             })
-           return ret;
+            return ret;
         }
     }
 })
@@ -1036,6 +1075,29 @@ Admissions.helpers({
         });
 
         return { "stays": stays, "total": total };
+    },
+    recentMeasurements(){
+        mapResults = new Map();
+        msmts = _.groupBy(this.measurements, function (a) { return a.measurement })
+        _.forOwn(msmts, function (val, key) {
+            val = _.orderBy(val, ['updatedAt'], [ 'desc']);
+            msmts[key] = _.take(val, 2)
+         });
+        //console.log(msmts)
+        return msmts;
+
+        // _.forOwn(msmts, function (val, key) {
+        //     //console.log(key)
+        //     arr = []
+        //     _.forEach(val, function (elem) {
+        //         if (elem.mainValue) {
+        //             arr.push([moment(elem.updatedAt).format("DD-MM-YY hh:mm"), elem.mainValue])
+        //             mapResults.set(key, arr);
+        //         }
+        //     })
+        //     mapResults.set(key, _.take(arr, 2));
+        // });
+        // return mapResults;
     }
 })
 
@@ -1168,8 +1230,8 @@ new Tabular.Table({
     },
     columns: [
         { data: "labTestName()", title: "Lab Test" },
-        {   
-            data: "valueStr()", title: "Value " 
+        {
+            data: "valueStr()", title: "Value "
         },
         {
             data: "createdAt", title: 'Created At',

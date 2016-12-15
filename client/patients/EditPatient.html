@@ -1,11 +1,8 @@
 <template name="EditPatient">
-
 {{#if patient}}
-    UPDATE
     {{> quickForm collection="Patients" id="editPatientForm" type="update" doc=patient autosave=false}}
 {{else}}
     {{> quickForm collection="Patients" id="insertPatientForm" type="insert"  autosave=false}}
 {{/if}}
-
 
 </template>

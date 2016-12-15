@@ -114,18 +114,18 @@ Meteor.publish('TodosCreatedByMe', function() {
 //})
 
 
-Meteor.publish('FullPatient', function (id) {
-    check(id, String);
+// Meteor.publish('FullPatient', function (id) {
+//     check(id, String);
 
-    if (id) {
-        return [
-            Patients.find({'_id': id}),
-            Encounters.find({'patient': id} /*, { sort: { "date": -1 } } */)
-        ];
-    } else {
-        return null;
-    }
-})
+//     if (id) {
+//         return [
+//             Patients.find({'_id': id}),
+//             Encounters.find({'patient': id} /*, { sort: { "date": -1 } } */)
+//         ];
+//     } else {
+//         return null;
+//     }
+// })
 
 Meteor.publishComposite('compPt', function (id) {
     return {
@@ -271,6 +271,11 @@ Meteor.publishComposite('compAdmission', function (id) {
 Meteor.publish('ScriptTemplates', function (skip, limit) {
     //Counts.publish(this, 'total_recipes', Recipes.find())
     return ScriptTemplates.find({});
+});
+
+//Find images for a given patient
+Meteor.publish('images', function(id) {
+   return images.find({ 'metadata.owner': id });
 });
 
 

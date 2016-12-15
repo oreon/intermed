@@ -2,7 +2,8 @@ Template.EditPatient.onCreated(function () {
     var self = this;
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
-        self.subscribe('FullPatient', id);
+        console.log(id)
+        self.subscribe('compPt', id);
     });
 
 });

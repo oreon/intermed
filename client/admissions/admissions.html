@@ -6,11 +6,13 @@
                 <h2> Ward {{name}} </h2>
                 <hr/>
                 {{#each rooms}}
+                 <div class="panel-group">
                     <h3> {{name}} </h3>
                     {{#each rbeds}}
                         {{> Admitted }}
                     {{/each}}
                     <hr/>
+                 </div>
                 {{/each}}
             </article>
         {{/each}}
@@ -21,13 +23,26 @@
 
 <template name="Admitted">
     {{#if bedHasPatient}}
-        <div style="background-color: {{color}} ; padding:5px;  border:1px solid red">
-             <h4> {{bedpatient.fullName}}  -  BED {{name}} </h4>
-              <br/>
-             {{admission.reason}}
-             <br/>
-            <a href="viewAdmission/{{admission._id}}"> View </a>
+         <div class="panel {{panelType}}">
+            <div class="panel-heading">
+                <h4>{{> patInfo patient=bedpatient extra=admission.reason}}  </h4>
+                <a href="viewAdmission/{{admission._id}}"> {{bedpatient.currentBed.fullName}} </a>
+            </div>
+            <div class="panel-body">
+                {{#each arrayify admission.recentMeasurements}}
+                     <ul class="list-group"><b>{{name}} </b>
+                        {{#each value}} 
+                           <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
+                        {{/each}}
+                    </ul>
+                    <hr/>
+                {{/each}}
+                <hr/>
+            </div>
+            <div class="panel-footer">
+                
+            </div>
         </div>
-        &nbsp;
+
     {{/if}}
 </template>

@@ -1,12 +1,9 @@
 <template name="Patient">
 
+     <img alt="{{patient.files.name}}" src="{{patient.files.url}}">
+
 	<article class="recipe">
-		<h3> {{patient.fullName}} </h3>
-        <h5> 
-        {{#each patient.chronicConditions}}
-            {{name}}
-        {{/each}} 
-        </h5>
+		 {{> patInfo patient=patient}}
          {{#if isAdmitted}}
 		<button class="btn-deny viewAdmission">Go to Admission</button>
 		<button class="btn-deny visit">Visit</button> 
@@ -14,16 +11,18 @@
 		<button class="btn-primary admit">Admit</button>
          {{/if}}
         <br/>
-        <panel>
-            Social History : {{patient.socialHistory}}
-         </panel> 
-         <br/>
-         <well>
-            Medical History : {{patient.pastMedicalHistory}}
-         </well>  
 
+        <div class="panel panel-primary">
+            <div class="panel-heading">Social History</div>
+            <div class="panel-body">{{patient.socialHistory}}</div>
+        </div>
+             
+        <div class="panel panel-primary">
+            <div class="panel-heading">Medical History</div>
+            <div class="panel-body">{{patient.pastMedicalHistory}}</div>
+        </div>
+        
        
-
     <ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#enc">Encounters</a></li>
 		<li><a data-toggle="tab" href="#drugAllergies">Drug Allergies</a></li>
@@ -63,12 +62,13 @@
 		</div>
 	</div>
 		<i class="fa fa-trash"></i>
-		<i class="fa fa-pencil"></i>
+		<a href="/editPatient/{{patient._id}}"><i class="fa fa-pencil"></i></a>
 	</article>
 
 </template>
 
 <template name="encountersTmpl">
+
 {{#if isSet  'editEncounterForm'}} 
     {{> quickForm collection="Encounters" id="newEncounterForm22" type="insert" template="plain"}} 
     <button class="btn-primary cancelEditEncounter">CancelEdit</button>
@@ -76,9 +76,16 @@
     <button class="btn-primary encounter">New Encounter</button>
     <p>
     {{#each patient.encounters}} 
-        {{reason}}
-        {{> scriptTbl script = script}}
-        <br/> 
+    <div class="panel-group">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{createdBy}} {{createdAt}}</div>
+            <div class="panel-body">
+                {{reason}}
+                {{> scriptTbl script = script}}
+             </div>
+        </div>
+        
+    </div>
     {{/each}}
     </p>
 {{/if}}
@@ -115,17 +122,6 @@
        
 	</table>
     </div>
-
-    {{#each script.items}}
-    {{ drugName drug }}
-    {{#with item}}  
-    <ul>
-    {{#each calcSchedule .}}
-    <li> {{ drugName item.drug }} {{.}} </li>    
-    {{/each}} 
-    </ul>
-    {{/with}}
-    {{/each}}
 
      {{/if}}
 </template>
@@ -178,4 +174,40 @@
 
 <template name="basicWizard">
   {{> wizard id="basic-wizard" steps=steps}}
+</template>
+
+
+<template name="imageView">
+  <div class="imageView">
+    {{#each images}}
+      <div>
+        <a href="{{this.url}}" target="_blank"><img src="{{this.url store='thumbs' uploading='/images/uploading.gif' storing='/images/storing.gif'}}" alt="" class="thumbnail" /></a>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+
+<template name="patInfo">
+    <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{extra}}
+        <h5> 
+        {{#if patient.pregnant}} Pregnant {{/if}}
+        {{#each patient.chronicConditions}}
+            {{.}}
+        {{/each}} 
+        </h5>
+</template>
+
+
+<template name="Sched">
+{{#each script.items}}
+    {{ drugName drug }}
+    {{#with item}}  
+    <ul>
+    {{#each calcSchedule .}}
+    <li> {{ drugName item.drug }} {{.}} </li>    
+    {{/each}} 
+    </ul>
+    {{/with}}
+{{/each}}
 </template>
