@@ -75,6 +75,9 @@ Template.ViewAdmission.helpers({
 
     isEditMode: function () { return Session.get("editAdmissionForm") },
 
+    visits:function (admission){
+        return _.orderBy(admission.visits, ['updatedAt'],['desc'])
+    },
     grandTotal: function (adm) {
         bedStayTotal = adm.bedStaysObj().total;
         //console.log(adm)
