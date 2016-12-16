@@ -1,8 +1,14 @@
 import moment from 'moment'
 
 Template.registerHelper('datef', (dt) => {
-  return moment(dt).format('LLLL'); //('D MMM YY hh:mm a');
+  return moment(dt).format('D MMM YY hh:mm a');
 });
+
+Template.registerHelper('datefbig', (dt) => {
+  return moment(dt).format('LLLL');
+});
+
+
 
 Template.registerHelper('datecal', (dt) => {
   return moment(dt).calendar(); //('D MMM YY hh:mm a');

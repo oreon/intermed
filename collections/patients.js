@@ -65,12 +65,16 @@ BaseSchema = new SimpleSchema({
         type: Date,
         optional: true,
         autoValue: function () {
-            if (this.isInsert) {
-                return new Date();
-            } else if (this.isUpsert) {
-                return { $setOnInsert: new Date() };
-            } else {
-                this.unset();  // Prevent user from supplying their own value
+            try {
+                if (this.isInsert) {
+                    return new Date();
+                } else if (this.isUpsert) {
+                    return { $setOnInsert: new Date() };
+                } else {
+                    this.unset();  // Prevent user from supplying their own value
+                }
+            } catch (e) {
+                console.log(e)
             }
         },
         autoform: {
@@ -82,12 +86,16 @@ BaseSchema = new SimpleSchema({
         type: String,
         optional: true,
         autoValue: function () {
-            if (this.isInsert) {
-                return this.userId
-            } else if (this.isUpsert) {
-                return { $setOnInsert: this.userId };
-            } else {
-                this.unset();  // Prevent user from supplying their own value
+            try {
+                if (this.isInsert) {
+                    return this.userId
+                } else if (this.isUpsert) {
+                    return { $setOnInsert: this.userId };
+                } else {
+                    this.unset();  // Prevent user from supplying their own value
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
         autoform: {
@@ -101,8 +109,12 @@ BaseSchema = new SimpleSchema({
     updatedAt: {
         type: Date,
         autoValue: function () {
-            if (this.isUpdate) {
-                return new Date();
+            try {
+                if (this.isUpdate) {
+                    return new Date();
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
         denyInsert: true,
@@ -481,6 +493,15 @@ DurationSchema = new SimpleSchema({
     }
 })
 
+RecurringAssessmentItemSchema = new SimpleSchema({
+    name: {
+        type: String
+    },
+    frequency: {
+        type: FrequencySchema,
+    }
+})
+
 
 ScriptItem = new SimpleSchema([BaseSchema, {
     drug: {
@@ -662,7 +683,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    pregnant:{
+    pregnant: {
         type: Boolean,
         optional: true,
     },
@@ -778,6 +799,10 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     },
     script: {
         type: ScriptSchema,
+        optional: true,
+    },
+    recurringAssessments: {
+        type: [RecurringAssessmentItemSchema],
         optional: true,
     },
     labsAndImages: {
@@ -998,40 +1023,6 @@ Todos.helpers({
     }
 })
 
-
-Encounters.helpers({
-    patientName: function () {
-        pt = Patients.findOne({ _id: this.patient })
-        return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
-    },
-    creator: function () {
-        user = Meteor.users.findOne({ _id: this.createdBy })
-        return user.profile.firstName + " " + user.profile.lastName;
-    },
-})
-
-
-
-TestResults.helpers({
-    labTestObj: function () {
-        return LabTests.findOne(this.labTest)
-    },
-    labTestName: function () {
-        return this.labTestObj().name
-    },
-    valueStr: function () {
-        if (this.mainValue)
-            return this.mainValue
-        else {
-            let ret = '';
-            _.forEach(this.values, function (elem) {
-                ret += `${elem.name}: ${elem.value} `
-            })
-            return ret;
-        }
-    }
-})
-
 Admissions.helpers({
     currentBed: function () {
         if (this.currentBedStay) {
@@ -1080,33 +1071,57 @@ Admissions.helpers({
 
         return { "stays": stays, "total": total };
     },
-    recentMeasurements(){
+    recentMeasurements() {
         mapResults = new Map();
         msmts = _.groupBy(this.measurements, function (a) { return a.measurement })
         _.forOwn(msmts, function (val, key) {
-            val = _.orderBy(val, ['updatedAt'], [ 'desc']);
-            msmts[key] = _.take(val, 2)
-         });
+            msmts[key] = _(val).orderBy(['updatedAt'], ['desc'])
+                .take(2)
+                .value();
+            // = _.take(val, 2)
+        });
         //console.log(msmts)
         return msmts;
+    },
 
-        // _.forOwn(msmts, function (val, key) {
-        //     //console.log(key)
-        //     arr = []
-        //     _.forEach(val, function (elem) {
-        //         if (elem.mainValue) {
-        //             arr.push([moment(elem.updatedAt).format("DD-MM-YY hh:mm"), elem.mainValue])
-        //             mapResults.set(key, arr);
-        //         }
-        //     })
-        //     mapResults.set(key, _.take(arr, 2));
-        // });
-        // return mapResults;
-    }
 })
 
 
 
+Encounters.helpers({
+    patientName: function () {
+        pt = Patients.findOne({ _id: this.patient })
+        return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
+    },
+    creator: function () {
+        user = Meteor.users.findOne({ _id: this.createdBy })
+        return user.profile.firstName + " " + user.profile.lastName;
+    },
+})
+
+
+
+TestResults.helpers({
+    labTestObj: function () {
+        return LabTests.findOne(this.labTest)
+    },
+    labTestName: function () {
+        return this.labTestObj().name
+    },
+    valueStr: function () {
+        if (this.mainValue)
+            return this.mainValue
+        else {
+            let ret = '';
+            _.forEach(this.values, function (elem) {
+                ret += `${elem.name}: ${elem.value} `
+            })
+            return ret;
+        }
+    }
+})
+
+//import {admHelpers} from '/imports/api/helpers'
 
 
 new Tabular.Table({
@@ -1241,7 +1256,7 @@ new Tabular.Table({
             render: function (val, type, doc) { return moment(val).calendar(); }
         }
     ],
-    extraFields: [ 'mainValue', 'values']
+    extraFields: ['mainValue', 'values']
 })
 
 

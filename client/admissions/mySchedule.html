@@ -1,0 +1,27 @@
+<template name="MySchedule">
+    <ul class="list-group">
+    {{#each findSchedule}}
+        <li  class="list-group-item" style="background-color : {{getColor .}} " >
+        {{ adm.patientObj.fullName}} - 
+        {{adm.currentBed.fullName}}
+        {{drugName item.drug}}
+        {{item.amount}}
+        {{item.route}}
+        {{datef dateToAdmin}}
+        </li>
+        {{/each}}
+    </ul>
+    
+</template>
+
+
+<template name="Sched">
+    {{ drugName drug }}
+    {{#with item}}  
+    <ul>
+    {{#each calcSchedule .}}
+    <li> {{ drugName item.drug }} {{.}} </li>    
+    {{/each}} 
+    </ul>
+    {{/with}}
+</template>

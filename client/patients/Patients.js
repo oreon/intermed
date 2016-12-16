@@ -1,4 +1,6 @@
 
+import {resColor} from '/imports/utils/myfunctional.js';
+
 Template.Patients.helpers({
 
     patient: function () {
@@ -6,14 +8,13 @@ Template.Patients.helpers({
         return Patients.findOne(FlowRouter.getParam('id'));
     },
 
-    selector: function(){
-        
+    test: function(){
+        console.log(resColor)
     }
 })
 
 Template.Patients.events({
     'click .new-recipe': () => FlowRouter.go('editPatient')
-
 });
 
 

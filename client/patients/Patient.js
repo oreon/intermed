@@ -1,5 +1,10 @@
 import moment from 'moment';
 require('moment-recur');
+import {scriptEnhanced} from '/imports/utils/drugAdminSchedule.js';
+ import {findUnits} from '/imports/utils/drugAdminSchedule.js';
+//import {itemEndDate} from '/imports/utils/drugAdminSchedule.js';
+
+
 //var later = require('later');
 //import result from 'myfunctional'
 
@@ -77,11 +82,9 @@ Template.Patient.events({
         Patients.update(
             { "_id": FlowRouter.getParam('id') },
             { "$pull": { "drugAllergies": { "drug": drg } } },
-            function (success) {
+            function (err, res) {
                 console.log(error);
-            },
-            function (error) {
-                console.log(error);
+                 console.log(res);
             }
         );
     }
@@ -90,51 +93,28 @@ Template.Patient.events({
 });
 
 
-export function calcHours(type) {
-    hrs = 1;
-    if (type === 'Day')
-        hrs = 24;
-    if (type === 'Week')
-        hrs = 24 * 7;
-    if (type === 'Month')
-        hrs = 24 * 7 * 30;
-    return hrs;
-}
-
-export function findUnits(item) {
-    let durationHrs = item.duration.for * calcHours(item.duration.type)
-    //console.log(durationHrs)
-    let oncePerX = calcHours(item.frequency.type) / item.frequency.every
-
-    return durationHrs / oncePerX
-}
-
-
 Template.scriptTbl.helpers({
 
-    endDate: function (item) {
-        //TODO calculate duration from the actual start date  
-        dt = new moment().add(item.duration.for, item.duration.type.toLowerCase());
-        return dt.format('D MMM YY hh:mm a')
+    enhItems:function(script){
+        //console.log(script)
+        items =  scriptEnhanced(script).items
+        console.log(items)
+        return items;
     },
-    unitsNeeded: function (item) {
-        return findUnits(item)
-    },
-    calcSchedule: function (item) {
-        total = findUnits(item)
-        listRetDates = []
-        let oncePerX = calcHours(item.frequency.type) / item.frequency.every
-
-        for (j = 0; j < total; j++) {
-            let occurence = new moment().add(oncePerX * j, 'hour')
-            listRetDates.push(occurence.format('D MMM YY hh:mm'))
-        }//
-
-        // var s = later.parse.text('every ' + oncePerX + "  hours");
-        // occurences = later.schedule(s).next(total);
-        console.log(listRetDates)
-
-        return listRetDates;
+    // startDate:function(item){
+    //     //if(item)
+    //     return item.updatedAt ? item.updatedAt : item.createdAt;
+    //     //return "Unknown"
+    // },
+    // endDate: function (item) {
+    //     //TODO calculate duration from the actual start date  
+    //     return itemEndDate(item)
+    // },
+    // unitsNeeded: function (item) {
+    //     return findUnits(item)
+    // },
+    itemSchedule: function (item) {
+        return calcSchedule(item);
     }
 
 })

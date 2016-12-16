@@ -1,4 +1,13 @@
 
+const Box = x => 
+({
+chain : f => f(x),
+map: f => Box(f(x)),
+fold: (f) => f(x),
+inspect: () => `Right{${x}}`   
+})
+
+
 const Right = x => 
 ({
 chain : f => f(x),
@@ -17,19 +26,31 @@ inspect: () => `Left{${x}}`
 
 const tryCatch = f => {
     try{
-        Right(f())
+        return Right(f())
     }catch(e){
+        console.log(e)
         return Left(e)
     }
 }
+
+const readFl = () => "{\"port\":888}"
+//console.log( tryCatch( () => "{port:888}" ) )
+
+const getPort = () =>
+tryCatch( () => readFl() ) //fs.readFileSync('config.json'))
+.chain(c => tryCatch( () => JSON.parse(c))  )
+.fold(e=>3000, c => c.port)
+
 
 export const findColor = name => fromNullable({'red':'Red', 'blue':'Blue', 'green':'Green'}[name])
 
 const fromNullable = x => x != null ? Right(x) : Left(null)
 
-export const result = findColor('red')
-.map(c => c.slice(1))
-.fold( e => 'not found', c => c.toUpperCase())
+// export const resColor = findColor('red')
+// .map(c => c.slice(1))
+// .fold( e => 'not found', c => c.toUpperCase())
+
+export const resColor = getPort();
 
 export const charForStr = str => 
 [str]

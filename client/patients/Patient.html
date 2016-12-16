@@ -113,18 +113,20 @@
 			<th> Frequency</th>
             <th> Duration </th>
  			<th> Instructions </th>
+            <th> Start Date </th> 
             <th> End Date </th>
             <th> Units </th>
 		</tr>
-        {{#each script.items}}
+        {{#each enhItems (script) }}
         <tr>
             <td>{{ drugName drug }}</td>
             <td> {{amount}} </td>
             <td> {{frequency.every}} / {{frequency.type}}</td>
             <td> {{duration.for}} {{duration.type}}(s)</td>
             <td> {{instructions}}</td>
-            <td> {{ endDate . }}</td>
-            <td> {{unitsNeeded . }}</td>
+            <td> {{datef startDate }}</td>
+            <td> {{datef endDate }}</td>
+            <td> {{unitsNeeded }}</td>
         </tr>
         {{/each}} 
        
@@ -207,15 +209,3 @@
 </template>
 
 
-<template name="Sched">
-{{#each script.items}}
-    {{ drugName drug }}
-    {{#with item}}  
-    <ul>
-    {{#each calcSchedule .}}
-    <li> {{ drugName item.drug }} {{.}} </li>    
-    {{/each}} 
-    </ul>
-    {{/with}}
-{{/each}}
-</template>
