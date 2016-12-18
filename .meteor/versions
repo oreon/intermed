@@ -165,6 +165,7 @@ templating-compiler@1.2.15
 templating-runtime@1.2.15
 templating-tools@1.0.5
 themeteorchef:bert@2.1.1
+tmeasday:publish-counts@0.8.0
 tmeasday:test-reporter-helpers@0.2.1
 todda00:collection-revisions@0.2.1
 tracker@1.1.1

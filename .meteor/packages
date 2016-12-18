@@ -51,7 +51,7 @@ aldeed:template-extension
 #added by jag singh
 sach:flow-db-admin
 #easy:search
-#tmeasday:publish-counts
+tmeasday:publish-counts
 #miguelalarcos:flow-router-pagination
 #shell-server
 dburles:collection-helpers

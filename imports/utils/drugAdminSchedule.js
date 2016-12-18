@@ -35,10 +35,11 @@ export function scheduleForTime(item, timeHrs) {
 
 export function scriptEnhanced(script) {
     script.items = _.map(script.items, (item) => {
-        item['startDate'] = item.updatedAt ? item.updatedAt : item.createdAt
+        //TODO user must be able to specfiy the start date themselves
+        item['startDate'] =  item.createdAt ? item.createdAt : item.updatedAt ;
         item['endDate'] = new moment(item['startDate']).add(item.duration.for, item.duration.type.toLowerCase())
         item['unitsNeeded'] = item ? findUnits(item) : 0;
-        item['isCurrent'] = item['endDate'] > new Date();
+        item['isCurrent'] = new moment(item.endDate).isAfter(new moment());
         return item;
     })
     return script;

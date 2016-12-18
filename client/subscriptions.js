@@ -19,7 +19,8 @@ Meteor.subscribe('ScriptTemplates')
 
 Meteor.subscribe('userData')
 
-Meteor.subscribe('patientFiles')
+//Meteor.subscribe('patientFiles')
+//Meteor.subscribe('MyPendingTodos')
 
 
 PtEncounters = new Mongo.Collection('ptEncounters');

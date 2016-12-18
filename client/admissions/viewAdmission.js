@@ -1,4 +1,5 @@
 import moment from 'moment'
+var SummaryTool = require('node-summary');
 
 export function getAdmission() {
     return Admissions.findOne({ _id: FlowRouter.getParam('id') });
@@ -6,10 +7,16 @@ export function getAdmission() {
 
 var gloablEdit = {};
 
+
+
+
 Template.ViewAdmission.onCreated(function () {
 
     //self.editMode = new ReactiveVar(false);
     this.editMode = new ReactiveVar(false);
+    this.summary = new ReactiveVar("Visit Summary ")
+    this.adm = new ReactiveVar()
+
     globalEdit = this.editMode;
 
     this.formType = new ReactiveVar('insert');
@@ -24,6 +31,7 @@ Template.ViewAdmission.onCreated(function () {
         self.subscribe('Rooms')
         self.subscribe('Beds')
         adm = getAdmission()
+        this.adm = adm;
         if (adm) {
             Session.set('adm', adm)
             Session.set('patient', adm.patient)
@@ -39,14 +47,50 @@ Template.ViewAdmission.helpers({
     editMode: function () {
         return Template.instance().editMode.get();
     },
+    getSummary: function () {
+        adm = getAdmission();
+
+        visitText = _.reduce(adm.visits, function (sum, n) {
+            return sum + ' \n ' + n.note;
+        }, '')
+        let cleanText = visitText.replace(/<\/?[^>]+(>|$)/g, "");
+        cleantText = cleanText.replace(/&nbsp;/gi, '')
+        
+
+        title = "Mr. H is a 65 year old white male with a past medical history significant for an MI ";
+        content = cleanText;
+
+        console.log(content)
+
+        // SummaryTool.getSortedSentences(content, 1, function (err, sorted_sentences) {
+        //     if (err) {
+        //         console.log("There was an error " + err); // Need better error reporting
+        //         Template.instance().summary.set("XXXX");
+        //     }
+        //     Template.instance().summary.set(sorted_sentences);
+        // });
+
+        // SummaryTool.summarize(title, content, function (err, summary) {
+        //     if (err) console.log("Something went wrong man!");
+
+        //     //console.log(summary);
+        //     //Template.instance().summary.set(summary);
+        //     //return summary;
+
+        //     console.log("Original Length " + (title.length + cleanText.length));
+        //     console.log("Summary Length " + summary.length);
+        //     console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
+        // });
+        return Template.instance().summary.get()
+    },
     admission: function () {
         return getAdmission();
     },
     patient: function () {
         return Patients.findOne(getAdmission().patient);
     },
-    conditonOpts: function(){
-        return ['Recovering','Stable', 'Critical']
+    conditonOpts: function () {
+        return ['Recovering', 'Stable', 'Critical']
     },
     visitCreator: function () {
         try {
@@ -75,8 +119,8 @@ Template.ViewAdmission.helpers({
 
     isEditMode: function () { return Session.get("editAdmissionForm") },
 
-    visits:function (admission){
-        return _.orderBy(admission.visits, ['updatedAt'],['desc'])
+    visits: function (admission) {
+        return _.orderBy(admission.visits, ['updatedAt'], ['desc'])
     },
     grandTotal: function (adm) {
         bedStayTotal = adm.bedStaysObj().total;
@@ -90,6 +134,20 @@ Template.ViewAdmission.helpers({
         }
         return 0;
     },
+
+    summaryCalc: function () {
+        return SummaryTool.summarize(title, content, function (err, summary) {
+            if (err) console.log("Something went wrong man!");
+
+            console.log(summary);
+            Template.instance().summary.set(summary);
+            //return summary;
+
+            // console.log("Original Length " + (title.length + content.length));
+            // console.log("Summary Length " + summary.length);
+            // console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
+        });
+    }
 });
 
 
@@ -180,12 +238,12 @@ AutoForm.hooks({
     },
 
     newTestResultsForm: {
-        
+
         formToDoc: function (doc) {
-             adm = Session.get('adm');
+            adm = Session.get('adm');
             patient = Session.get('patient')
             doc.patient = patient
-            if(!!adm)
+            if (!!adm)
                 doc.admission = adm._id;
             return doc;
         },

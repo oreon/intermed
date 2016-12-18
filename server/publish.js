@@ -282,6 +282,17 @@ Meteor.publish('Images', function() {
    return Images.find();
 });
 
+Meteor.publish('counts', function() {
+  Counts.publish(this, 'MyPendingTodos', Todos.find({ forUser: this.userId, completed: false }));
+});
+
+Meteor.publish('MyPendingTodos', function() {
+   return Todos.find({ forUser: this.userId, completed: false });
+});
+
+
+
+
 
 if (Meteor.isServer) {
 //make sure a patient is not used in two current admissions simultaneously

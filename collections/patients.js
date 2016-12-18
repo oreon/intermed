@@ -475,7 +475,7 @@ DrugSchema = new SimpleSchema([BaseSchema, {
 FrequencySchema = new SimpleSchema({
     every: {
         type: Number,
-        label: "Numbers"
+        label: "Times "
     },
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
@@ -530,7 +530,7 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     },
     quantity: { type: Number, defaultValue: 1 },
     duration: { type: DurationSchema },
-    prn: { type: Boolean, optional: true, label: 'PRN (as needed) ' },
+    prn: { type: Boolean, optional: true, label:''/* 'PRN (as needed) ' */},
 
     instructions: { type: String, optional: true },
     endDate: {
@@ -873,7 +873,12 @@ TodoSchema = new SimpleSchema([BaseSchema, {
                 return Meteor.users.find().map(function (c) {
                     let name = "XXX"
                     try {
-                        name = c.profile.firstName + " " + c.profile.lastName
+                        spec = (c.profile.specialization)?c.profile.specialization : "";
+                        profession =(c.profile.profession)?c.profile.profession : "";
+                        if(profession == "physician")
+                            profession = "Dr"
+
+                        name = `${profession} ${c.profile.firstName}  ${c.profile.lastName} ${spec}`
                     } catch (e) {
                         name = c._id
                     }
@@ -883,7 +888,9 @@ TodoSchema = new SimpleSchema([BaseSchema, {
         }
     },
     completed: {
-        type: Boolean
+        type: Boolean,
+        defaultValue:false,
+        optional: true 
     },
     dateCompleted: {
         type: Date,
@@ -1018,8 +1025,21 @@ Todos.helpers({
         return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
     },
     creator: function () {
-        user = Meteor.users.findOne({ _id: this.createdBy })
-        return user.profile.firstName + " " + user.profile.lastName;
+        try {
+            user = Meteor.users.findOne({ _id: this.createdBy })
+            return user.profile.firstName + " " + user.profile.lastName;
+        } catch (error) {
+            return "Dr Unknown"
+        }
+    },
+    assignee: function () {
+        try {
+            user = Meteor.users.findOne({ _id: this.forUser })
+            console.log(user)
+            return user.profile.firstName + " " + user.profile.lastName;
+        } catch (error) {
+            return "Dr Unknown"
+        }
     }
 })
 
@@ -1157,6 +1177,7 @@ commonTodoCols = [
     { data: "patient", visible: false },
     { data: "createdBy", visible: false },
     { data: "creator()", title: "Creator" },
+    { data: "assignee()", title: "Assignee" },
     {
         data: "createdAt", title: 'Created At',
         render: function (val, type, doc) { return moment(val).calendar(); }
@@ -1170,7 +1191,10 @@ mycols.push({
 }
 );
 
+
 bymeCols = _.cloneDeep(commonTodoCols);
+//bymeCols.push({ data: "assignee()", title: "Assignee" })
+
 //mycols.push ({ data: "description" , title:"Description"});
 bymeCols.push({
     tmpl: Meteor.isClient && Template.removeTodoCell
@@ -1216,7 +1240,8 @@ new Tabular.Table({
         smart: false,
         onEnterOnly: true,
     },
-    columns: bymeCols
+    columns: bymeCols,
+    extraFields: ['forUser']
 })
 
 new Tabular.Table({
