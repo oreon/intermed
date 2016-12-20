@@ -8,9 +8,9 @@ Template.registerHelper('datefbig', (dt) => {
   return moment(dt).format('LLLL');
 });
 
-Template.registerHelper('myTodoCount', () => {
-  return Todos.find().count() ;
-});
+// Template.registerHelper('myTodoCount', () => {
+//   return Todos.find().count() ;
+// });
 
 
 Template.registerHelper('datecal', (dt) => {

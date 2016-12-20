@@ -55,12 +55,11 @@ Template.ViewAdmission.helpers({
         }, '')
         let cleanText = visitText.replace(/<\/?[^>]+(>|$)/g, "");
         cleantText = cleanText.replace(/&nbsp;/gi, '')
-        
 
         title = "Mr. H is a 65 year old white male with a past medical history significant for an MI ";
         content = cleanText;
 
-        console.log(content)
+        //console.log(content)
 
         // SummaryTool.getSortedSentences(content, 1, function (err, sorted_sentences) {
         //     if (err) {
@@ -159,17 +158,7 @@ Template.ViewAdmission.events({
         Meteor.call('toggleDischargeEligible', adm._id, adm.eligibleForDischarge);
     },
     'click .discharge': function () {
-        adm = getAdmission();
-        Meteor.call('discharge', adm, function (error, response) {
-            if (error) {
-                Bert.alert(error.reason, "danger");
-                console.log(error)
-            } else {
-                console.log(response)
-                Bert.alert('Successfully discharged patient !', 'success', 'growl-top-right');
-                FlowRouter.go('/recipe/' + adm.patient)
-            }
-        });
+
     },
     'click .fa-pencil': function (event, template) {
         Session.set("editAdmissionForm", true);
@@ -258,13 +247,27 @@ AutoForm.hooks({
         onSuccess: function (operation, result) {
             Session.set("editEncounterForm", false);
         },
-
     },
 
     updateAdmissionForm: {
         onSuccess: function (operation, result) {
             Session.set("editAdmissionForm", false);
             globalEdit.set(false)
+        },
+    },
+    updateDischargeForm: {
+        onSuccess: function (operation, result) {
+            adm = getAdmission();
+            Meteor.call('discharge', adm, function (error, response) {
+                if (error) {
+                    Bert.alert(error.reason, "danger");
+                    console.log(error)
+                } else {
+                    console.log(response)
+                    Bert.alert('Successfully discharged patient !', 'success', 'growl-top-right');
+                    FlowRouter.go('/patient/' + adm.patient)
+                }
+            });
         },
     }
 });

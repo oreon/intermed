@@ -6,7 +6,8 @@
 			{{#if currentUser}}
 			<li><a href="/patients"><i class="fa fa-list"></i>Patients</a></li>
 			<li><a href="/admissions"><i class="fa fa-map-o"></i>Admissions</a></li>
-			<li><a href="/mytodos"><i class="fa fa-shopping-cart"></i>My Todos<span class="badge">{{myTodoCount}}</span> </a></li>
+			<li><a href="/mytodos"><i class="fa fa-shopping-cart"></i>My Todos<span class="label 
+			{{#if myTodoCount }} label-danger {{/if}}">{{myTodoCount}}</span> </a></li>
 			<li ><a href="#" class="logout"><i class="fa fa-pencil"></i>Logout {{user}}</a></li>
 			{{else}}
 			<li ><a href="/login">Login/Sign-up </a></li>

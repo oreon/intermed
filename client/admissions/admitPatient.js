@@ -71,10 +71,7 @@ Template.AvailableBed.events({
         adm =  Admissions.findOne({patient:pt, isCurrent:true})
         console.log(adm)
 
-
         if (!adm ) {
-
-            console.log("admitting patient")
 
             Meteor.call('admit', this, patient, function (error, response) {
                 if (error) {

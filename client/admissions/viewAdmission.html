@@ -37,7 +37,17 @@
 				{{else}} 
 					{{#if admission.eligibleForDischarge}}
 						<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
-						<button class="btn-deny discharge">Discharge</button> 
+						
+						<button class="btn-deny dischargePerform"  data-toggle="collapse" 
+							data-target="#editDischarge">
+							Perform Discharge
+						</button> 
+						
+						<div class="collapse" id="editDischarge">
+						{{> dischargeTmpl var=admission}}
+						</div>
+						
+						<button class="btn-deny discharge">Perform Discharge</button> 
 					{{else}}
 						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
 					{{/if}}
@@ -161,30 +171,34 @@
 
 <template name="updateAdmissionForm">
 	<article class="recipe">
-		{{#autoForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var}}
+		{{> quickForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var
+		fields="admissionNoteSection"}}
+	</article>
+</template>
 
+<template name="dischargeTmpl">
+	<article class="recipe">
+		{{#autoForm collection="Admissions" id="updateDischargeForm" type="update" doc=var}}
 		<fieldset>
 			<legend>Update Admission</legend>
-			{{> afQuickField name='reason'}} {{> afQuickField name='admissionNote'}} {{#if doc.eligibleForDischarge}} {{> afQuickField
-			name='dischargeNote'}} {{/if}}
+			{{> afQuickField name='dischargeType'}}
+			 {{> afQuickField name='dischargeNote'}} 
+			 {{#if doc.eligibleForDischarge}} 
+			  {{> afQuickField name='referredTo'}} 
+			 {{/if}}
 		</fieldset>
 		<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 	</article>
 </template>
 
 <template name="updateScriptForm">
-
 	{{>scriptTbl script=var.script}}
 		<hr/>
-	
-		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var 
-			template="plain"}}
+		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var }}
 		 {{> afQuickField
 		name='script'}}
-
 		<button type="submit" class="btn btn-primary">Update</button> 
 		{{/autoForm}}
-	
 </template>
 
 

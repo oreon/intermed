@@ -13,6 +13,7 @@ Meteor.startup(() => {
             LabTests.insert({"name": "CBC"})
             LabTests.insert({"name": "Fasting Sugar"})
             LabTests.insert({"name": "PP Sugar"})
+            LabTests.insert({"name": "Random Sugar"})
             LabTests.insert({"name": "PSA"})
             LabTests.insert({"name": "Thyroid Panel"})
             LabTests.insert({"name": "Blood Chemistry"})
@@ -26,6 +27,17 @@ Meteor.startup(() => {
             Services.insert({"name": "Angiography" , price:8400, autoCreated:false})
             Services.insert({"name": "Gastrectocomy" , price:7800, autoCreated:false})
         }
+         if (Specializations.find().count() == 0) {
+            Specializations.insert({"name": "Opthalmology" })
+            Specializations.insert({"name": "Gyanecology" })
+            Specializations.insert({"name": "Cardiology" })
+            Specializations.insert({"name": "Internal Medicine" })
+            Specializations.insert({"name": "Dermatology" })
+            Specializations.insert({"name": "Surgery" })    
+           
+        }
+
+
         //   if (Wards.find().count() > 0) {
         //     wd = Wards.insert({"name": "Female General" , price:150}, function(error, res){
         //         console.log(res)

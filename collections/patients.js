@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 //import {Roles} from 'alanning/roles'
 import moment from 'moment'
+import { userFullName, userFullNameById } from '/imports/utils/misc.js';
 
 /*export const*/
 Patients = new Mongo.Collection('patients')
@@ -44,12 +45,38 @@ Images.allow({
     },
 });
 
-// PatientFiles.allow({
-//     download: function () {
-//         return true;
-//     },
-//     fetch: null
-// });
+tmStamp = {
+    type: Date,
+    optional: true,
+    autoform: {
+        type: "hidden"
+    },
+    autoValue: function () {
+        return new Date();
+    },
+}
+
+creatorId = {
+    type: String,
+    optional: true,
+    autoValue: function () {
+        return this.userId
+    },
+    autoform: {
+        type: "hidden"
+    },
+}
+
+creator = {
+    type: String,
+    optional: true,
+    autoValue: function () {
+        return userFullName(Meteor.users.find(this.userId))
+    },
+    autoform: {
+        type: "hidden"
+    },
+}
 
 
 Wards = new Mongo.Collection('wards')
@@ -123,12 +150,17 @@ BaseSchema = new SimpleSchema({
             type: "hidden"
         }
     },
-
-
 })
 
 ChronicDiseaseSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
 LabTestSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
+
+EventSchema = new SimpleSchema({
+    name: { type: String },
+    creator: creator,
+    creatorId: creatorId,
+    date: tmStamp
+})
 
 
 SpecializationsSchema = new SimpleSchema([BaseSchema, {
@@ -342,7 +374,24 @@ WardSchema = new SimpleSchema([BaseSchema, {
 
 
 FacilitySchema = new SimpleSchema([BaseSchema, {
-    name: { type: String }
+    name: { type: String },
+    address: { type: String },
+    city: { type: String },
+    specializations: {
+        type: [String],
+        autoform: {
+            type: "select-checkbox",
+            options: function () {
+                return Specializations.find({}, { sort: { name: 1 } }).map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+    taxes: {
+        type: Number,
+    }
+
 }
 ])
 
@@ -530,7 +579,7 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     },
     quantity: { type: Number, defaultValue: 1 },
     duration: { type: DurationSchema },
-    prn: { type: Boolean, optional: true, label:''/* 'PRN (as needed) ' */},
+    prn: { type: Boolean, optional: true, label: ''/* 'PRN (as needed) ' */ },
 
     instructions: { type: String, optional: true },
     endDate: {
@@ -722,6 +771,58 @@ PatientSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
+AdmissionNoteSchema = new SimpleSchema({
+    admitDate: tmStamp,
+    reason: {
+        type: String,
+        optional: true,
+    },
+    admissionType: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select2",
+            options: function () {
+                fac = Facilities.findOne();
+                return _(fac.specializations).map(function (c) {
+                    return { label: c.name, value: c.name };
+                });
+            }
+        }
+    },
+    admissionNote: {
+        type: String,//orion.attribute('summernote'),
+        optional: true,
+        autoform: {
+            type: "summernote",
+            rows: 4
+        }
+    },
+})
+
+DischargeSchema = new SimpleSchema({
+    dischargeNote: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "textarea"
+        }
+    },
+
+    dischargeType: {
+        type: String,
+        //label: "Route",
+        defaultValue: 'Recovering',
+        allowedValues: ['Recovering', 'Referred', 'Deceased']
+    },
+    referredTo: {
+        type: String,
+        optional: true,
+        label: " Name of the Institution the patient has been referred to",
+    },
+    dischargeDate: tmStamp,
+})
+
 AdmissionSchema = new SimpleSchema([BaseSchema, {
     patient: {
         type: String,
@@ -744,30 +845,13 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    admitDate: {
-        type: Date,
+    admissionNoteSection: {
+        type: AdmissionNoteSchema,
         optional: true
-        ,
-        autoform: {
-            type: "hidden"
-        }
     },
-    dischargeDate: {
-        type: Date,
-        optional: true,
-        autoform: {
-            type: "hidden"
-        }
-    },
-    reason: {
-        type: String,
-        optional: true,
-    },
-    route: {
-        type: String,
-        label: "Route",
-        defaultValue: 'PO',
-        allowedValues: ['PO', 'IM', 'IV', 'SC', 'Topical', 'ID', 'IO']
+    dischargeSection: {
+        type: DischargeSchema,
+        optional: true
     },
     condition: {
         type: String,
@@ -779,24 +863,12 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             // options:   ['Recovering','Stable', 'Critical']
         }
     },
-    admissionNote: {
-        type: String,//orion.attribute('summernote'),
-        optional: true,
-        autoform: {
-            type: "summernote"
-        }
-    },
+
     visits: {
         type: [VisitSchema],
         optional: true,
     },
-    dischargeNote: {
-        type: String,
-        optional: true,
-        autoform: {
-            type: "textarea"
-        }
-    },
+
     script: {
         type: ScriptSchema,
         optional: true,
@@ -861,6 +933,7 @@ TodoSchema = new SimpleSchema([BaseSchema, {
     },
     description: {
         type: String,
+        optional: true,
         autoform: {
             type: "textarea"
         }
@@ -871,26 +944,15 @@ TodoSchema = new SimpleSchema([BaseSchema, {
             type: "select2",
             options: function () {
                 return Meteor.users.find().map(function (c) {
-                    let name = "XXX"
-                    try {
-                        spec = (c.profile.specialization)?c.profile.specialization : "";
-                        profession =(c.profile.profession)?c.profile.profession : "";
-                        if(profession == "physician")
-                            profession = "Dr"
-
-                        name = `${profession} ${c.profile.firstName}  ${c.profile.lastName} ${spec}`
-                    } catch (e) {
-                        name = c._id
-                    }
-                    return { label: name, value: c._id };
+                    return { label: userFullName(c), value: c._id };
                 });
             }
         }
     },
     completed: {
         type: Boolean,
-        defaultValue:false,
-        optional: true 
+        defaultValue: false,
+        optional: true
     },
     dateCompleted: {
         type: Date,
@@ -1025,21 +1087,10 @@ Todos.helpers({
         return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
     },
     creator: function () {
-        try {
-            user = Meteor.users.findOne({ _id: this.createdBy })
-            return user.profile.firstName + " " + user.profile.lastName;
-        } catch (error) {
-            return "Dr Unknown"
-        }
+        return userFullNameById(this.createdBy).fork(err =>  "Dr Unknown" , data => data)
     },
     assignee: function () {
-        try {
-            user = Meteor.users.findOne({ _id: this.forUser })
-            console.log(user)
-            return user.profile.firstName + " " + user.profile.lastName;
-        } catch (error) {
-            return "Dr Unknown"
-        }
+        return userFullNameById(this.forUser).fork(err =>  "Dr Unknown" , data => data)
     }
 })
 

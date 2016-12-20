@@ -1,0 +1,11 @@
+<template name="EditFacility">
+{{#if patient}}
+    {{> quickForm collection="Facilities" id="editPatientForm" type="update" doc=patient 
+    autosave=false
+    }}
+{{else}}
+    {{> quickForm collection="Facilities" id="insertPatientForm" type="insert"  autosave=false
+    }}
+{{/if}}
+
+</template>
