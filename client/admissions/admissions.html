@@ -10,7 +10,9 @@
                     <h3> {{name}} </h3>
                     {{#each rbeds}}
                     <div class="col-sm-6">
-                        {{> Admitted }}
+                        {{#if admission}}
+                        {{> Admitted admission=admission}}
+                        {{/if}}
                     </div>
                     {{/each}}
                     <hr/>
@@ -24,22 +26,21 @@
 
 
 <template name="Admitted">
-    {{#if bedHasPatient}}
-         <div class="panel {{panelType}}">
-            <div class="panel-heading">
-                <h4>{{> patInfo patient=bedpatient extra=admission.reason}}  </h4>
-                <a href="viewAdmission/{{admission._id}}"> {{bedpatient.currentBed.fullName}} </a>
-            </div>
-            <div class="panel-body">
-                {{#each arrayify admission.recentMeasurements}}
-                     <ul class="list-group"><b>{{name}} </b>
-                        {{#each value}} 
-                           <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
-                        {{/each}}
-                    </ul>
-                {{/each}}
-                
-            </div>
+    <a href="viewAdmission/{{admission._id}}">
+    <div class="panel {{panelType admission}}">
+        <div class="panel-heading">
+            <h4>{{> patInfo patient=admission.patientObj extra=admission.reason}}  </h4>
+             {{admission.patientObj.currentBed.fullName}} 
         </div>
-    {{/if}}
+        <div class="panel-body">
+            {{#each arrayify admission.recentMeasurements}}
+                    <ul class="list-group"><b>{{name}} </b>
+                    {{#each value}} 
+                        <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
+                    {{/each}}
+                </ul>
+            {{/each}}
+        </div>
+    </div>
+    </a>
 </template>

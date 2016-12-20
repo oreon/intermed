@@ -1,0 +1,36 @@
+<template name="LabAdmin">
+     {{#if Template.subscriptionsReady}}
+        {{# each wards }}
+            <article class="recipe">
+                <h2> Ward {{.}} </h2>
+                <hr/>
+                {{#each wardAdms .}}
+                    {{_id}} {{reason}} 
+                    
+                {{/each}}
+            </article>   
+         {{/each}}
+        {{/if}}
+</template>
+
+
+<template name="LabAdm">
+    {{#if bedHasPatient}}
+         <div class="panel {{panelType}}">
+            <div class="panel-heading">
+                <h4>{{> patInfo patient=admission.patientObj extra=admission.reason}}  </h4>
+                <a href="viewAdmission/{{admission._id}}"> {{bedpatient.currentBed.fullName}} </a>
+            </div>
+            <div class="panel-body">
+                {{#each arrayify admission.recentMeasurements}}
+                     <ul class="list-group"><b>{{name}} </b>
+                        {{#each value}} 
+                           <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
+                        {{/each}}
+                    </ul>
+                {{/each}}
+                
+            </div>
+        </div>
+    {{/if}}
+</template>

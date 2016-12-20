@@ -19,6 +19,8 @@ Meteor.subscribe('ScriptTemplates')
 
 Meteor.subscribe('userData')
 
+Meteor.subscribe('Specializations')
+
 //Meteor.subscribe('patientFiles')
 //Meteor.subscribe('MyPendingTodos')
 

@@ -44,10 +44,9 @@
 						</button> 
 						
 						<div class="collapse" id="editDischarge">
-						{{> dischargeTmpl var=admission}}
+						{{> dischargeTmpl admission=admission}}
 						</div>
 						
-						<button class="btn-deny discharge">Perform Discharge</button> 
 					{{else}}
 						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
 					{{/if}}
@@ -172,20 +171,18 @@
 <template name="updateAdmissionForm">
 	<article class="recipe">
 		{{> quickForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var
-		fields="admissionNoteSection"}}
+		fields="admissionNote, reason, admissionType"}}
 	</article>
 </template>
 
 <template name="dischargeTmpl">
 	<article class="recipe">
-		{{#autoForm collection="Admissions" id="updateDischargeForm" type="update" doc=var}}
+		{{#autoForm collection="Admissions" id="updateDischargeForm" type="update" doc=admission}}
 		<fieldset>
-			<legend>Update Admission</legend>
-			{{> afQuickField name='dischargeType'}}
-			 {{> afQuickField name='dischargeNote'}} 
-			 {{#if doc.eligibleForDischarge}} 
-			  {{> afQuickField name='referredTo'}} 
-			 {{/if}}
+			<legend>Discharge Patient</legend>
+			{{> afQuickField name='dischargeSection.dischargeType' options="allowed"}}
+			{{> afQuickField name='dischargeSection.dischargeNote'}} 
+			
 		</fieldset>
 		<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 	</article>

@@ -46,7 +46,7 @@ Template.MySchedule.helpers({
                 arrSched.push(itemsWithAdm)
             })
         })
-        console.log(arrSched)
+        //console.log(arrSched)
         return _(arrSched)
             .flatten()
             .orderBy(['dateToAdmin'], ['asc'])

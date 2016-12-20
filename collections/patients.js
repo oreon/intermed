@@ -382,7 +382,7 @@ FacilitySchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select-checkbox",
             options: function () {
-                return Specializations.find({}, { sort: { name: 1 } }).map(function (c) {
+                return Specializations.find().map(function (c) {
                     return { label: c.name, value: c.name };
                 });
             }
@@ -771,34 +771,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
-AdmissionNoteSchema = new SimpleSchema({
-    admitDate: tmStamp,
-    reason: {
-        type: String,
-        optional: true,
-    },
-    admissionType: {
-        type: String,
-        optional: true,
-        autoform: {
-            type: "select2",
-            options: function () {
-                fac = Facilities.findOne();
-                return _(fac.specializations).map(function (c) {
-                    return { label: c.name, value: c.name };
-                });
-            }
-        }
-    },
-    admissionNote: {
-        type: String,//orion.attribute('summernote'),
-        optional: true,
-        autoform: {
-            type: "summernote",
-            rows: 4
-        }
-    },
-})
+
 
 DischargeSchema = new SimpleSchema({
     dischargeNote: {
@@ -812,8 +785,8 @@ DischargeSchema = new SimpleSchema({
     dischargeType: {
         type: String,
         //label: "Route",
-        defaultValue: 'Recovering',
-        allowedValues: ['Recovering', 'Referred', 'Deceased']
+        defaultValue: 'Recovered',
+        allowedValues: ['Recovered', 'Referred', 'Deceased']
     },
     referredTo: {
         type: String,
@@ -845,9 +818,31 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    admissionNoteSection: {
-        type: AdmissionNoteSchema,
-        optional: true
+   admitDate: tmStamp,
+    reason: {
+        type: String,
+        optional: true,
+    },
+    admissionType: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select2",
+             options: function () {
+                //TODO - fix the find to use correct facility
+                fac = Facilities.findOne();
+                console.log(fac.specializations)
+                return fac.specializations.map( (c) => {return { label: c, value: c } })
+            }
+        }
+    },
+    admissionNote: {
+        type: String,//orion.attribute('summernote'),
+        optional: true,
+        autoform: {
+            type: "summernote",
+            rows: 4
+        }
     },
     dischargeSection: {
         type: DischargeSchema,
@@ -944,7 +939,7 @@ TodoSchema = new SimpleSchema([BaseSchema, {
             type: "select2",
             options: function () {
                 return Meteor.users.find().map(function (c) {
-                    return { label: userFullName(c), value: c._id };
+                    return { label: userFullNameById(c._id).fork(e=>"drx",s=>s), value: c._id };
                 });
             }
         }
@@ -1072,7 +1067,11 @@ Beds.helpers({
     fullName: function () {
         return this.roomObj().fullName() + '-' + this.name;
     },
-    roomObj: function () { return Rooms.findOne({ _id: this.room }) }
+    roomObj: function () { return Rooms.findOne({ _id: this.room }) },
+    admission:function(){
+        bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+        return Admissions.findOne({ 'currentBedStay.bed': bed })
+    }
 })
 Rooms.helpers({
     fullName: function () {

@@ -23,6 +23,11 @@ Template.Admissions.helpers({
     rbeds: function () {
         return Beds.find({ room: this._id });
     }
+,
+    adm:function(){
+        bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+        return Admissions.findOne({ 'currentBedStay.bed': bed })
+    }
 
 })
 
@@ -41,38 +46,27 @@ Template.Admitted.onCreated(function () {
 Template.Admitted.helpers({
 
     bedHasPatient: function () {
-        busyBeds = _.map(Admissions.find().fetch(), 'currentBedStay.bed')
-        return _.includes(busyBeds, this._id);
+        // busyBeds = _.map(Admissions.find().fetch(), 'currentBedStay.bed')
+        // bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+        // return _.includes(busyBeds, bed);
     },
 
-    admission: function () {
-        return Admissions.findOne({ 'currentBedStay.bed': this._id })
-    },
-
-    panelType: function () {
-        adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
+    panelType: function (adm) {
+        //adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
         if (adm.condition === 'Critical')
             return "panel-danger"
         if (adm.condition === 'Recovering')
             return "panel-success"
         return 'panel-warning'
     },
-
-    msmtNames: function () {
-        adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
-        return Array.from(adm.recentMeasurements().keys())
-    },
-    msmtVals: function (key) {
-        adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
-        console.log(adm.recentMeasurements().get(key));
-        return adm.recentMeasurements().get(key)
-    },
-    bedpatient: function () {
-        //var id = FlowRouter.getParam('id');
-        //console.log(this.patient)
-        let adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
-        //console.log(adm)
-        return Patients.findOne({ _id: adm.patient });
-    },
+    // msmtNames: function (adm) {
+    //     adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
+    //     return Array.from(adm.recentMeasurements().keys())
+    // },
+    // // msmtVals: function (adm, key) {
+    // //     adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
+    // //     console.log(adm.recentMeasurements().get(key));
+    // //     return adm.recentMeasurements().get(key)
+    // // },
 
 });
