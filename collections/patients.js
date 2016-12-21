@@ -1080,6 +1080,7 @@ Beds.helpers({
     roomObj: function () { return Rooms.findOne({ _id: this.room }) },
     admission:function(){
         bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+        console.log(bed);
         return Admissions.findOne({ 'currentBedStay.bed': bed })
     },
     wardObj:function(){

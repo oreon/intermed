@@ -139,14 +139,17 @@ export const userFullName = (user) => {
 
 }
 
-export const findInvTotal = (inv) => {
-    let itemsVal = inv.items
-    if(!itemsVal) return 0;
-    console.log(inv.items)
-    total = _.reduce(itemsVal, function (sum, item) {
-        item.total = item.appliedPrice * item.units
-        return sum + (item.total ? item.total : 0);
-    }, 0);
-    return total;
-}
+export const findInvTotal = (inv) => _(inv.items).reduce(function (sum, item) {
+    item.total = item.appliedPrice * item.units
+    return sum + (item.total ? item.total : 0);
+}, 0);
+
+// export const findInvTotal = (inv) => {
+//     if(!inv.items) return 0;
+//     total = _(itemsVal).reduce(, function (sum, item) {
+//         item.total = item.appliedPrice * item.units
+//         return sum + (item.total ? item.total : 0);
+//     }, 0);
+//     return total;
+// }
 

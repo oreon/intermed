@@ -54,8 +54,11 @@ Template.AvailableBed.onCreated(function () {
 
 Template.AvailableBed.helpers({
     isBedAvailable:function(){
+        //to prevent objectIDS
+        if( !( typeof this._id === "string" ) ) return false;
+
         busyBeds = _.map(Admissions.find().fetch(), 'currentBedStay.bed')
-        return  ! _.includes(busyBeds, this._id );
+        return  ! _.includes(busyBeds, this._id ) 
     }
 
 })
