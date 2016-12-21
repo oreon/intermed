@@ -79,12 +79,14 @@ Template.Patient.events({
         event.preventDefault();
         drg = event.currentTarget.name;
         console.log(drg)
+
+        //TODO not working as expected
         Patients.update(
             { "_id": FlowRouter.getParam('id') },
             { "$pull": { "drugAllergies": { "drug": drg } } },
             function (err, res) {
-                console.log(error);
-                 console.log(res);
+                console.log(err);
+                console.log(res);
             }
         );
     }
@@ -98,21 +100,10 @@ Template.scriptTbl.helpers({
     enhItems:function(script){
         //console.log(script)
         items =  scriptEnhanced(script).items
-        console.log(items)
+        //console.log(items)
         return items;
     },
-    // startDate:function(item){
-    //     //if(item)
-    //     return item.updatedAt ? item.updatedAt : item.createdAt;
-    //     //return "Unknown"
-    // },
-    // endDate: function (item) {
-    //     //TODO calculate duration from the actual start date  
-    //     return itemEndDate(item)
-    // },
-    // unitsNeeded: function (item) {
-    //     return findUnits(item)
-    // },
+   
     itemSchedule: function (item) {
         return calcSchedule(item);
     }

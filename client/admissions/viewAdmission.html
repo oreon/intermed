@@ -19,6 +19,7 @@
 		<li><a data-toggle="tab" href="#script">Script</a></li>
 		
 		<li><a data-toggle="tab" href="#todos">Todos</a></li>
+		<li><a data-toggle="tab" href="#labs">Labs</a></li>
 		<li><a data-toggle="tab" href="#testResults">Tests</a></li>
 		<li><a data-toggle="tab" href="#measurements">Measurements</a></li>
 
@@ -33,7 +34,7 @@
 			<article class="recipe">
 				<br/>
 				{{#if isEditMode }} 
-					{{> updateAdmissionForm var=admission }} 
+					{{> updateAdmissionForm admission=admission }} 
 				{{else}} 
 					{{#if admission.eligibleForDischarge}}
 						<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
@@ -76,7 +77,7 @@
 
 		<div id="script" class="tab-pane fade ">
 			<h3>Current Order </h3>
-			{{> updateScriptForm var=admission }} 
+			{{> updateScriptForm admission=admission }} 
 		</div>
 
 		<div id="measurements" class="tab-pane fade ">
@@ -113,7 +114,7 @@
 			</table>
 
 			<table class="table table-striped table-bordered table-condensed">
-				<tr style="background:navy; color: #ffe">
+				<tr style="background:navy; color: #fff">
 					<th>Service</th>
 					<th> Units</th>
 					<th> Price</th>
@@ -131,7 +132,7 @@
 				{{/each}}
 				<tr>
 					<td colspan="6">
-						<b> Total : {{ admission.invoice.total }}</b>
+						<b> Total : {{ admission.invoice.totalCurrent }}</b>
 					</td>
 				</tr>
 			</table>
@@ -147,19 +148,23 @@
 			</div>
 			<br/>
 			Bed Stay : Rs. <b> {{ admission.bedStaysObj.total }} </b>
-			<br/> Grand Total : <b> Rs {{ grandTotal admission }} </b>
+			<br/> Grand Total : <b> Rs {{admission.invoice.grandTotal}}</b>
 		</div>
 
 		<div id="todos" class="tab-pane fade">
-			{{> todosPt var=admission}}
+			{{> todosPt admission=admission}}
 		</div>
 
 		<div id="testResults" class="tab-pane fade">
-			{{> testResults var=admission}}
+			{{> testResults admission=admission}}
 		</div>
 
 		<div id="ptGraphs" class="tab-pane fade">
 			{{> PtGraphs admission=admission}}
+		</div>
+
+		<div id="labs" class="tab-pane fade">
+			{{> Labs admission=admission}}
 		</div>
 
 	</div>
@@ -170,7 +175,7 @@
 
 <template name="updateAdmissionForm">
 	<article class="recipe">
-		{{> quickForm collection="Admissions" id="updateAdmissionForm" type="update" doc=var
+		{{> quickForm collection="Admissions" id="updateAdmissionForm" type="update" doc=admission
 		fields="admissionNote, reason, admissionType"}}
 	</article>
 </template>
@@ -180,18 +185,22 @@
 		{{#autoForm collection="Admissions" id="updateDischargeForm" type="update" doc=admission}}
 		<fieldset>
 			<legend>Discharge Patient</legend>
-			{{> afQuickField name='dischargeSection.dischargeType' options="allowed"}}
-			{{> afQuickField name='dischargeSection.dischargeNote'}} 
+			{{> afQuickField name='dischargeSection.dischargeType' options="allowed" value="Recovered"}}
 			
+			{{#if afFieldValueIs name="dischargeSection.dischargeType" value="Referred"}}
+    			{{> afQuickField name="referredTo"}}
+  			{{/if}}
+
+			{{> afQuickField name='dischargeSection.dischargeNote' value="your notes here "}} 
 		</fieldset>
 		<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
 	</article>
 </template>
 
 <template name="updateScriptForm">
-	{{>scriptTbl script=var.script}}
+	{{>scriptTbl script=admission.script}}
 		<hr/>
-		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=var }}
+		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
 		 {{> afQuickField
 		name='script'}}
 		<button type="submit" class="btn btn-primary">Update</button> 
@@ -217,7 +226,27 @@
 <template name="testResults">
 	{{> tabular table=TabularTables.TestResultsAdmTbl selector=selector class="table table-striped table-bordered table-condensed"}}
 
-	{{> quickForm collection="TestResults" id="newTestResultsForm" type="insert" }} 
+	 <ul class="list-group">
+		{{#each  admission.tests}}
+			<li class="list-group-item">  
+				{{name}} 
+				{{#autoForm collection="TestResults" id="newTestResultsForm" type="insert"}}
+				<fieldset>
+					<legend>Update {{name}}</legend>
+					{{> afQuickField name='labTest' value=_id readonly = true}}
+					{{> afQuickField name='mainValue' }}
+					{{> afQuickField name='values'}} 
+				</fieldset>
+				<button type="submit" class="btn btn-primary">Update</button> 
+				{{/autoForm}}
+			</li>
+		{{/each}}
+    </ul> 
+</template>
+
+<template name="Labs">
+	{{> quickForm collection="Admissions" id="testsForm" type="update" 
+		fields="labsAndImages" doc=admission autosave=true  }} 
 </template>
 
 <template name="measurementTmpl">

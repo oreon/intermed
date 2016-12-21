@@ -1,3 +1,5 @@
+import * as utils from '/imports/utils/misc.js';
+
 Template.Admissions.onCreated(function () {
     var self = this;
     self.autorun(function () {
@@ -13,6 +15,7 @@ Template.Admissions.onCreated(function () {
 Template.Admissions.helpers({
 
     wards: function () {
+        console.log(utils.wardsWithPatients());
         return Wards.find();
     },
 

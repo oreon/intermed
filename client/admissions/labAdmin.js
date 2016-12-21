@@ -10,18 +10,38 @@ Template.LabAdmin.onCreated(function () {
     });
 });
 
+
 Template.LabAdmin.helpers({
 
     wards: function () {
+        //console.log(utils.wardsWithPatients());
+        return Wards.find( { name: { $in: utils.wardsWithPatients() } });
+    },
+
+    rooms: function () {
+        return Rooms.find({ ward: this._id });
+    },
+
+    rbeds: function () {
+        return Beds.find({ room: this._id });
+    }
+,
+    adm:function(){
+        bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+        return Admissions.findOne({ 'currentBedStay.bed': bed })
+    }
+
+})
+
+Template.UploadLabResults.helpers({
+     formId: function (testName) {
         wds = utils.admissionsByWards()
         console.log(wds);
         utils.logret( ()=> Object.keys(wds) );
-        //console.log(ret);
-        //return ret;
     },
-
-    wardAdms: function (key) {
-        return utils.admissionsByWards()[key];
-    },
-
+    prepDoc:function(testName){
+        test = LabTests.findOne({'name':testName})
+        doc = {'labTest':test._id}
+        return doc; 
+    }
 })

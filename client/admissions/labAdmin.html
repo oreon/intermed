@@ -1,36 +1,52 @@
 <template name="LabAdmin">
-     {{#if Template.subscriptionsReady}}
+    {{#if Template.subscriptionsReady}}
         {{# each wards }}
+        {{#if wardHasPatients .}}
             <article class="recipe">
-                <h2> Ward {{.}} </h2>
+                <h2> Ward {{name}} </h2>
                 <hr/>
-                {{#each wardAdms .}}
-                    {{_id}} {{reason}} 
-                    
+                {{#each rooms}}
+                {{#if roomHasPatients .}}
+                 <div class="row">
+                    <h3> {{name}} </h3>
+                    {{#each rbeds}}
+                    <div class="col-sm-6">
+                        {{#if and admission admission.tests}}
+                         {{> UploadLabResults admission=admission}}
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                    <hr/>
+                 </div>
+                 {{/if}}
                 {{/each}}
-            </article>   
-         {{/each}}
+            </article>
         {{/if}}
+        {{/each}}
+    {{/if}}
 </template>
 
 
-<template name="LabAdm">
-    {{#if bedHasPatient}}
-         <div class="panel {{panelType}}">
-            <div class="panel-heading">
-                <h4>{{> patInfo patient=admission.patientObj extra=admission.reason}}  </h4>
-                <a href="viewAdmission/{{admission._id}}"> {{bedpatient.currentBed.fullName}} </a>
-            </div>
-            <div class="panel-body">
-                {{#each arrayify admission.recentMeasurements}}
-                     <ul class="list-group"><b>{{name}} </b>
-                        {{#each value}} 
-                           <li class="list-group-item">  {{mainValue}} ,{{datecal updatedAt}} </li>
-                        {{/each}}
-                    </ul>
-                {{/each}}
-                
-            </div>
+<template name="UploadLabResults">
+    <a href="viewAdmission/{{admission._id}}">
+    <div class="panel">
+        <div class="panel-heading">
+            <h4>{{> patInfo patient=admission.patientObj extra=admission.reason}}  </h4>
+             {{admission.patientObj.currentBed.fullName}} 
         </div>
-    {{/if}}
+
+         <ul class="list-group">
+             {{#each  admission.tests}}
+             <li class="list-group-item">  
+                {{name}} 
+            </li>
+            {{/each}}
+        </ul>
+
+       <br/>  
+        <div class="panel-body">
+         
+        </div>
+    </div>
+    </a>
 </template>

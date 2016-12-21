@@ -121,19 +121,6 @@ Template.ViewAdmission.helpers({
     visits: function (admission) {
         return _.orderBy(admission.visits, ['updatedAt'], ['desc'])
     },
-    grandTotal: function (adm) {
-        bedStayTotal = adm.bedStaysObj().total;
-        //console.log(adm)
-        if (adm) {
-            let inv = adm.invoice()
-            if (inv) {
-                return bedStayTotal + inv.total;
-            } else
-                return bedStayTotal;
-        }
-        return 0;
-    },
-
     summaryCalc: function () {
         return SummaryTool.summarize(title, content, function (err, summary) {
             if (err) console.log("Something went wrong man!");
@@ -235,6 +222,46 @@ AutoForm.hooks({
             if (!!adm)
                 doc.admission = adm._id;
             return doc;
+        },
+        onSuccess: function (operation, result) {
+            //console.log(operation)
+            console.log(result)
+
+            testObj  = TestResults.findOne(result)
+            test = testObj.labTest;
+
+            console.log(test)
+            //Session.set("editEncounterForm", false);
+            adm = Session.get('adm');
+
+            Admissions.update(
+                { "_id": adm._id },
+                { "$pull": { "labsAndImages.tests": test } },
+                function (err, res) {
+                    console.log(err);
+                    console.log(res);
+                }
+            );
+
+            service = Services.findOne({ name: "Lab Tests" })
+            console.log(service._id)
+            invoiceItem = {
+                service: service.name + ' ' + testObj.labTestName(),
+                appliedPrice: 200, units: 1, remarks: testObj.labTestName(),
+                total: 200
+            }
+
+            inv = Invoices.findOne({ "admission": adm._id })
+
+            Invoices.update(
+                { "_id": inv._id },
+                { "$push": { "items": invoiceItem } },
+                function (err, res) {
+                    console.log(err);
+                    console.log(res);
+                }
+            )
+
         },
     },
 

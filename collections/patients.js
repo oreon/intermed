@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 //import {Roles} from 'alanning/roles'
 import moment from 'moment'
-import { userFullName, userFullNameById } from '/imports/utils/misc.js';
+import { userFullName, userFullNameById , findInvTotal} from '/imports/utils/misc.js';
 
 /*export const*/
 Patients = new Mongo.Collection('patients')
@@ -208,6 +208,10 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             readonly: true
         }
+    },
+    remarks:{
+        type:String,
+        optional:true
     }
 
 }])
@@ -650,7 +654,7 @@ EncounterSchema = new SimpleSchema([BaseSchema, {
         optional: true,
     },
     labsAndImages: {
-        type: [LabsAndImagingSchema],
+        type: LabsAndImagingSchema,
         optional: true,
     },
 }])
@@ -791,7 +795,7 @@ DischargeSchema = new SimpleSchema({
     referredTo: {
         type: String,
         optional: true,
-        label: " Name of the Institution the patient has been referred to",
+        //label: "Institution the patient has been referred to",
     },
     dischargeDate: tmStamp,
 })
@@ -873,7 +877,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         optional: true,
     },
     labsAndImages: {
-        type: [LabsAndImagingSchema],
+        type: LabsAndImagingSchema,
         optional: true,
     },
     tests: {
@@ -1046,7 +1050,7 @@ Patients.helpers({
     currentBed: function () {
         adm = this.currentAdmisson();
         if (adm) {
-            console.log("found bed " + adm.currentBedStay.bed)
+            //console.log("found bed " + adm.currentBedStay.bed)
             return Beds.findOne(adm.currentBedStay.bed);
         }
         return null
@@ -1063,6 +1067,12 @@ Patients.helpers({
     }
 })
 
+Wards.helpers({
+    busyBeds: function () {
+        return this.roomObj().fullName() + '-' + this.name;
+    },
+})
+
 Beds.helpers({
     fullName: function () {
         return this.roomObj().fullName() + '-' + this.name;
@@ -1071,6 +1081,9 @@ Beds.helpers({
     admission:function(){
         bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
         return Admissions.findOne({ 'currentBedStay.bed': bed })
+    },
+    wardObj:function(){
+        return this.roomObj().wardObj()
     }
 })
 Rooms.helpers({
@@ -1106,6 +1119,13 @@ Admissions.helpers({
     invoice: function () {
         inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
         return inv;
+    },
+    tests:function(){
+        if(!this.labsAndImages) return;
+
+        return _(this.labsAndImages.tests)
+        .map(x => LabTests.findOne( x ))
+        .value();
     },
     testResults: function () {
         return TestResults.find({ admission: this._id });
@@ -1156,6 +1176,22 @@ Admissions.helpers({
 
 })
 
+Invoices.helpers({
+    admissionObj: function(){
+        return Admissions.findOne(this.admission)
+    },
+    totalCurrent:function(){ return findInvTotal(this);},
+    grandTotal: function () {
+        adm = this.admissionObj();
+        bedStayTotal = adm.bedStaysObj().total;
+        invTotal = findInvTotal(this)
+        console.log(invTotal)
+        if (adm) {
+            return (this) ? bedStayTotal + invTotal: bedStayTotal;
+        }
+        return 0;
+    },
+})
 
 
 Encounters.helpers({

@@ -194,7 +194,6 @@ Meteor.publishComposite('compWards', {
 
                 {
                     find: function (room) {
-
                         return Beds.find(
                             {room: room._id},
                             {sort: {name: -1}, limit: 1000/*, fields: {profile: 1}*/});

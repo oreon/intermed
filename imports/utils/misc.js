@@ -95,6 +95,38 @@ export const userFullNameById = (id) => {
 
 //export const userFullNameById = (id) => Meteor.users.findOne({ _id: this.forUser })
 
+export const busyBeds = () =>
+    _(Admissions.find().fetch())
+        .map('currentBedStay.bed')
+        .map(x => Beds.findOne(x))
+        .filter(x => !!x)
+        .value()
+
+export const busyBedsByWard = (ward) =>
+    _(busyBeds())
+        .filter(x => x.wardObj()._id == ward._id)
+
+export const wardHasPatients = (ward) =>
+    wardsWithPatients()
+        .includes(ward.name)
+
+export const wardsWithPatients = () =>
+    _(busyBeds())
+        .map(x => x.wardObj().name)
+        .uniq()
+        .value()
+
+export const roomHasPatients = (room) =>
+    roomsWithPatients()
+        .includes(room._id)
+
+export const roomsWithPatients = () =>
+    _(busyBeds())
+        .map(x => x.room)
+        .value()
+
+
+
 export const userFullName = (user) => {
     if (user.profile) {
         spec = getDefault(user.profile.specialization)
@@ -104,13 +136,17 @@ export const userFullName = (user) => {
     } else {
         return user._id
     }
-    // if (profession === "developer")
-    //     throw ("too wierd user")
 
-    // ret = `${profession} ${user.profile.firstName}  ${getDefault(user.profile.lastName)} ${spec}`
-    // ret = undefined
-    // //console.log(ret);
-    // return ret;
+}
 
+export const findInvTotal = (inv) => {
+    let itemsVal = inv.items
+    if(!itemsVal) return 0;
+    console.log(inv.items)
+    total = _.reduce(itemsVal, function (sum, item) {
+        item.total = item.appliedPrice * item.units
+        return sum + (item.total ? item.total : 0);
+    }, 0);
+    return total;
 }
 

@@ -1,26 +1,28 @@
 <template name="Admissions">
-
     {{#if Template.subscriptionsReady}}
         {{# each wards }}
+        {{#if wardHasPatients .}}
             <article class="recipe">
                 <h2> Ward {{name}} </h2>
                 <hr/>
                 {{#each rooms}}
+                {{#if roomHasPatients .}}
                  <div class="row">
                     <h3> {{name}} </h3>
                     {{#each rbeds}}
                     <div class="col-sm-6">
                         {{#if admission}}
-                        {{> Admitted admission=admission}}
+                         {{> Admitted admission=admission}}
                         {{/if}}
                     </div>
                     {{/each}}
                     <hr/>
                  </div>
+                 {{/if}}
                 {{/each}}
             </article>
+        {{/if}}
         {{/each}}
-
     {{/if}}
 </template>
 
