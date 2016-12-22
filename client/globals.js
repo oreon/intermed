@@ -17,12 +17,16 @@ Template.registerHelper('roomHasPatients', (room) => {
   return utils.roomHasPatients(room);
 });
 
-Template.registerHelper('isCurrentAdmSelector', function (a, b) {
+Template.registerHelper('isCurrentAdmSelector', function () {
   return { 'isCurrent': true };
 });
 
-Template.registerHelper('isUnpaidInvoicSelector', function (a, b) {
+Template.registerHelper('isUnpaidInvoicSelector', function () {
   return { 'isDue': true ,amountPaid: {$exists: false } };
+});
+
+Template.registerHelper('allInvoicSelector', function () {
+  return {  };
 });
 
 Template.registerHelper('findAdmissionByInvoice', function (id) {

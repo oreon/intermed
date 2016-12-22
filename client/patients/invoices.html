@@ -1,4 +1,22 @@
 <template name="invoices">
-{{> tabular table=TabularTables.InvoicesTbl selector=isUnpaidInvoicSelector
-    class="table table-striped table-bordered table-condensed"}}	
+
+       <ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#due">Due</a></li>
+		<li><a data-toggle="tab" href="#all">All</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="due" class="tab-pane fade in active">
+            <h3> Due invoices </h3>
+        <hr/>
+            {{> tabular table=TabularTables.InvoicesTbl selector=isUnpaidInvoicSelector
+    class="table table-striped table-bordered table-condensed"}}
+		</div>
+        <div id="all" class="tab-pane fade ">
+        <h3> All invoices </h3>
+        <hr/>
+		 {{> tabular table=TabularTables.allInvoicesTbl selector=allInvoicSelector}}
+    	</div>
+	</div>
+	
 </template>

@@ -1,6 +1,5 @@
 <template name="EditInvoice">
 {{#if Template.subscriptionsReady}}
-    {{inv._id}} {{inv.total}}
     {{>invoiceTmpl admission=admission flds='all' }}
 {{/if}}
 </template>
@@ -27,13 +26,13 @@
 					<td> {{total}} </td>
 				</tr>
 				{{/each}}
-				<tr>
+				<tr style="background:#dde; ">
 					<td colspan="6">
-						<b> Total : {{getBedStayTotal admission}}</b>
+						<b> Total : Rs {{getBedStayTotal admission}}</b>
 					</td>
 				</tr>
 			</table>
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped ">
 				<tr style="background:navy; color: #fff">
 					<th>Service</th>
 					<th> Units</th>
@@ -50,7 +49,7 @@
 					<td> {{total}} </td>
 				</tr>
 				{{/each}}
-				<tr>
+				<tr style="background:#dde; ">
 					<td colspan="6">
 						<b> Total : {{ admission.invoice.totalCurrent }}</b>
 					</td>

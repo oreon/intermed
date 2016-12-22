@@ -1350,11 +1350,7 @@ updateDate = {
     render: (val, type, doc) => moment(val).calendar()
 },
 
-new Tabular.Table({
-    name: "InvoicesTbl",
-    collection: Invoices,
-    search: defSearch,
-    columns: [
+invcols =  [
         //{ data: "fullName()", title: "Full Name" },
         { data: "patientName", title: "Patient" },
         { data: "admission", title: "Admission" },
@@ -1366,7 +1362,21 @@ new Tabular.Table({
         },
         updateDate,
     ]
+
+new Tabular.Table({
+    name: "InvoicesTbl",
+    collection: Invoices,
+    search: defSearch,
+    columns: invcols
 })
+
+new Tabular.Table({
+    name: "allInvoicesTbl",
+    collection: Invoices,
+    search: defSearch,
+    columns: invcols
+})
+
 
 new Tabular.Table({
     name: "AdmissionsTbl",
