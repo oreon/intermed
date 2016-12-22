@@ -1,5 +1,6 @@
 import moment from 'moment'
 var SummaryTool = require('node-summary');
+import * as utils from '/imports/utils/misc.js';
 
 export function getAdmission() {
     return Admissions.findOne({ _id: FlowRouter.getParam('id') });
@@ -162,32 +163,19 @@ Template.ViewAdmission.events({
 });
 
 
-Template.invoice.onCreated(function () {
-    var self = this;
-    self.autorun(function () {
-        var id = FlowRouter.getParam('id');
-        self.subscribe('Rooms')
-        self.subscribe('Beds')
-        //self.subscribe('compAdmission', id);
-    });
-});
+// Template.invoiceTmpl.onCreated(function () {
+//     var self = this;
+//     self.autorun(function () {
+//         var id = FlowRouter.getParam('id');
+//         self.subscribe('Rooms')
+//         self.subscribe('Beds')
+//         //self.subscribe('compAdmission', id);
+//     });
+// });
 
-Template.invoice.helpers({
+// Template.invoiceTmpl.helpers({
 
-    grandTotal: function (adm) {
-
-        // bedStayTotal = adm.bedStaysObj().total;
-        // //console.log(adm)
-        // if (adm) {
-        //     let inv = adm.invoice()
-        //     if(inv){
-        //         return bedStayTotal  + inv.total;
-        //     }else
-        //         return bedStayTotal;
-        // }    
-        return 0;
-    },
-})
+// })
 
 
 
@@ -227,7 +215,7 @@ AutoForm.hooks({
             //console.log(operation)
             console.log(result)
 
-            testObj  = TestResults.findOne(result)
+            testObj = TestResults.findOne(result)
             test = testObj.labTest;
 
             console.log(test)
@@ -244,23 +232,9 @@ AutoForm.hooks({
             );
 
             service = Services.findOne({ name: "Lab Tests" })
-            console.log(service._id)
-            invoiceItem = {
-                service: service.name + ' ' + testObj.labTestName(),
-                appliedPrice: 200, units: 1, remarks: testObj.labTestName(),
-                total: 200
-            }
-
+            svc = service.name + '-' + testObj.labTestName()
             inv = Invoices.findOne({ "admission": adm._id })
-
-            Invoices.update(
-                { "_id": inv._id },
-                { "$push": { "items": invoiceItem } },
-                function (err, res) {
-                    console.log(err);
-                    console.log(res);
-                }
-            )
+            utils.createInvoiceItem(inv, svc, 200)
 
         },
     },
@@ -285,12 +259,14 @@ AutoForm.hooks({
     updateDischargeForm: {
         onSuccess: function (operation, result) {
             adm = getAdmission();
+            console.log(adm)
             Meteor.call('discharge', adm, function (error, response) {
                 if (error) {
                     Bert.alert(error.reason, "danger");
                     console.log(error)
                 } else {
-                    console.log(response)
+                    console.log(adm)
+
                     Bert.alert('Successfully discharged patient !', 'success', 'growl-top-right');
                     FlowRouter.go('/patient/' + adm.patient)
                 }

@@ -52,9 +52,9 @@
 						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
 					{{/if}}
 
-					<a href="/admitPatient/{{admission.patient}}" class="top-bar-button"> Move Patient </a>
+					<a href="/admitPatient/{{admission.patient}}" class="btn btn-primary"> Move Patient </a>
 
-					<a href="/editAdmission/{{admission._id}}" class="top-bar-button"> Edit  </a>
+					<a href="/editAdmission/{{admission._id}}" class="btn btn-primary"> Edit  </a>
 
 					<br/> <b>Admission Note</b> {{{admission.admissionNote}}}
 					<hr/>
@@ -121,7 +121,7 @@
 					<th> Date </th>
 					<th> Total</th>
 				</tr>
-				{{#each admission.invoice.items}}
+				{{#each admission.invoice.allItems}}
 				<tr>
 					<td>{{service}}</td>
 					<td> {{units}} </td>
@@ -136,8 +136,6 @@
 					</td>
 				</tr>
 			</table>
-
-			{{formType}}
 
 			<button class="btn btn-primary" 
 				data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
@@ -191,9 +189,10 @@
     			{{> afQuickField name="referredTo"}}
   			{{/if}}
 
-			{{> afQuickField name='dischargeSection.dischargeNote' value="your notes here "}} 
+			{{> afQuickField name='dischargeSection.dischargeNote' }} 
 		</fieldset>
-		<button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
+		<button type="submit" class="btn btn-danger">Discharge</button> 
+		{{/autoForm}}
 	</article>
 </template>
 

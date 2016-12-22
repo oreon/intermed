@@ -1,6 +1,5 @@
 <template name="Patients">
-	{{> LabAdmin}}
-
+	
     <button class="new-patient">Add Patient</button>
 
     <ul class="nav nav-tabs">
@@ -13,6 +12,12 @@
 		 {{> tabular table=TabularTables.PatientsTbl class="table table-striped table-bordered table-condensed"}}
 		</div>
         <div id="current" class="tab-pane fade ">
+		{{> tabular table=TabularTables.AdmissionsTbl selector=isCurrentAdmSelector
+			class="table table-striped table-bordered table-condensed"}}
+
+		{{> tabular table=TabularTables.InvoicesTbl selector=isUnpaidInvoicSelector
+			class="table table-striped table-bordered table-condensed"}}	
+
     	</div>
 	</div>
 

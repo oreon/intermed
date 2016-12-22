@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 //import {Roles} from 'alanning/roles'
 import moment from 'moment'
-import { userFullName, userFullNameById , findInvTotal} from '/imports/utils/misc.js';
+import { userFullName, userFullNameById, findInvTotal } from '/imports/utils/misc.js';
 
 /*export const*/
 Patients = new Mongo.Collection('patients')
@@ -45,6 +45,8 @@ Images.allow({
     },
 });
 
+patientName = {type:String, optional:true ,  autoform: {type: "hidden"},}
+
 tmStamp = {
     type: Date,
     optional: true,
@@ -83,6 +85,31 @@ Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
+
+class ChartsCollection extends Mongo.Collection {
+    insert(list, callback, language = 'en') {
+        const ourList = list;
+        if (!ourList.name) {
+            const defaultName = TAPi18n.__('lists.insert.list', null, language);
+            let nextLetter = 'A';
+            ourList.name = `${defaultName} ${nextLetter}`;
+
+            while (this.findOne({ name: ourList.name })) {
+                // not going to be too smart here, can go past Z
+                nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
+                ourList.name = `${defaultName} ${nextLetter}`;
+            }
+        }
+
+        return super.insert(ourList, callback);
+    }
+    remove(selector, callback) {
+        Todos.remove({ listId: selector });
+        return super.remove(selector, callback);
+    }
+}
+
+export const Lists = new ChartsCollection('Charts');
 
 
 
@@ -209,9 +236,9 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
             readonly: true
         }
     },
-    remarks:{
-        type:String,
-        optional:true
+    remarks: {
+        type: String,
+        optional: true
     }
 
 }])
@@ -225,9 +252,17 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
+    patientName:patientName,
     comments: { type: String, optional: true },
     items: { type: [LineItemSchema], optional: true },
-    total: {
+    autoCreatedItems: {
+        type: [LineItemSchema],
+        optional: true,
+        autoform: {
+            type: "hidden"
+        }
+    },
+    totalItems: {
         type: Number,
         //defaultValue: 0 ,
         optional: true,
@@ -249,8 +284,21 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             readonly: true
         }
     },
+    total: { type: Number, optional: true ,
+        autoform: {
+            type: "hidden"
+        }    
+    },
     amountPaid: { type: Number, optional: true },
-    datePaid: { type: Date, optional: true },
+    datePaid: {
+        type: Date, optional: true
+    },
+    isDue: {
+        type: Boolean, optional: true,
+         autoform: {
+            type: "hidden"
+        }
+    },
     paymentType: {
         type: String,
         allowedValues: ['Cheque', 'Cash', 'Card', 'Other'],
@@ -808,6 +856,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
+    patientName:patientName,
     currentBedStay: {
         type: BedStaySchema,
         optional: true,
@@ -822,7 +871,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-   admitDate: tmStamp,
+    admitDate: tmStamp,
     reason: {
         type: String,
         optional: true,
@@ -832,11 +881,11 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         optional: true,
         autoform: {
             type: "select2",
-             options: function () {
+            options: function () {
                 //TODO - fix the find to use correct facility
                 fac = Facilities.findOne();
                 console.log(fac.specializations)
-                return fac.specializations.map( (c) => {return { label: c, value: c } })
+                return fac.specializations.map((c) => { return { label: c, value: c } })
             }
         }
     },
@@ -943,7 +992,7 @@ TodoSchema = new SimpleSchema([BaseSchema, {
             type: "select2",
             options: function () {
                 return Meteor.users.find().map(function (c) {
-                    return { label: userFullNameById(c._id).fork(e=>"drx",s=>s), value: c._id };
+                    return { label: userFullNameById(c._id).fork(e => "drx", s => s), value: c._id };
                 });
             }
         }
@@ -1078,12 +1127,11 @@ Beds.helpers({
         return this.roomObj().fullName() + '-' + this.name;
     },
     roomObj: function () { return Rooms.findOne({ _id: this.room }) },
-    admission:function(){
-        bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
-        console.log(bed);
+    admission: function () {
+        bed = (typeof this._id === "object") ? this._id.toHexString() : this._id;
         return Admissions.findOne({ 'currentBedStay.bed': bed })
     },
-    wardObj:function(){
+    wardObj: function () {
         return this.roomObj().wardObj()
     }
 })
@@ -1100,10 +1148,10 @@ Todos.helpers({
         return "<a href='/patient/" + this.patient + "'>" + pt.fullName() + "</a>";
     },
     creator: function () {
-        return userFullNameById(this.createdBy).fork(err =>  "Dr Unknown" , data => data)
+        return userFullNameById(this.createdBy).fork(err => "Dr Unknown", data => data)
     },
     assignee: function () {
-        return userFullNameById(this.forUser).fork(err =>  "Dr Unknown" , data => data)
+        return userFullNameById(this.forUser).fork(err => "Dr Unknown", data => data)
     }
 })
 
@@ -1114,6 +1162,9 @@ Admissions.helpers({
         }
         return null
     },
+    currentBedName: function () {
+        return (this.currentBed()) ? this.currentBed().fullName() : "Discharged"
+    },
     patientObj: function () {
         return Patients.findOne({ _id: this.patient })
     },
@@ -1121,12 +1172,12 @@ Admissions.helpers({
         inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
         return inv;
     },
-    tests:function(){
-        if(!this.labsAndImages) return;
+    tests: function () {
+        if (!this.labsAndImages) return;
 
         return _(this.labsAndImages.tests)
-        .map(x => LabTests.findOne( x ))
-        .value();
+            .map(x => LabTests.findOne(x))
+            .value();
     },
     testResults: function () {
         return TestResults.find({ admission: this._id });
@@ -1135,8 +1186,9 @@ Admissions.helpers({
         stays = []
         total = 0;
 
-        tempStays = this.bedStays;
-        tempStays.push(this.currentBedStay)
+        tempStays = _.cloneDeep(this.bedStays);
+        if(this.currentBedStay)
+            tempStays.push(this.currentBedStay)
 
         _.forEach(tempStays, function (stay) {
             //if(stay.bed)
@@ -1178,17 +1230,23 @@ Admissions.helpers({
 })
 
 Invoices.helpers({
-    admissionObj: function(){
+    admissionObj: function () {
         return Admissions.findOne(this.admission)
     },
-    totalCurrent:function(){ return findInvTotal(this);},
+    patientName: function () {
+        this.admissionObj().patientName();
+    },
+    allItems: function () {
+        return _(this.items).concat(this.autoCreatedItems ? this.autoCreatedItems : []).value();
+    },
+    totalCurrent: function () { return findInvTotal(this); },
     grandTotal: function () {
         adm = this.admissionObj();
         bedStayTotal = adm.bedStaysObj().total;
         invTotal = findInvTotal(this)
         console.log(invTotal)
         if (adm) {
-            return (this) ? bedStayTotal + invTotal: bedStayTotal;
+            return (this) ? bedStayTotal + invTotal : bedStayTotal;
         }
         return 0;
     },
@@ -1228,17 +1286,88 @@ TestResults.helpers({
     }
 })
 
+
+////////////////// Hooks /////////////////
+
+Admissions.before.insert( (userId, doc) => doc.patientName = Patients.findOne(doc.patient).fullName());
+
+Admissions.after.insert( (userId, doc) => {
+    Invoices.insert({ "admission": doc._id })
+})
+
+Admissions.before.update( (userId, doc, fieldNames, modifier, options) => {
+    modifier.$set = modifier.$set || {};
+    modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
+});
+
+
+
+Invoices.before.insert( (userId, doc) => {
+    admission = Admissions.findOne(doc.admission)
+    doc.patientName = admission.patientName;
+});
+
+
+// Invoices.before.update( (userId, doc, fieldNames, modifier, options) => {
+//     modifier.$set = modifier.$set || {};
+//     modifier.$set.total = findInvTotal(Invoices.findOne(doc._id))
+// });
+
+// Admissions.after.insert(function (userId, doc) {
+//   doc.patientName = 
+// });
+
+
 //import {admHelpers} from '/imports/api/helpers'
+defSearch = { caseInsensitive: true, smart: false, onEnterOnly: true, }
+
+updateDate = {
+    data: "updatedAt", title: "Updated ",
+    render: (val, type, doc) => moment(val).calendar()
+},
+
+new Tabular.Table({
+    name: "InvoicesTbl",
+    collection: Invoices,
+    search: defSearch,
+    columns: [
+        //{ data: "fullName()", title: "Full Name" },
+        { data: "patientName", title: "Patient" },
+        { data: "admission", title: "Admission" },
+        { data: "total", title: "Total" },
+        updateDate,
+    ]
+})
+
+new Tabular.Table({
+    name: "AdmissionsTbl",
+    collection: Admissions,
+    search: defSearch,
+    columns: [
+        //{ data: "fullName()", title: "Full Name" },
+        { data: "patientName", title: "Patient" },
+        updateDate,
+        { data: "currentBedName()", title: "Bed" },
+        { data: "currentBedStay", visible: false },
+        {
+            data: "_id",
+            render: (val, type, doc) =>
+                `<a href='viewAdmission/${val}'> <i class='fa fa-map'/></a>`
+        },
+        {
+            data: "_id",
+            render: (val, type, doc) =>
+                `<a href='visit/${val}' class="btn btn-primary"> Visit</a>`
+        },
+        
+    ]
+})
 
 
 new Tabular.Table({
     name: "PatientsTbl",
     collection: Patients,
-    search: {
-        caseInsensitive: true,
-        smart: false,
-        onEnterOnly: true,
-    },
+    search: defSearch,
     columns: [
         { data: "fullName()", title: "Full Name" },
         { data: "age()", title: "Age" },

@@ -1,8 +1,10 @@
 /* Returns full user name give the meteor user */
 import { Box, Righ, Left, tryCatch } from '/imports/utils/myfunctional'
 var Task = require('data.task')
+var diff = require('rus-diff').diff
 
 user = { _id: 44, profile: { 'firstName': 'ddf' } }
+
 
 export const getDefault = (x, y = "") => x ? x : y
 //export  const getDefault = (x, y) =>  x ? x : ""
@@ -31,6 +33,8 @@ export const createTask = (f) => new Task((rej, res) => {
         return rej(e)
     }
 })
+
+
 
 //Always returns a value - fails on null or undefined
 export const safeTask = (f) => new Task((rej, res) => {
@@ -139,17 +143,46 @@ export const userFullName = (user) => {
 
 }
 
-export const findInvTotal = (inv) => _(inv.items).reduce(function (sum, item) {
-    item.total = item.appliedPrice * item.units
-    return sum + (item.total ? item.total : 0);
-}, 0);
+export const itemTotal = (item) => item && item.appliedPrice ? item.appliedPrice * item.units : 0
 
-// export const findInvTotal = (inv) => {
-//     if(!inv.items) return 0;
-//     total = _(itemsVal).reduce(, function (sum, item) {
-//         item.total = item.appliedPrice * item.units
-//         return sum + (item.total ? item.total : 0);
-//     }, 0);
-//     return total;
-// }
+export const findInvTotal2 = (inv) =>
+    _(inv.items)
+        .map(console.log)
+        .reduce((sum, item) => sum + itemTotal(item), 0);
+
+
+export const findInvTotal = (inv) => {
+    if (!inv.allItems()) return 0;
+
+    total = _(inv.allItems()).reduce((sum, item) => {
+        item.total = item.appliedPrice * item.units
+        return sum + (item.total ? item.total : 0);
+    }, 0);
+    return total;
+}
+
+export const taskDbUpdate = (coll , id, exp) => new Task((rej, res) => 
+coll.update( { "_id": id }, exp , (err, success) => err ? rej(err) : res(success)) )
+
+export const createInvoiceItemBasic = (inv, serviceName, price) => { return {
+        service: serviceName ,
+        appliedPrice: price, 
+        units: 1, 
+        remarks: serviceName + " Sys updated",
+        total: price
+    }
+}
+
+export const createInvoiceItem = (inv, serviceName, price) => {
+    //TODO if not invoice create it
+    invoiceItem = createInvoiceItemBasic(inv, serviceName, price)
+
+    //_.map(myinv.autoCreatedItems)
+    //TODO  the pull below is not working , in case of an error multiple room stays might be created
+    
+    taskDbUpdate( Invoices, inv._id, { $pull: { "autoCreatedItems":{"service": "Room Stay XXXXX" }} } )  
+    .chain(()=>taskDbUpdate(Invoices, inv._id,  { $addToSet: { "autoCreatedItems": invoiceItem } }))
+    .fork(console.error, console.log )
+
+}
 

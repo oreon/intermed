@@ -17,6 +17,15 @@ Template.registerHelper('roomHasPatients', (room) => {
   return utils.roomHasPatients(room);
 });
 
+Template.registerHelper('isCurrentAdmSelector', function(a, b) {  
+  return {'isCurrent':true};
+});
+
+Template.registerHelper('isUnpaidInvoicSelector', function(a, b) {  
+  return {'isDue':true};
+});
+
+
 Template.registerHelper('and', function(a, b) {  
   return a && b;
 });
@@ -24,6 +33,7 @@ Template.registerHelper('and', function(a, b) {
 Template.registerHelper('or', function(a, b) {  
   return a || b;
 });
+
 
 
 
