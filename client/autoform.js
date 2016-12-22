@@ -36,7 +36,9 @@ var hooksObject = {
   },
 
   // Called when any submit operation fails
-  onError: function(formType, error) {},
+  onError: function(formType, error) {
+    console.log(error)
+  },
 
   // Called every time an insert or typeless form
   // is revalidated, which can be often if keyup

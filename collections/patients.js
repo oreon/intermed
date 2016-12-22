@@ -211,11 +211,12 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: false }).map(function (c) {
+                return Services.find({ autoCreated: false } ).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c.name };
                 });
             }
-        }
+        },
+        label:"Service"
     },
     appliedPrice: {
         type: Number,
@@ -230,12 +231,14 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
 
     },
     units: { type: Number },
-    total: {
-        type: Number,
-        autoform: {
-            readonly: true
-        }
-    },
+    // total: {
+    //     type: Number,
+    //     optional: true,
+    //     defaultValue: 0 ,
+    //     autoform: {
+    //         readonly: true
+    //     }
+    // },
     remarks: {
         type: String,
         optional: true
@@ -262,33 +265,34 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    totalItems: {
-        type: Number,
-        //defaultValue: 0 ,
-        optional: true,
-        autoValue: function () {
-            let items = this.field("items");
-            if (items.isSet) {
-                // console.log(items)
-                let itemsVal = items["value"];
-                total = _.reduce(itemsVal, function (sum, item) {
+    // total: {
+    //     type: Number,
+    //     //defaultValue: 0 ,
+    //     optional: true,
+    //     autoValue: function () {
+    //         let dueFld = this.field("isDue");
+    //         //console.log(dueFld)
+    //         //console.log(this.doc.total)
+        
+    //         if (dueFld.isSet && dueFld["value"] == true) { return this.field("total")["value"] }
 
-                    item.total = item.appliedPrice * item.units
-                    return sum + (item.total ? item.total : 0);
-                }, 0);
-                return total;
-            }
-            return 0;
-        },
-        autoform: {
-            readonly: true
-        }
-    },
-    total: { type: Number, optional: true ,
-        autoform: {
-            type: "hidden"
-        }    
-    },
+    //         let items = this.field("items");
+    //         if (items.isSet) {
+                 
+    //             let itemsVal = items["value"];
+    //             let total = _.reduce(itemsVal, function (sum, item) {
+    //                 item.total = item.appliedPrice * item.units
+    //                 return sum + (item.total ? item.total : 0);
+    //             }, 0);
+    //             return total;
+    //         }
+    //         return 0;
+    //     },
+    //     autoform: {
+    //         readonly: true
+    //     }
+    // },
+    total: { type: Number, optional: true  },
     amountPaid: { type: Number, optional: true },
     datePaid: {
         type: Date, optional: true
@@ -1292,7 +1296,10 @@ TestResults.helpers({
 Admissions.before.insert( (userId, doc) => doc.patientName = Patients.findOne(doc.patient).fullName());
 
 Admissions.after.insert( (userId, doc) => {
-    Invoices.insert({ "admission": doc._id })
+    inv = { "admission": doc._id }
+    InvoiceSchema.clean(inv);
+    check(inv, InvoiceSchema);
+    Invoices.insert(inv)
 })
 
 Admissions.before.update( (userId, doc, fieldNames, modifier, options) => {
@@ -1309,9 +1316,11 @@ Invoices.before.insert( (userId, doc) => {
 
 
 // Invoices.before.update( (userId, doc, fieldNames, modifier, options) => {
-//     modifier.$set = modifier.$set || {};
-//     modifier.$set.total = findInvTotal(Invoices.findOne(doc._id))
-// });
+//      modifier.$set = modifier.$set || {};
+//      (itemsVal, function (sum, item) {
+//                     item.total = item.appliedPrice * item.units
+//      modifier.$set.total = findInvTotal(Invoices.findOne(doc._id))
+//  });
 
 // Admissions.after.insert(function (userId, doc) {
 //   doc.patientName = 
@@ -1335,6 +1344,11 @@ new Tabular.Table({
         { data: "patientName", title: "Patient" },
         { data: "admission", title: "Admission" },
         { data: "total", title: "Total" },
+        {
+            data: "_id",
+            render: (val, type, doc) =>
+                `<a href='editInvoice/${val}'> <i class='fa fa-map'/></a>`
+        },
         updateDate,
     ]
 })

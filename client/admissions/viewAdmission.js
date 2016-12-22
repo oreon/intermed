@@ -100,17 +100,17 @@ Template.ViewAdmission.helpers({
         }
     },
 
-    currentInv: function () {
-        adm = getAdmission()
+    // currentInv: function () {
+    //     adm = getAdmission()
 
-        if (adm) {
-            let current = adm.invoice()
-            if (current) {
-                Template.instance().formType.set('update');
-                return current;
-            }
-        }
-    },
+    //     if (adm) {
+    //         let current = adm.invoice()
+    //         if (current) {
+    //             Template.instance().formType.set('update');
+    //             return current;
+    //         }
+    //     }
+    // },
 
     formType: function () {
         var formType = Template.instance().formType.get();
@@ -163,30 +163,39 @@ Template.ViewAdmission.events({
 });
 
 
-// Template.invoiceTmpl.onCreated(function () {
-//     var self = this;
-//     self.autorun(function () {
-//         var id = FlowRouter.getParam('id');
-//         self.subscribe('Rooms')
-//         self.subscribe('Beds')
-//         //self.subscribe('compAdmission', id);
-//     });
-// });
+Template.invoiceTmpl.onCreated(function () {
+    var self = this;
+    self.autorun(function () {
+        var id = FlowRouter.getParam('id');
+        self.subscribe('Rooms')
+        self.subscribe('Beds')
+        self.subscribe('compAdmission', id);
+    });
+});
 
-// Template.invoiceTmpl.helpers({
+Template.invoiceTmpl.helpers({
 
-// })
+    getBedStayTotal(adm){
+        let adms = Admissions.findOne(adm._id)
+        return adms.bedStaysObj()['total'] 
+    },
+    findAdmissionByInvoice(){
+        id = FlowRouter.getParam('id');
+        return Invoices.findOne(id).admissionObj()
+    }
+
+})
 
 
 
 AutoForm.hooks({
     editInvoiceForm: {
 
-        formToDoc: function (doc) {
-            console.log(doc)
-            doc.admission = FlowRouter.getParam('id');
-            return doc;
-        },
+        // formToDoc: function (doc) {
+        //     console.log(doc)
+        //     doc.admission = FlowRouter.getParam('id');
+        //     return doc;
+        // },
         onSuccess: function (operation, result) {
             //console.log(result)
             //console.log(this.template.parent())
