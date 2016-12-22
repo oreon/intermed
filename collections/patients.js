@@ -246,6 +246,21 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
 
 }])
 
+LineItemACSchema = new SimpleSchema([LineItemSchema, {
+    service: {
+        type: String,
+        optional:true,
+        autoform: {
+            type: "select",
+            options: function () {
+                return Services.find({ autoCreated: true } ).map(function (c) {
+                    return { label: c.name + " - Rs" + c.price, value: c.name };
+                });
+            }
+        },
+        label:"Service"
+    },
+}])
 
 InvoiceSchema = new SimpleSchema([BaseSchema, {
     admission: {
@@ -259,11 +274,11 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     comments: { type: String, optional: true },
     items: { type: [LineItemSchema], optional: true },
     autoCreatedItems: {
-        type: [LineItemSchema],
+        type: [LineItemACSchema],
         optional: true,
-        autoform: {
-            type: "hidden"
-        }
+        // autoform: {
+        //     type: "hidden"
+        // }
     },
     // total: {
     //     type: Number,

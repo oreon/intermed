@@ -17,20 +17,28 @@ Template.registerHelper('roomHasPatients', (room) => {
   return utils.roomHasPatients(room);
 });
 
-Template.registerHelper('isCurrentAdmSelector', function(a, b) {  
-  return {'isCurrent':true};
+Template.registerHelper('isCurrentAdmSelector', function (a, b) {
+  return { 'isCurrent': true };
 });
 
-Template.registerHelper('isUnpaidInvoicSelector', function(a, b) {  
-  return {'isDue':true};
+Template.registerHelper('isUnpaidInvoicSelector', function (a, b) {
+  return { 'isDue': true ,amountPaid: {$exists: false } };
+});
+
+Template.registerHelper('findAdmissionByInvoice', function (id) {
+  if(!id)
+  id = FlowRouter.getParam('id');
+  console.log(Invoices.findOne(id).admissionObj())
+  return Invoices.findOne(id).admissionObj()
 });
 
 
-Template.registerHelper('and', function(a, b) {  
+
+Template.registerHelper('and', function (a, b) {
   return a && b;
 });
 
-Template.registerHelper('or', function(a, b) {  
+Template.registerHelper('or', function (a, b) {
   return a || b;
 });
 
@@ -53,16 +61,16 @@ Template.registerHelper('drugName', (id) => {
   //console.log(id)
   //console.log(Drugs.find().count())
   drug = Drugs.findOne({ _id: id })
-  return (drug)?drug.name:"Unknown"
-    
+  return (drug) ? drug.name : "Unknown"
+
 })
 
-Template.registerHelper('arrayify',function(obj){
-    var result = [];
-    for (var key in obj) {
-      result.push({name:key,value:obj[key]});
-    }
-    return result;
+Template.registerHelper('arrayify', function (obj) {
+  var result = [];
+  for (var key in obj) {
+    result.push({ name: key, value: obj[key] });
+  }
+  return result;
 });
 
 

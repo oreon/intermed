@@ -179,10 +179,7 @@ Template.invoiceTmpl.helpers({
         let adms = Admissions.findOne(adm._id)
         return adms.bedStaysObj()['total'] 
     },
-    findAdmissionByInvoice(){
-        id = FlowRouter.getParam('id');
-        return Invoices.findOne(id).admissionObj()
-    }
+    
 
 })
 

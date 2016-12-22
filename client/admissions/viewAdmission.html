@@ -153,69 +153,7 @@
 </template>
 
 
-<template name="invoiceTmpl">
 
-	<table class="table table-striped table-bordered table-condensed">
-				<tr style="background:navy; color: #ffd">
-					<th>Bed</th>
-					<th> From</th>
-					<th> To</th>
-					<th> Days</th>
-					<th> Price</th>
-					<th> Total</th>
-				</tr>
-				{{#each admission.bedStaysObj.stays}}
-				<tr>
-					<td>{{bed.fullName}}</td>
-					<td> {{datef fromDate}} </td>
-					<td> {{datef toDate}} </td>
-					<td> {{days}} </td>
-					<td> {{price}} </td>
-					<td> {{total}} </td>
-				</tr>
-				{{/each}}
-				<tr>
-					<td colspan="6">
-						<b> Total : {{getBedStayTotal admission}}</b>
-					</td>
-				</tr>
-			</table>
-			<table class="table table-striped table-bordered table-condensed">
-				<tr style="background:navy; color: #fff">
-					<th>Service</th>
-					<th> Units</th>
-					<th> Price</th>
-					<th> Date </th>
-					<th> Total</th>
-				</tr>
-				{{#each admission.invoice.allItems}}
-				<tr>
-					<td>{{service}}</td>
-					<td> {{units}} </td>
-					<td> {{appliedPrice}} </td>
-					<td> {{datef updatedAt}} </td>
-					<td> {{total}} </td>
-				</tr>
-				{{/each}}
-				<tr>
-					<td colspan="6">
-						<b> Total : {{ admission.invoice.totalCurrent }}</b>
-					</td>
-				</tr>
-			</table>
-
-			<button class="btn btn-primary" 
-				data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
-
-			<div class="collapse" id="editInvoice">
-				{{flds}}
-				{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-			autosave=true omitFields="amountPaid, datePaid, paymentType,total"}} 
-			</div>
-			<br/>
-			Bed Stay : Rs. <b> {{getBedStayTotal admission}} </b>
-			<br/> Grand Total : <b> Rs {{admission.invoice.grandTotal}}</b>
-</template>
 
 <template name="todosPt">
 	{{> tabular table=TabularTables.TodosPtTbl selector=selector class="table table-striped table-bordered table-condensed"}}

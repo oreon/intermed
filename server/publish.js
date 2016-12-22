@@ -91,6 +91,10 @@ Meteor.publish('Invoices', function() {
     return Invoices.find();
 })
 
+Meteor.publish('Invoices', function(id) { 
+    return Invoices.find({id});
+})
+
 Meteor.publish('Todos', function() { 
     return Todos.find({});
 })
@@ -224,7 +228,7 @@ Meteor.publishComposite('compAdmissions', {
 Meteor.publishComposite('compAdmission', function (id) {
     return {
         find: function () {
-            return Admissions.find({"currentBedStay": {$exists: true}, _id: id}, {sort: {name: -1}, limit: 1});
+            return Admissions.find({ /*"currentBedStay": {$exists: true},*/ _id: id}, {sort: {name: -1}, limit: 1});
         },
         children: [
             {
@@ -248,13 +252,6 @@ Meteor.publishComposite('compAdmission', function (id) {
                         { limit: 1000/*, fields: {profile: 1}*/});
                 },
             },
-            //  {
-            //     find: function (adm) {
-            //         return Beds.find(
-            //             {_id: adm.currentBedStay.bed},
-            //             { limit: 1/*, fields: {profile: 1}*/});
-            //     },
-            // },
         ]
     }
 })
