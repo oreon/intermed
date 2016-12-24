@@ -104,7 +104,8 @@ export const busyBedIds =() => _(Admissions.find().fetch())
         .map('currentBedStay.bed').value()
 
 export const busyBeds = () =>
-        busyBedIds
+        _(Admissions.find().fetch())
+        .map('currentBedStay.bed')
         .map(x => Beds.findOne(x))
         .filter(x => !!x)
         .value()

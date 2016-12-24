@@ -103,53 +103,50 @@
 <template name="scriptTbl">
     
     {{# if script.items}} 
-    <div class="table-responsive">
-        <br/>
-    <h4> {{script.notes}} </h4> <br/>
+  
+    <h5> {{script.notes}} </h5> <br/>
 
-    <table class="table">
+    <table class="table table-striped table-condensed">
+        <thead>
 		<tr style="background:#88a; color: #ffd">
 			<th> Drug</th>
-            <th> Amount</th>
-			<th> Frequency</th>
-            <th> Duration </th>
- 			<th> Instructions </th>
             <th> Start Date </th> 
             <th> End Date </th>
             <th> Units </th>
+            <th> Instructions </th>
 		</tr>
+        </thead>
+        <tbody>
         {{#each enhItems (script) }}
-        <!--{{#if isCurrent}}
-         <tr  style="background:#a99; color: #fff" >
-        {{else}} 
-          <tr>
-        {{/if}}-->
         <tr style = "{{rowColorOutdated}}" >
-            <td>{{ drugName drug }}</td>
-            <td> {{amount}} {{route}}</td>
-            <td> {{frequency.every}} / {{frequency.type}}</td>
-            <td> {{duration.for}} {{duration.type}}(s)</td>
-            <td> {{instructions}}</td>
+            <td>{{ drugName drug }} {{amount}} {{route}}
+             {{frequency.every}} / {{frequency.type}} 
+            {{duration.for}} {{duration.type}}(s)
+            </td>
             <td> {{datef startDate }}</td>
             <td> {{datef endDate }}</td>
             <td> {{unitsNeeded }}</td>
-           
+            <td> {{instructions}}</td>
         </tr>
         {{/each}} 
+        </tbody>
 	</table>
-    </div>
+    
      {{/if}}
 </template>
 
 <template name="recurringMsmtTmpl">
     {{admission.reason}}
    <table class="table">
+       <thead>
 		<tr style="background:#88a; color: #ffd">
 			<th> Measurement</th>
      		<th> Frequency</th>
         	<th> Instructions </th>
             <th> Start Date </th> 
      	</tr>
+       </thead>
+         <tbody>
         {{#each recurringAssessments }}
         <tr>
             <td>{{ name }}</td>
@@ -158,6 +155,7 @@
             <td> {{datef startDate }}</td>
         </tr>
         {{/each}} 
+         </tbody>
 	</table>
 </template>
 

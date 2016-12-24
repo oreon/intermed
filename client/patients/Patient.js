@@ -109,7 +109,7 @@ Template.scriptTbl.helpers({
     },
 
     rowColorOutdated:function (){
-        return this.isCurrent ?  `background:#dfd; color: #888` : 
+        return this.isCurrent ?  ` color: #888` : 
             `background:#a99; color: #fff`
     }
 

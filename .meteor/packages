@@ -90,7 +90,8 @@ xolvio:cleaner
 #orionjs:relationships
 #orionjs:summernote
 
-twbs:bootstrap
+#twbs:bootstrap
+matb33:bootstrap-full
 mpowaga:autoform-summernote
 forwarder:autoform-wizard
 #orionjs:bootstrap
