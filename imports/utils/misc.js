@@ -99,12 +99,19 @@ export const userFullNameById = (id) => {
 
 //export const userFullNameById = (id) => Meteor.users.findOne({ _id: this.forUser })
 
+export const busyBedIds =() => _(Admissions.find().fetch())
+        .map('currentBedStay.bed').value()
+
 export const busyBeds = () =>
-    _(Admissions.find().fetch())
-        .map('currentBedStay.bed')
+        busyBedIds
         .map(x => Beds.findOne(x))
         .filter(x => !!x)
         .value()
+
+export const freeBeds = () =>
+    Beds.find({_id:{$nin : busyBedIds()  }}).fetch()
+    .map(x =>  Beds.findOne(x) )
+    
 
 export const busyBedsByWard = (ward) =>
     _(busyBeds())
@@ -113,6 +120,17 @@ export const busyBedsByWard = (ward) =>
 export const wardHasPatients = (ward) =>
     wardsWithPatients()
         .includes(ward.name)
+
+export const wardHasBedsAvailable = (ward) =>
+    wardsWithBedsAvailable()
+        .includes(ward.name)
+
+export const wardsWithBedsAvailable = () =>
+    _(freeBeds())
+        .map(x => { if(x) return x.wardObj() } )
+        .uniqBy(x => x.name)
+        .value()
+
 
 export const wardsWithPatients = () =>
     _(busyBeds())
@@ -161,13 +179,17 @@ export const findInvTotal = (inv) => {
     return total;
 }
 
-export const taskDbUpdate = (coll , id, exp) => new Task((rej, res) => 
-coll.update( { "_id": id }, exp , (err, success) => err ? rej(err) : res(success)) )
+export const taskDbUpdate = (coll, id, exp) => new Task((rej, res) =>
+    coll.update({ "_id": id }, exp, (err, success) => err ? rej(err) : res(success)))
 
-export const createInvoiceItemBasic = (inv, serviceName, price) => { return {
-        service: serviceName ,
-        appliedPrice: price, 
-        units: 1, 
+export const taskDbInsert = (coll, exp) => new Task((rej, res) =>
+    coll.insert(exp, (err, success) => err ? rej(err) : res(success)))
+
+export const createInvoiceItemBasic = (inv, serviceName, price) => {
+    return {
+        service: serviceName,
+        appliedPrice: price,
+        units: 1,
         remarks: serviceName + " Sys updated",
         total: price
     }
@@ -179,10 +201,17 @@ export const createInvoiceItem = (inv, serviceName, price) => {
 
     //_.map(myinv.autoCreatedItems)
     //TODO  the pull below is not working , in case of an error multiple room stays might be created
-    
-    taskDbUpdate( Invoices, inv._id, { $pull: { "autoCreatedItems":{"service": "Room Stay XXXXX" }} } )  
-    .chain(()=>taskDbUpdate(Invoices, inv._id,  { $addToSet: { "autoCreatedItems": invoiceItem } }))
-    .fork(console.error, console.log )
+
+    taskDbUpdate(Invoices, inv._id, { $pull: { "autoCreatedItems": { "service": "Room Stay XXXXX" } } })
+        .chain(() => taskDbUpdate(Invoices, inv._id, { $addToSet: { "autoCreatedItems": invoiceItem } }))
+        .fork(console.error, console.log)
 
 }
 
+export const massageScriptItems = (items) =>
+    _(items).map(item => {
+        item.startDate = item.startDate ? item.startDate : new Date();
+        item.endDate = new moment(item.startDate).add(item.duration.for,
+            item.duration.type.toLowerCase()).toDate();
+        console.log(item)
+    }).value() 

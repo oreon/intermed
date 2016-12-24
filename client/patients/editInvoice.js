@@ -5,7 +5,7 @@ Template.EditInvoice.onCreated(function () {
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
         console.log(id)
-        self.subscribe('Invoices', id);
+        self.subscribe('InvoiceSingle', id);
         let invc = Invoices.findOne(id)
         //console.log(inv)
         if (invc) {

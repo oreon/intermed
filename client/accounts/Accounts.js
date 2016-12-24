@@ -50,8 +50,8 @@ AccountsTemplates.addFields([
 				value: 'clerk'
 			}, 
 			{
-				text: 'Other',
-				value: 'other'
+				text: 'Manager',
+				value: 'manager'
 			}
 		]
 	},

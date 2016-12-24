@@ -412,7 +412,7 @@ LabsAndImagingSchema = new SimpleSchema({
 RoomSchema = new SimpleSchema([BaseSchema, {
     name: { type: String },
     type: { type: String, optional: true },
-    beds: { type: [BedSchema] },
+    beds: { type: [BedSchema], optional: true },
     ward: {
         type: String,
         optional: false,
@@ -615,11 +615,13 @@ DurationSchema = new SimpleSchema({
 
 RecurringAssessmentItemSchema = new SimpleSchema({
     name: {
-        type: String
+        type: String,
+        label: 'Name of the measurement e.g Blood Pressure, Blood Sugar etc'
     },
     frequency: {
         type: FrequencySchema,
-    }
+    },
+    instructions: { type: String, optional: true },
 })
 
 
@@ -653,21 +655,32 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     prn: { type: Boolean, optional: true, label: ''/* 'PRN (as needed) ' */ },
 
     instructions: { type: String, optional: true },
+    startDate:{
+        type: Date,
+        optional: true,
+        label: "Start Date (Leave empty for now)",
+        autoValue: function () {
+            let content = this.field("startDate");
+             return (content.isSet) ? content.value: new Date();
+        },
+        // autoform: {
+        //     readonly: true
+        // }
+    },
     endDate: {
         type: Date,
         optional: true,
-        autoValue: function () {
-            let content = this.field("duration");
-            if (content.isSet) {
-                dur = content.value;
-                Console.log(dur);
-                enddt = new moment().add(4, 'day');
-                Console.log(enddt);
-                return enddt;
-            } else {
-                console.log("No duration")
-            }
-        },
+        // autoValue: function () {
+        //     let content = this.field("duration");
+        //     if (content.isSet) {
+        //         duration = content.value;
+        //         Console.log(dur);
+        //         enddt = new moment().duration.for, duration.type.toLowerCase()
+        //         return enddt;
+        //     } else {
+        //         console.log("No duration")
+        //     }
+        // },
         autoform: {
             readonly: true
         }
@@ -687,7 +700,9 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
     items: {
         type: [ScriptItem],
         optional: true,
-    }
+       
+    },
+    
 }])
 
 ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {
@@ -731,31 +746,10 @@ EncounterSchema = new SimpleSchema([BaseSchema, {
 VisitSchema = new SimpleSchema([BaseSchema, {
     note: {
         type: String,
-        optional: true,
         autoform: {
             type: "summernote"
         }
-    },
-
-    // testResults:{
-    //     type: String,
-    //     optional: true,
-    //     autoValue: function () {
-    //         let content = this.field("tests");
-    //         if (content.isSet) {
-    //             let tests =  content.value;
-    //             _.forEach(tests, function(element) {
-    //                 console.log(element);
-    //                 let labTest = LabTests.findOne({name:element});
-    //                 console.log(labTest)
-    //                 TestResults.insert({"labTest":labTest})
-    //             });
-    //             return "";
-    //         } else {
-    //             this.unset();
-    //         }
-    //     }    
-
+    },  
     createdBy: {
         type: String,
         autoValue: function () { return this.userId },
@@ -935,7 +929,6 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         type: [VisitSchema],
         optional: true,
     },
-
     script: {
         type: ScriptSchema,
         optional: true,
@@ -1321,6 +1314,33 @@ Admissions.before.update( (userId, doc, fieldNames, modifier, options) => {
     modifier.$set = modifier.$set || {};
     modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
 });
+
+Beds.before.update( (userId, doc, fieldNames, modifier, options) => {
+    modifier.$set = modifier.$set || {};
+    modifier.$set.ward = Beds.findOne(bed.room).ward
+})
+
+Beds.before.insert( (userId, doc) => {
+    doc.ward = Beds.findOne(bed.room).ward
+})
+
+// massageScriptItems = (items) =>
+// _(items).map(item => {
+//                     item.startDate = item.startDate ? item.startDate: new Date();
+//                     item.endDate = new moment(item.startDate).add(item.duration.for,
+//                     item.duration.type.toLowerCase()).toDate();
+//                     console.log(item)
+//                    }).value() 
+
+
+Scripts.before.update( (userId, doc, fieldNames, modifier, options) => {
+    console.log("before scirpt update")
+    modifier.$set = modifier.$set || {};
+    console.log(fieldNames)
+    modifier.$set.items =  massageScriptItems(modifier.$set.items)
+});
+
+Scripts.before.insert( (userId, doc) => doc.items = massageScriptItems(modifier.$set.items) )
 
 
 

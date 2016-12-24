@@ -106,6 +106,11 @@ Template.scriptTbl.helpers({
    
     itemSchedule: function (item) {
         return calcSchedule(item);
+    },
+
+    rowColorOutdated:function (){
+        return this.isCurrent ?  `background:#dfd; color: #888` : 
+            `background:#a99; color: #fff`
     }
 
 })

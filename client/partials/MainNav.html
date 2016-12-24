@@ -4,11 +4,27 @@
 
 		<ul class="nav navbar-nav">
 			{{#if currentUser}}
-			<li><a href="/patients"><i class="fa fa-list"></i>Patients</a></li>
-			<li><a href="/admissions"><i class="fa fa-map-o"></i>Admissions</a></li>
-			<li><a href="/mytodos"><i class="fa fa-shopping-cart"></i>My Todos<span class="label 
-			{{#if myTodoCount }} label-danger {{/if}}">{{myTodoCount}}</span> </a></li>
-			<li ><a href="#" class="logout"><i class="fa fa-pencil"></i>Logout {{user}}</a></li>
+				<li><a href="/patients"><i class="fa fa-list"></i>Patients</a></li>
+				<li><a href="/admissions"><i class="fa fa-map-o"></i>Admissions</a></li>
+				<li><a href="/mytodos"><i class="fa fa-shopping-cart"></i>My Tasks<span class="label 
+				{{#if myTodoCount }} label-danger {{/if}}">{{myTodoCount}}</span> </a></li>
+				{{#if isInRole 'nurse'}}
+				<li><a href="/mySchedule"><i class="fa fa-list"></i>Schedule</a></li>
+				{{/if}}
+				{{#if isInRole 'clerk'}}
+				<li><a href="/invoices"><i class="fa fa-list"></i>Invoices</a></li>
+				{{/if}}
+				{{#if isInRole 'manager'}}
+				<li><a href="/analytics"><i class="fa fa-list"></i>Analytics</a></li>
+				{{/if}}
+				{{#if isInRole 'labTech'}}
+				<li><a href="/labTasks"><i class="fa fa-list"></i>Lab Tests</a></li>
+				{{/if}}
+				{{#if isInRole 'admin'}}
+				<li><a href="/admin"><i class="fa fa-list"></i>Admin</a></li>
+				{{/if}}
+			
+				<li ><a href="#" class="logout"><i class="fa fa-pencil"></i>Logout {{user}}</a></li>
 			{{else}}
 			<li ><a href="/login">Login/Sign-up </a></li>
 			{{/if}}

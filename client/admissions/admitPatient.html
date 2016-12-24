@@ -10,20 +10,17 @@
         {{# each wards }}
             <article class="recipe">
                 <h2> {{name}} </h2>
-
                 {{#each rooms}}
-
                     <h3> {{name}} </h3>
 
                     {{#each rbeds}}
-
                         {{> AvailableBed }}
-
-                    {{else}} <p> No beds Available </p>
+                    {{else}} 
 
                     {{/each}}
 
                     <hr/>
+                {{else}}
 
                 {{/each}}
             </article>
@@ -33,10 +30,9 @@
 
 
 <template name="AvailableBed">
-
     {{#if isBedAvailable}}
         <span style="background-color: #ffdddd">
-             BED {{name}} {{_id}}
+             BED {{name}} 
             <button class="btn-primary admit">Admit</button>
         </span>
         &nbsp;

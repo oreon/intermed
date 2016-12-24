@@ -15,7 +15,6 @@ Template.AdmitPatient.helpers({
     patient: function () {
         var id = FlowRouter.getParam('id');
         return Patients.findOne({_id: id});
-
     },
 
     currentBed: function () {
@@ -24,7 +23,6 @@ Template.AdmitPatient.helpers({
         if(admission)
             return admission.currentBedStay.bed
         return null
-
     },
 
     wards: function () {

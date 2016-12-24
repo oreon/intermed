@@ -104,7 +104,8 @@
     
     {{# if script.items}} 
     <div class="table-responsive">
-	{{script.notes}} <br/>
+        <br/>
+    <h4> {{script.notes}} </h4> <br/>
 
     <table class="table">
 		<tr style="background:#88a; color: #ffd">
@@ -118,22 +119,46 @@
             <th> Units </th>
 		</tr>
         {{#each enhItems (script) }}
-        <tr>
+        <!--{{#if isCurrent}}
+         <tr  style="background:#a99; color: #fff" >
+        {{else}} 
+          <tr>
+        {{/if}}-->
+        <tr style = "{{rowColorOutdated}}" >
             <td>{{ drugName drug }}</td>
-            <td> {{amount}} </td>
+            <td> {{amount}} {{route}}</td>
             <td> {{frequency.every}} / {{frequency.type}}</td>
             <td> {{duration.for}} {{duration.type}}(s)</td>
             <td> {{instructions}}</td>
             <td> {{datef startDate }}</td>
             <td> {{datef endDate }}</td>
             <td> {{unitsNeeded }}</td>
+           
         </tr>
         {{/each}} 
-       
 	</table>
     </div>
-
      {{/if}}
+</template>
+
+<template name="recurringMsmtTmpl">
+    {{admission.reason}}
+   <table class="table">
+		<tr style="background:#88a; color: #ffd">
+			<th> Measurement</th>
+     		<th> Frequency</th>
+        	<th> Instructions </th>
+            <th> Start Date </th> 
+     	</tr>
+        {{#each recurringAssessments }}
+        <tr>
+            <td>{{ name }}</td>
+            <td> {{frequency.every}} / {{frequency.type}}</td>
+            <td> {{instructions}}</td>
+            <td> {{datef startDate }}</td>
+        </tr>
+        {{/each}} 
+	</table>
 </template>
 
 <template name="drugAllergies">

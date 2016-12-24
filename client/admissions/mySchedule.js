@@ -17,34 +17,53 @@ Template.MySchedule.helpers({
     admCount: function () {
         return Admissions.find().count();
     },
-    getColor: function(item){
-        if(item.isFuture)
+    getColor: function (item) {
+        if (item.isFuture)
             return " #fff"
         else
             return "#eee"
-    }
-    ,
+    },
+    desc:  (item) =>
+        (item.drug) ? ` ${item.amount} ${item.route}` : item.name ,
+    
+
     findSchedule: function () {
         arrSched = []
         let now = new Date()
         console.log(now)
-        let start =  moment(now).add(-4, 'hours') 
+        let start = moment(now).add(-4, 'hours')
         //console.log(start.format('LLLL'))
         //console.log (new moment(start).format('LLLL'))
-        let end =  moment(start).add(16, 'hours')
+        let end = moment(start).add(16, 'hours')
         //console.log(end.format('LLLL'))
 
         adms = Admissions.find().fetch();
         _.map(adms, (adm) => {
-            _.map(scriptEnhanced(adm.script).items, (item) => {
-                
-                retItems = calcShedForIterval(item, start, end)
-                itemsWithAdm = _.map(retItems, (itemTemp) => {
-                itemTemp['adm'] = adm;
-                    return itemTemp
+
+            let allItems = _.concat(scriptEnhanced(adm.script).items, 
+                adm.recurringAssessments? adm.recurringAssessments: [])
+            
+
+            _.map(allItems,
+                (item) => {
+                    retItems = calcShedForIterval(item, start, end)
+                    itemsWithAdm = _.map(retItems, (itemTemp) => {
+                        itemTemp['adm'] = adm;
+                        return itemTemp
+                    })
+                    arrSched.push(itemsWithAdm)
                 })
-                arrSched.push(itemsWithAdm)
-            })
+
+                console.log(adm.recurringAssessments)
+
+            //  _.map(adm.recurringAssessments, (item) => {
+            //     retItems = calcShedForIterval(item, start, end)
+            //     itemsWithAdm = _.map(retItems, (itemTemp) => {
+            //         itemTemp['adm'] = adm;
+            //         return itemTemp
+            //     })
+            //     arrSched.push(itemsWithAdm)
+            // })
         })
         //console.log(arrSched)
         return _(arrSched)

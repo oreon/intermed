@@ -10,7 +10,6 @@ var gloablEdit = {};
 
 
 
-
 Template.ViewAdmission.onCreated(function () {
 
     //self.editMode = new ReactiveVar(false);
@@ -152,14 +151,10 @@ Template.ViewAdmission.events({
         Session.set("editAdmissionForm", true);
         template.editMode.set(!template.editMode.get());
     },
-    'click .visit': function (event, template) {
-        //adm = Admissions.findOne({patient:});
-        FlowRouter.go('visit', { id: FlowRouter.getParam('id') })
+    'click .fac': function (event, template) {
+         Meteor.call('setupFaciltiy');
     },
-    // 'change .items.$.service': function (e) {
-    //     console.log($(e.target).val())
-
-    // }
+    
 });
 
 
@@ -185,6 +180,8 @@ Template.invoiceTmpl.helpers({
 
 
 
+
+
 AutoForm.hooks({
     editInvoiceForm: {
 
@@ -197,6 +194,14 @@ AutoForm.hooks({
             //console.log(result)
             //console.log(this.template.parent())
             //this.template.parent().editMode.set(false);
+        },
+    },
+
+    updateAdmissionScriptForm:{
+         formToDoc: function (doc) {
+            console.log(items             )
+            doc.items = utils.massageItems(doc.items)
+            return doc;
         },
     },
 

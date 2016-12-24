@@ -2,13 +2,15 @@
     <ul class="list-group">
     {{#each findSchedule}}
         <li  class="list-group-item" style="background-color : {{getColor .}} " >
-        {{ adm.patientObj.fullName}} - 
+        {{#unless item.drug}}<i class="fa fa-list"></i>{{/unless}}
+        <a href="viewAdmission/{{adm._id}}"> {{ adm.patientObj.fullName}} - 
         {{adm.currentBed.fullName}}
-        {{drugName item.drug}}
-        {{item.amount}}
-        {{item.route}}
+        </a>
+         {{#if item.drug}}<b>{{drugName item.drug}}</b>{{/if}}
+        {{desc item}}
         {{datef dateToAdmin}}
-        </li>
+        <input type="checkbox" name="{{desc item}}" />
+         </li>
         {{/each}}
     </ul>
     

@@ -91,7 +91,7 @@ Meteor.publish('Invoices', function() {
     return Invoices.find();
 })
 
-Meteor.publish('Invoices', function(id) { 
+Meteor.publish('InvoiceSingle', function(id) { 
     return Invoices.find({id});
 })
 

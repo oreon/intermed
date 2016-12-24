@@ -36,7 +36,7 @@ export function scheduleForTime(item, timeHrs) {
 export function scriptEnhanced(script) {
     script.items = _.map(script.items, (item) => {
         //TODO user must be able to specfiy the start date themselves
-        item['startDate'] =  item.createdAt ? item.createdAt : item.updatedAt ;
+        // item['startDate'] =  item.createdAt ? item.createdAt : item.updatedAt ;
         item['endDate'] = new moment(item['startDate']).add(item.duration.for, item.duration.type.toLowerCase())
         item['unitsNeeded'] = item ? findUnits(item) : 0;
         item['isCurrent'] = new moment(item.endDate).isAfter(new moment());
@@ -47,33 +47,27 @@ export function scriptEnhanced(script) {
 
 export function calcShedForIterval(item, start, end) {
     listRetDates = []
-    total = findUnits(item)
+    //total = findUnits(item)
     //let hrs = end.diff(start, 'hours')
     //console.log(`diff is ${hrs} ${total}`)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
 
-    for (j = 0; j < total; j++) {
+    j = 1;
+    let occurence = new moment(item.startDate)
+    //for (j = 0; j < total; j++) {
+    while (occurence.isBefore(end)) {
         //TODO inefficient calculation - starts counting by start day - should be by  
-        let occurence = new moment(item.startDate).add(oncePerX * j, 'hour')
-       
-        // let occurenceStartDiff = start.diff(occurence, 'hours') 
-        // let occurenceEndDiff = end.diff(occurence, 'hours') 
-        if(occurence.isBefore(start)  )
-            continue;
+        occurence = new moment(item.startDate).add(oncePerX * j++, 'hour')
 
-        //console.log(occurenceEndDiff)
-        if (occurence.isAfter(end) ) {
-            //console.log(occurence.diff(end, 'hours'))
-            break;
+        if (occurence.isAfter(start)) {
+            listRetDates.push(
+                {
+                    dateToAdmin: occurence,
+                    item: item,
+                    isFuture: occurence.isAfter(new moment())
+                })
         }
-        //console.log(occurence.format('D MMM YY hh:mm'))
-        listRetDates.push(
-            {
-                dateToAdmin: occurence,
-                item: item,
-                isFuture: occurence.isAfter(new moment()) 
-            })
-    }//
+    }
 
     return listRetDates;
 }

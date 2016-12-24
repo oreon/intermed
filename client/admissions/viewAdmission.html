@@ -4,8 +4,14 @@
 	{{getSummary}}
 
 	<h3> {{> patInfo patient=patient}} {{patient.currentBed.fullName}} </h3>
-	<h4> {{admission.reason }}   Admitted on: {{datef admission.created}} </h4> 
-	<button class="btn visit">New Visit</button> 
+	<h4> {{admission.reason }}  </h4> <b> Admitted on: {{datef admission.created}} </b> 
+
+	<hr/>
+	
+	<!--<button class="btn fac">Facility</button>-->
+
+	<a href="/visit/{{admission._id}}" class="btn btn-primary"> New Visit  </a> 
+	
 	<button class="btn btn-primary" 
 				data-toggle="collapse" data-target="#editCondition">{{admission.condition}}</button>
 
@@ -139,12 +145,14 @@
 
 <template name="updateScriptForm">
 	{{>scriptTbl script=admission.script}}
+	{{> recurringMsmtTmpl amdission=admission recurringAssessments = admission.recurringAssessments}}
 		<hr/>
 		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
-		 {{> afQuickField
-		name='script'}}
+		 {{> afQuickField name='script'}}
 		<button type="submit" class="btn btn-primary">Update</button> 
 		{{/autoForm}}
+
+		{{>quickForm fields='recurringAssessments' collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
 </template>
 
 
