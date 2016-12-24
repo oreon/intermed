@@ -3,6 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import moment from 'moment'
 import { userFullName, userFullNameById, findInvTotal } from '/imports/utils/misc.js';
 
+import * as utils from '/imports/utils/misc.js';
+
 /*export const*/
 Patients = new Mongo.Collection('patients')
 Drugs = new Mongo.Collection('drugs')
@@ -659,13 +661,6 @@ ScriptItem = new SimpleSchema([BaseSchema, {
         type: Date,
         optional: true,
         label: "Start Date (Leave empty for now)",
-        autoValue: function () {
-            let content = this.field("startDate");
-             return (content.isSet) ? content.value: new Date();
-        },
-        // autoform: {
-        //     readonly: true
-        // }
     },
     endDate: {
         type: Date,
@@ -700,9 +695,11 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
     items: {
         type: [ScriptItem],
         optional: true,
-       
-    },
-    
+        autoValue: function () {
+            console.log(this.value)
+            return utils.massageScriptItems(this.value);
+        }
+    }, 
 }])
 
 ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {

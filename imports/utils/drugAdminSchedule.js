@@ -37,7 +37,7 @@ export function scriptEnhanced(script) {
     script.items = _.map(script.items, (item) => {
         //TODO user must be able to specfiy the start date themselves
         // item['startDate'] =  item.createdAt ? item.createdAt : item.updatedAt ;
-        item['endDate'] = new moment(item['startDate']).add(item.duration.for, item.duration.type.toLowerCase())
+        //item['endDate'] = new moment(item['startDate']).add(item.duration.for, item.duration.type.toLowerCase())
         item['unitsNeeded'] = item ? findUnits(item) : 0;
         item['isCurrent'] = new moment(item.endDate).isAfter(new moment());
         return item;

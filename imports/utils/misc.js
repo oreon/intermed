@@ -2,6 +2,7 @@
 import { Box, Righ, Left, tryCatch } from '/imports/utils/myfunctional'
 var Task = require('data.task')
 var diff = require('rus-diff').diff
+import moment from 'moment'
 
 user = { _id: 44, profile: { 'firstName': 'ddf' } }
 
@@ -210,8 +211,11 @@ export const createInvoiceItem = (inv, serviceName, price) => {
 
 export const massageScriptItems = (items) =>
     _(items).map(item => {
+        console.log(item.startDate)
         item.startDate = item.startDate ? item.startDate : new Date();
+        if(item.duration)
         item.endDate = new moment(item.startDate).add(item.duration.for,
             item.duration.type.toLowerCase()).toDate();
         console.log(item)
+        return item;
     }).value() 
