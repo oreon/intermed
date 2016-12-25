@@ -220,3 +220,6 @@ export const massageScriptItems = (items) =>
         console.log(item)
         return item;
     }).value() 
+
+
+ export const  setPtName = (doc)=>  doc.patientName = Patients.findOne(doc.patient).fullName()

@@ -132,6 +132,8 @@ mdg:validated-method@1.1.0
 mdg:validation-error@0.5.1
 meteor@1.6.0
 meteor-base@1.0.4
+meteorhacks:aggregate@1.3.0
+meteorhacks:collection-utils@1.2.0
 meteorhacks:meteorx@1.4.1
 meteorhacks:unblock@1.1.0
 meteortoys:allthings@3.0.0
@@ -188,6 +190,7 @@ reload@1.1.11
 retry@1.0.9
 reywood:publish-composite@1.4.2
 routepolicy@1.0.12
+rzymek:fullcalendar@2.7.2
 sach:flow-db-admin@1.1.5
 service-configuration@1.0.11
 session@1.1.7
@@ -217,6 +220,7 @@ underscore@1.0.10
 url@1.0.11
 useraccounts:core@1.14.2
 useraccounts:unstyled@1.14.2
+voidale:later-js-tz@1.1.9
 webapp@1.3.12
 webapp-hashing@1.0.9
 xolvio:cleaner@0.3.1

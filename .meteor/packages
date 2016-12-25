@@ -64,6 +64,12 @@ alanning:roles
 yogiben:autoform-file
 #materialize:materialize
 
+
+rzymek:fullcalendar
+#fullcalendar:fullcalendar
+voidale:later-js-tz
+meteorhacks:aggregate
+
 reywood:publish-composite
 matb33:collection-hooks
 todda00:collection-revisions

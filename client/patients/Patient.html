@@ -2,11 +2,16 @@
 
 	<article class="recipe">
 		 {{> patInfo patient=patient}}
+
          {{#if isAdmitted}}
-		<button class="btn-deny viewAdmission">Go to Admission</button>
+		<button class="btn-primary viewAdmission">Go to Admission</button>
 		<button class="btn-deny visit">Visit</button> 
         {{else}}
+        <br/>
 		<button class="btn-primary admit">Admit</button>
+
+        <a class="btn-primary admit" href="/events/{{patient._id}}"> New Appointment </a>
+        
          {{/if}}
         <br/>
         
@@ -62,7 +67,7 @@
 		</div>
 
 		<div id="ptGraphs" class="tab-pane fade">
-			wisdom
+			No graphs yet.
 		</div>
 
         <div id="docs" class="tab-pane fade">

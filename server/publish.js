@@ -22,6 +22,10 @@ Meteor.publish('userData', function () {
     return Meteor.users.find({}, {fields: {profile: 1}}); 
 }); 
 
+Meteor.publish('Physicians', function () { 
+    return Meteor.users.find({'profile.profession':'physician'}, {fields: {profile: 1}}); 
+}); 
+
 
 // Meteor.publish('AllProducts', function () {
 //     return Products.find();
@@ -107,9 +111,18 @@ Meteor.publish('TodosCreatedByMe', function() {
     return Todos.find({createdBy:this.userId});
 })
 
+Meteor.publish('EventsAll', function () {
+    return Events.find({})
+});
 
-
-
+Meteor.publish('Events', function (start, end) {
+    return Events.find({
+        $or: [
+            {date: {$gte: start}},
+            {date: {$lte: end}}
+        ]
+    });
+});
 
 
 

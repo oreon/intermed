@@ -1,0 +1,11 @@
+<template name="appts">
+    <button class="addEvent">Add Event</button>
+    <button class="removeEvent">Remove Event</button>
+    {{> fullcalendar
+        class="mainCalendar"
+        defaultView='agendaWeek'
+        height="100%"
+        events=events
+        eventClick=onEventClicked
+    }}
+</template>

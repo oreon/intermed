@@ -1298,7 +1298,7 @@ TestResults.helpers({
 
 ////////////////// Hooks /////////////////
 
-Admissions.before.insert( (userId, doc) => doc.patientName = Patients.findOne(doc.patient).fullName());
+Admissions.before.insert( (userId, doc) => utils.setPtName(doc));
 
 Admissions.after.insert( (userId, doc) => {
     inv = { "admission": doc._id }

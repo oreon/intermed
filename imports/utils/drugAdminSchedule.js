@@ -51,6 +51,20 @@ export function calcShedForIterval(item, start, end) {
     //let hrs = end.diff(start, 'hours')
     //console.log(`diff is ${hrs} ${total}`)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
+    if(item.frequency.type == day && item.route != 'IV'){
+        
+    }
+
+    let sched4x = later.parse.recur().on('7:00', '11:00', '15:00', '20:00').time() //.onWeekday();
+    let sched3x = later.parse.recur().on('7:00', '14:00', '20:00').time() //.onWeekday();
+    let sched2x = later.parse.recur().on( '14:00', '20:00').time()
+    let sched1x = later.parse.recur().on( '14:00').time()
+    scheds = [sched1x, sched2x, sched3x, sched4x]
+
+    later.date.localTime();
+    console.log( later.schedule(sched3x).next(3) );
+    console.log ( later.schedule(sched3x).prev(3) ) ;
+    
 
     j = 1;
     let occurence = new moment(item.startDate)
