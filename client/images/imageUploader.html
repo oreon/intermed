@@ -4,14 +4,18 @@
   <ul class="list-group">
     <li class="list-group-item">
           <img src="{{url}}" alt="{{name}}" class="img-responsive">
-          <input type="button" value="remove" class="btnRemove"/>
+          <br/>
+          {{datef uploadedAt}}
+          <input type="button" value="Remove" class="btn btn-danger"/>
     </li>
   </ul>
       {{else}}
+      <div>
           No files uploaded.
+      </div>
   {{/each}}
   </p>
-  <p>Upload profile pic:</p>
+  <p>Upload Document:</p>
   <input name="files" id="files" type="file" multiple/><br/>
   <br/>
   <div id="dropzone" class="dropzone">

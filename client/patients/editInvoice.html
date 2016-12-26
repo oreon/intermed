@@ -7,7 +7,8 @@
 
 <template name="invoiceTmpl">
 
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped  table-condensed">
+			<thead>
 				<tr style="background:navy; color: #ffd">
 					<th>Bed</th>
 					<th> From</th>
@@ -16,6 +17,8 @@
 					<th> Price</th>
 					<th> Total</th>
 				</tr>
+			</thead>
+			<tbody>
 				{{#each admission.bedStaysObj.stays}}
 				<tr>
 					<td>{{bed.fullName}}</td>
@@ -31,8 +34,10 @@
 						<b> Total : Rs {{getBedStayTotal admission}}</b>
 					</td>
 				</tr>
+			</tbody>
 			</table>
 			<table class="table table-striped ">
+				<thead>
 				<tr style="background:navy; color: #fff">
 					<th>Service</th>
 					<th> Units</th>
@@ -40,13 +45,15 @@
 					<th> Date </th>
 					<th> Total</th>
 				</tr>
+				</thead>
+				<tbody>
 				{{#each admission.invoice.allItems}}
 				<tr>
 					<td>{{service}}</td>
 					<td> {{units}} </td>
 					<td> {{appliedPrice}} </td>
 					<td> {{datef updatedAt}} </td>
-					<td> {{total}} </td>
+					<td> {{lineItemTotal}} </td>
 				</tr>
 				{{/each}}
 				<tr style="background:#dde; ">
@@ -54,6 +61,7 @@
 						<b> Total : {{ admission.invoice.totalCurrent }}</b>
 					</td>
 				</tr>
+				</tbody>
 			</table>
 
 			<button class="btn btn-primary" 
@@ -63,13 +71,12 @@
 			{{#if flds}}
                   {{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
 			        autosave=true }}
-				 
             {{else}}
                     {{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-			autosave=true omitFields="amountPaid, datePaid, paymentType,total"}}
+			autosave=true omitFields="autoCreatedItems, amountPaid, datePaid, paymentType,total"}}
             {{/if}}
 			</div>
 			<br/>
-			Bed Stay : Rs. <b> {{getBedStayTotal admission}} </b>
-			<br/> Grand Total : <b> Rs {{admission.invoice.grandTotal}}</b>
+			Bed Stay : <i class="fa fa-rupee"></i> <b> {{getBedStayTotal admission}} </b>
+			<br/> Grand Total : <b> <i class="fa fa-rupee"></i> {{admission.invoice.grandTotal}}</b>
 </template>

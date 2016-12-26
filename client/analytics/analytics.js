@@ -86,11 +86,11 @@ Template.Analytics.helpers({
 
         let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
         let tasksData = [{
-            y: 3,
-            name: "Incomplete"
+            y: 350,
+            name: "Male"
         }, {
-            y: 1,//allTasks - incompleteTask,
-            name: "Complete"
+            y: 410,//allTasks - incompleteTask,
+            name: "Female"
         }];
         // Use Meteor.defer() to craete chart after DOM is ready:
         Meteor.defer(function () {
@@ -107,4 +107,89 @@ Template.Analytics.helpers({
             });
         });
     }
+    ,
+
+    admissionCategoryChart: function () {
+        // Gather data: 
+        let allTasks = Todos.find().count()
+        console.log(allTasks)
+
+        let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
+        let tasksData = [{
+            y: 150,
+            name: "General"
+        }, {
+            y: 120,//allTasks - incompleteTask,
+            name: "Gyanec"
+        },
+        {
+            y: 180,//allTasks - incompleteTask,
+            name: "Cardiac"
+        },
+        {
+            y: 100,//allTasks - incompleteTask,
+            name: "Trauma"
+        },
+        
+        ]
+        
+        ;
+        // Use Meteor.defer() to craete chart after DOM is ready:
+        Meteor.defer(function () {
+            // Create standard Highcharts chart with options:
+            Highcharts.chart('admissionCategoryChart', {
+
+                title: {
+                    text: 'Admisisons By Category'
+                },
+                series: [{
+                    type: 'pie',
+                    data: tasksData
+                }]
+            });
+        });
+    }
+,
+
+     opdChart: function () {
+        // Gather data: 
+        let allTasks = Todos.find().count()
+        console.log(allTasks)
+
+        let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
+        let tasksData = [{
+            y: 10,
+            name: "Internal Medicine"
+        }, {
+            y: 20,//allTasks - incompleteTask,
+            name: "Gyanec"
+        },
+        {
+            y: 80,//allTasks - incompleteTask,
+            name: "Cardiac"
+        },
+        {
+            y: 40,//allTasks - incompleteTask,
+            name: "Dermatolgical"
+        },
+        
+        ]
+        
+        ;
+        // Use Meteor.defer() to craete chart after DOM is ready:
+        Meteor.defer(function () {
+            // Create standard Highcharts chart with options:
+            Highcharts.chart('opdChart', {
+
+                title: {
+                    text: 'OPD Encounters'
+                },
+                series: [{
+                    type: 'pie',
+                    data: tasksData
+                }]
+            });
+        });
+    }
+
 });

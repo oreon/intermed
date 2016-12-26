@@ -2,28 +2,34 @@
     {{#if Template.subscriptionsReady}}
     
         {{#if currentBed}} 
-            Move {{patient.firstName}} from {{currentBed.name}} 
+           <h2> <small>Move </small> {{patient.fullName}} from {{currentBed.name}}  </h2>
         {{else }}
-            Admit {{patient.firstName}}
+            <h2><small>Admit</small> {{patient.fullName}}  </h2>
         {{/if}} 
 
         {{# each wards }}
-            <article class="recipe">
-                <h2> {{name}} </h2>
-                {{#each rooms}}
-                    <h3> {{name}} </h3>
+            {{#if wardHasRooms }}
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3> {{name}} </h3> </div>
+                    <div class="panel-body">
+                           {{#each rooms}}
+                {{#if  roomHasBeds }}
+                    <h4> {{name}} </h4>
 
                     {{#each rbeds}}
                         {{> AvailableBed }}
                     {{else}} 
 
                     {{/each}}
-
                     <hr/>
-                {{else}}
+                {{/if}}
 
                 {{/each}}
-            </article>
+                </div>
+            	
+		</div>
+               
+            {{/if}}
         {{/each}}
     {{/if}}
 </template>
@@ -31,10 +37,9 @@
 
 <template name="AvailableBed">
     {{#if isBedAvailable}}
-        <span style="background-color: #ffdddd">
-             BED {{name}} 
-            <button class="btn-primary admit">Admit</button>
-        </span>
-        &nbsp;
+        <div  class="well well-sm">
+             <h5> Bed {{name}} , AC Deluxe</h5>
+            <button class="btn btn-primary admit">Admit</button>
+        </div>
     {{/if}}
 </template>

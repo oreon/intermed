@@ -1,8 +1,6 @@
 <template name="ViewAdmission">
 	{{#if Template.subscriptionsReady}}
 
-	{{getSummary}}
-
 	<h3> {{> patInfo patient=patient}} {{patient.currentBed.fullName}} </h3>
 	<h4> {{admission.reason }}  </h4> <b> Admitted on: {{datef admission.created}} </b> 
 

@@ -199,8 +199,7 @@ AutoForm.hooks({
 
     updateAdmissionScriptForm:{
          formToDoc: function (doc) {
-            console.log(items             )
-            doc.items = utils.massageItems(doc.items)
+            doc.items = utils.massageScriptItems(doc.items)
             return doc;
         },
     },
@@ -237,8 +236,8 @@ AutoForm.hooks({
                 { "_id": adm._id },
                 { "$pull": { "labsAndImages.tests": test } },
                 function (err, res) {
-                    console.log(err);
-                    console.log(res);
+                    if(err) console.error(err);
+                    console.log("successfully removed test from scheduled " + test );
                 }
             );
 

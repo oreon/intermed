@@ -51,8 +51,8 @@ export function calcShedForIterval(item, start, end) {
     //let hrs = end.diff(start, 'hours')
     //console.log(`diff is ${hrs} ${total}`)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
-    if(item.frequency.type == day && item.route != 'IV'){
-        
+    if(item.frequency.type == "Day" && item.route != 'IV'){
+
     }
 
     let sched4x = later.parse.recur().on('7:00', '11:00', '15:00', '20:00').time() //.onWeekday();

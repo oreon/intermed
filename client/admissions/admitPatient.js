@@ -35,8 +35,13 @@ Template.AdmitPatient.helpers({
 
     rbeds: function () {
         return Beds.find({room: this._id});
+    },
+    roomHasBeds:function(){
+        return Beds.find({room: this._id}).count() > 0 
+    },
+    wardHasRooms:function(){
+        return Rooms.find({ward: this._id}).count() > 0 
     }
-
 
 })
 

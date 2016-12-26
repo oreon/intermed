@@ -193,7 +193,7 @@ export const createInvoiceItemBasic = (inv, serviceName, price) => {
         appliedPrice: price,
         units: 1,
         remarks: serviceName + " Sys updated",
-        total: price
+        lineItemTotal: price
     }
 }
 

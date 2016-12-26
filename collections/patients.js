@@ -47,7 +47,7 @@ Images.allow({
     },
 });
 
-patientName = {type:String, optional:true ,  autoform: {type: "hidden"},}
+patientName = { type: String, optional: true, autoform: { type: "hidden" }, }
 
 tmStamp = {
     type: Date,
@@ -213,12 +213,12 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: false } ).map(function (c) {
+                return Services.find({ autoCreated: false }).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c.name };
                 });
             }
         },
-        label:"Service"
+        label: "Service"
     },
     appliedPrice: {
         type: Number,
@@ -233,14 +233,14 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
 
     },
     units: { type: Number },
-    // total: {
-    //     type: Number,
-    //     optional: true,
-    //     defaultValue: 0 ,
-    //     autoform: {
-    //         readonly: true
-    //     }
-    // },
+    lineItemTotal: {
+        type: Number,
+        optional: true,
+        defaultValue: 0 ,
+        autoform: {
+            readonly: true
+        }
+    },
     remarks: {
         type: String,
         optional: true
@@ -251,16 +251,16 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
 LineItemACSchema = new SimpleSchema([LineItemSchema, {
     service: {
         type: String,
-        optional:true,
+        optional: true,
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: true } ).map(function (c) {
+                return Services.find({ autoCreated: true }).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c.name };
                 });
             }
         },
-        label:"Service"
+        label: "Service"
     },
 }])
 
@@ -272,15 +272,25 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    patientName:patientName,
+    patientName: patientName,
     comments: { type: String, optional: true },
-    items: { type: [LineItemSchema], optional: true },
+    items: { type: [LineItemSchema], optional: true ,
+        autoValue: function () {
+            _.map(this.value , x => { 
+                x.lineItemTotal = x.units * x.appliedPrice; return x   }  )
+        }
+    },
     autoCreatedItems: {
         type: [LineItemACSchema],
         optional: true,
-        // autoform: {
-        //     type: "hidden"
-        // }
+        autoform: {
+            type: "hidden"
+        },
+        autoValue: function () {
+            _.map(this.value , x => { 
+                x.lineItemTotal = x.units * x.appliedPrice; return x   }  )
+        }
+
     },
     // total: {
     //     type: Number,
@@ -290,12 +300,12 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     //         let dueFld = this.field("isDue");
     //         //console.log(dueFld)
     //         //console.log(this.doc.total)
-        
+
     //         if (dueFld.isSet && dueFld["value"] == true) { return this.field("total")["value"] }
 
     //         let items = this.field("items");
     //         if (items.isSet) {
-                 
+
     //             let itemsVal = items["value"];
     //             let total = _.reduce(itemsVal, function (sum, item) {
     //                 item.total = item.appliedPrice * item.units
@@ -309,14 +319,14 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     //         readonly: true
     //     }
     // },
-    total: { type: Number, optional: true  },
+    total: { type: Number, optional: true },
     amountPaid: { type: Number, optional: true },
     datePaid: {
         type: Date, optional: true
     },
     isDue: {
         type: Boolean, optional: true,
-         autoform: {
+        autoform: {
             type: "hidden"
         }
     },
@@ -657,7 +667,7 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     prn: { type: Boolean, optional: true, label: ''/* 'PRN (as needed) ' */ },
 
     instructions: { type: String, optional: true },
-    startDate:{
+    startDate: {
         type: Date,
         optional: true,
         label: "Start Date (Leave empty for now)",
@@ -699,7 +709,7 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
             console.log(this.value)
             return utils.massageScriptItems(this.value);
         }
-    }, 
+    },
 }])
 
 ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {
@@ -732,10 +742,10 @@ EncounterSchema = new SimpleSchema([BaseSchema, {
         type: ScriptSchema,
         optional: true,
     },
-    labsAndImages: {
-        type: LabsAndImagingSchema,
-        optional: true,
-    },
+    // labsAndImages: {
+    //     type: LabsAndImagingSchema,
+    //     optional: true,
+    // },
 }])
 
 
@@ -746,7 +756,7 @@ VisitSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "summernote"
         }
-    },  
+    },
     createdBy: {
         type: String,
         autoValue: function () { return this.userId },
@@ -816,6 +826,16 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         type: [String],
         optional: true,
     },
+    email: {
+        type: String,
+        optional: true,
+    },
+    blooGroup: {
+        type: String,
+        optional: true,
+        allowedValues: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
+    
+    },
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
     orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
@@ -866,7 +886,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-    patientName:patientName,
+    patientName: patientName,
     currentBedStay: {
         type: BedStaySchema,
         optional: true,
@@ -1146,7 +1166,7 @@ Beds.helpers({
 })
 Rooms.helpers({
     fullName: function () {
-        return this.wardObj().name + '-' + this.name;
+        return this.wardObj().name + '-' + (this.name && this.name != "__" ?this.name: "");
     },
     wardObj: function () { return Wards.findOne({ _id: this.ward }) }
 })
@@ -1196,7 +1216,7 @@ Admissions.helpers({
         total = 0;
 
         tempStays = _.cloneDeep(this.bedStays);
-        if(this.currentBedStay)
+        if (this.currentBedStay)
             tempStays.push(this.currentBedStay)
 
         _.forEach(tempStays, function (stay) {
@@ -1298,26 +1318,26 @@ TestResults.helpers({
 
 ////////////////// Hooks /////////////////
 
-Admissions.before.insert( (userId, doc) => utils.setPtName(doc));
+Admissions.before.insert((userId, doc) => utils.setPtName(doc));
 
-Admissions.after.insert( (userId, doc) => {
+Admissions.after.insert((userId, doc) => {
     inv = { "admission": doc._id }
     InvoiceSchema.clean(inv);
     check(inv, InvoiceSchema);
     Invoices.insert(inv)
 })
 
-Admissions.before.update( (userId, doc, fieldNames, modifier, options) => {
+Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
     modifier.$set = modifier.$set || {};
     modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
 });
 
-Beds.before.update( (userId, doc, fieldNames, modifier, options) => {
+Beds.before.update((userId, doc, fieldNames, modifier, options) => {
     modifier.$set = modifier.$set || {};
     modifier.$set.ward = Beds.findOne(bed.room).ward
 })
 
-Beds.before.insert( (userId, doc) => {
+Beds.before.insert((userId, doc) => {
     doc.ward = Beds.findOne(bed.room).ward
 })
 
@@ -1330,18 +1350,18 @@ Beds.before.insert( (userId, doc) => {
 //                    }).value() 
 
 
-Scripts.before.update( (userId, doc, fieldNames, modifier, options) => {
+Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
     console.log("before scirpt update")
     modifier.$set = modifier.$set || {};
     console.log(fieldNames)
-    modifier.$set.items =  massageScriptItems(modifier.$set.items)
+    modifier.$set.items = massageScriptItems(modifier.$set.items)
 });
 
-Scripts.before.insert( (userId, doc) => doc.items = massageScriptItems(modifier.$set.items) )
+Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
 
 
 
-Invoices.before.insert( (userId, doc) => {
+Invoices.before.insert((userId, doc) => {
     admission = Admissions.findOne(doc.admission)
     doc.patientName = admission.patientName;
 });
@@ -1367,7 +1387,12 @@ updateDate = {
     render: (val, type, doc) => moment(val).calendar()
 },
 
-invcols =  [
+    createDate = {
+        data: "createdAt", title: "Created ",
+        render: (val, type, doc) => moment(val).calendar()
+    },
+
+    invcols = [
         //{ data: "fullName()", title: "Full Name" },
         { data: "patientName", title: "Patient" },
         { data: "admission", title: "Admission" },
@@ -1402,7 +1427,10 @@ new Tabular.Table({
     columns: [
         //{ data: "fullName()", title: "Full Name" },
         { data: "patientName", title: "Patient" },
-        updateDate,
+        {
+            data: "createdAt", title: "Admitted ",
+            render: (val, type, doc) => moment(val).calendar()
+        }, 
         { data: "currentBedName()", title: "Bed" },
         { data: "currentBedStay", visible: false },
         {
@@ -1415,7 +1443,7 @@ new Tabular.Table({
             render: (val, type, doc) =>
                 `<a href='visit/${val}' class="btn btn-primary"> Visit</a>`
         },
-        
+
     ]
 })
 

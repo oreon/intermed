@@ -49,6 +49,9 @@ datariot:ganalytics
 check@1.2.4
 aldeed:template-extension
 
+meteorhacks:ssr
+email
+
 #added by jag singh
 sach:flow-db-admin
 #easy:search
