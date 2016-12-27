@@ -81,7 +81,16 @@
 
 		<div id="script" class="tab-pane fade ">
 			<h3>Current Order </h3>
+			{{>scriptTbl script=admission.script}}
+			{{> recurringMsmtTmpl amdission=admission recurringAssessments = admission.recurringAssessments}}
+	
+			{{#if isInRole 'physician'}}
+			<button class="btn btn-primary" 
+				data-toggle="collapse" data-target="#editScript">Edit Script</button>
+			<div id="editScript" class="well">
 			{{> updateScriptForm admission=admission }} 
+			</div>
+			{{/if}}
 		</div>
 
 		<div id="measurements" class="tab-pane fade ">
@@ -142,9 +151,7 @@
 </template>
 
 <template name="updateScriptForm">
-	{{>scriptTbl script=admission.script}}
-	{{> recurringMsmtTmpl amdission=admission recurringAssessments = admission.recurringAssessments}}
-		<hr/>
+	
 		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
 		 {{> afQuickField name='script'}}
 		<button type="submit" class="btn btn-primary">Update</button> 

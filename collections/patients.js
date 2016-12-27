@@ -71,6 +71,8 @@ creatorId = {
     },
 }
 
+
+
 creator = {
     type: String,
     optional: true,
@@ -81,6 +83,12 @@ creator = {
         type: "hidden"
     },
 }
+
+ snFld = {
+                type: 'summernote',
+                class: 'editor' ,// optional
+                settings: { height: 90 }
+            }
 
 
 Wards = new Mongo.Collection('wards')
@@ -388,7 +396,10 @@ BedSchema = new SimpleSchema([BaseSchema, {
 ImagingSchema = new SimpleSchema({
     type: {
         type: String,
-        allowedValues: ['XRay', 'CT', 'MRI', 'Other']
+        allowedValues: ['XRay', 'CT', 'MRI', 'Other'],
+          autoform: {
+            type: "select-radio"
+        }
     },
     details: {
         type: String,
@@ -697,9 +708,7 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true,
         autoform: {
-            afFieldInput: {
-                type: 'textarea' //'summernote',
-            }
+            afFieldInput: snFld
         }
     },
     items: {
@@ -754,7 +763,8 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     note: {
         type: String,
         autoform: {
-            type: "summernote"
+            type: "summernote",
+            afFieldInput: snFld
         }
     },
     createdBy: {
@@ -830,11 +840,13 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true,
     },
-    blooGroup: {
+    bloodGroup: {
         type: String,
         optional: true,
         allowedValues: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
-    
+        , autoform: {
+            type: "select-radio"
+        }
     },
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
@@ -1436,12 +1448,12 @@ new Tabular.Table({
         {
             data: "_id",
             render: (val, type, doc) =>
-                `<a href='viewAdmission/${val}'> <i class='fa fa-map'/></a>`
+                `<a href='viewAdmission/${val}' class="btn btn-primary"> <i class='fa fa-arrow-circle-right'></i> View</a>`
         },
         {
             data: "_id",
             render: (val, type, doc) =>
-                `<a href='visit/${val}' class="btn btn-primary"> Visit</a>`
+                `<a href='visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`
         },
 
     ]
@@ -1461,12 +1473,14 @@ new Tabular.Table({
         { data: "dob", visible: false },
         {
             data: "_id",
-            render: (val, type, doc) => "<a href='patient/" + val + "'>  <i class='fa fa-map'/></a>"
+            render: (val, type, doc) => `<a href='patient/${val}' class='btn btn-primary'> <i class='fa fa-map'> </i> View</a>`
         },
         {
             data: "_id",
-            render: (val, type, doc) => Roles.userIsInRole(Meteor.userId(), ['admin', 'physician']) ?
-                "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>" : ""
+            render: (val, type, doc) => `<a href='editPatient/${val}' class='btn btn-primary'> <i class='fa fa-pencil'> Edit</a>`
+            
+            //Roles.userIsInRole(Meteor.userId(), ['admin', 'physician']) ?
+               // "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>" : ""
         },
     ]
 });
