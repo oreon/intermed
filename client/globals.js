@@ -5,6 +5,10 @@ Template.registerHelper('datef', (dt) => {
   return moment(dt).format('D MMM YY hh:mm a');
 });
 
+Template.registerHelper('datesm', (dt) => {
+  return moment(dt).format('LL');
+});
+
 Template.registerHelper('datefbig', (dt) => {
   return moment(dt).format('LLLL');
 });
@@ -61,13 +65,13 @@ Template.registerHelper('isSet', (arg) => {
   return Session.get(arg) === true
 });
 
-Template.registerHelper('drugName', (id) => {
-  //console.log(id)
-  //console.log(Drugs.find().count())
-  drug = Drugs.findOne({ _id: id })
-  return (drug) ? drug.name : "Unknown"
+Template.registerHelper('drugName', (id) => utils.drugName(id) )
 
-})
+
+Template.registerHelper('encounterFromId', () => Encounters.findOne(FlowRouter.getParam('id'))  )
+
+
+
 
 Template.registerHelper('arrayify', function (obj) {
   var result = [];

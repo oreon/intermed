@@ -6,7 +6,10 @@ Template.EditInvoice.onCreated(function () {
         var id = FlowRouter.getParam('id');
         console.log(id)
         self.subscribe('InvoiceSingle', id);
+        //self.subscribe()
         let invc = Invoices.findOne(id)
+        self.subscribe('Rooms')
+        self.subscribe('Beds')
         //console.log(inv)
         if (invc) {
             self.inv.set(invc);

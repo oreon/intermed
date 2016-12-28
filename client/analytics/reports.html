@@ -1,0 +1,31 @@
+<template name="reports">
+
+<div class="btn-group">
+  <button type="button" class="btn btn-primary adm" >Admissions</button>
+  <button type="button" class="btn btn-success inv">Invoices</button>
+  <button type="button" class="btn btn-primary tst">Tests</button>
+</div>
+
+<form>
+	<div class="row">
+    <div class="col-xs-5">
+		<input  type="text" name="from" class="form-control" value="{{from}}">
+    </div>
+    <div class="col-xs-5">
+		<input  type="text" name="to" class="form-control" value="{{to}}">
+    </div>
+	<div class="col-xs-2">
+	<button type="submit" class="btn btn-success">Fetch</button>
+	</div>
+  </div>
+  </form>
+
+  <table class="table table-striped"> 
+	  <tbody>
+	{{#each admissions}}
+		<tr> <td> {{datesm dt}} </td><td>{{summary}} {{type}}</td></tr>
+	{{/each}}
+    <tr> <td> <b> Total : {{total}} </b></td> </tr>
+	  </tbody>
+  </table>
+</template>

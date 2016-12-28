@@ -99,7 +99,10 @@
     {{#each patient.encounters}} 
     <div class="panel-group">
           <div class="panel panel-default">
-            <div class="panel-heading"><b>Dr Raj Kohli {{datef createdAt}} {{reason}} </b></div>
+            <div class="panel-heading"><b>Dr Raj Kohli {{datef createdAt}} {{reason}} 
+                </b>
+                <a href="/editEncounter/{{_id}}" class="btn btn-primary"> <i class="fa fa-pencil"></i> </a>
+            </div>
             <div class="panel-body">
                 <h5> Dx: {{preliminaryDiagnosis}} </h5>
                 {{> scriptTbl script = script}}

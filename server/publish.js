@@ -58,6 +58,10 @@ Meteor.publish('Encounters', function () {
     return Encounters.find();
 });
 
+Meteor.publish('EncounterSingle', function (id) {
+    return Encounters.find({_id:id});
+});
+
 Meteor.publish('ChronicDiseases', function () {
     return ChronicDiseases.find();
 });

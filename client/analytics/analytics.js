@@ -1,4 +1,5 @@
 import Highcharts from 'Highcharts'
+import moment from 'moment'
 
 
 Template.Patient.onCreated(function () {
@@ -32,8 +33,28 @@ dataMonthlyPd = [
     ['Apr', 39000],
 ]
 
+
+
+
+
 Template.Analytics.helpers({
-    
+
+    //from: function () { return Template.instance().from.get() },
+    //to: () => Template.instance().to.get(),
+    admisisonsReport: function () {
+        Meteor.call('admitStats', null, function (error, response) {
+            if (error) {
+                Bert.alert(error.reason, "danger");
+                console.error(error)
+            } else {
+                console.log(response)
+
+                //FlowRouter.go('/viewAdmission/' + response)
+            }
+        });
+
+    },
+
     invoicesChart: function () {
         Meteor.defer(function () {
             Highcharts.chart('invDaily', {
@@ -130,10 +151,10 @@ Template.Analytics.helpers({
             y: 100,//allTasks - incompleteTask,
             name: "Trauma"
         },
-        
+
         ]
-        
-        ;
+
+            ;
         // Use Meteor.defer() to craete chart after DOM is ready:
         Meteor.defer(function () {
             // Create standard Highcharts chart with options:
@@ -149,9 +170,9 @@ Template.Analytics.helpers({
             });
         });
     }
-,
+    ,
 
-     opdChart: function () {
+    opdChart: function () {
         // Gather data: 
         let allTasks = Todos.find().count()
         console.log(allTasks)
@@ -172,10 +193,10 @@ Template.Analytics.helpers({
             y: 40,//allTasks - incompleteTask,
             name: "Dermatolgical"
         },
-        
+
         ]
-        
-        ;
+
+            ;
         // Use Meteor.defer() to craete chart after DOM is ready:
         Meteor.defer(function () {
             // Create standard Highcharts chart with options:

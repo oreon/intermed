@@ -5,6 +5,20 @@ import { userFullName, userFullNameById, findInvTotal } from '/imports/utils/mis
 
 import * as utils from '/imports/utils/misc.js';
 
+
+SimpleSchema.messages({
+    'allergicMeds': 'Patient has allergy to prescribed Medicines',
+    'regEx firstName': "[label] can have alphabets only",
+    'regEx lastName': "[label] can have alphabets only",
+    passwordMismatch: 'Passwords do not match',
+    duplicateEmail: 'Email already in use',
+    notUnique: 'Please use another email, this is already in use',
+    'regEx tel': 'Invalid phone number',
+    'regEx password': "Password must be 8-20 characters long and contain a lowercase alphabet, an uppercase alphabet, a digit and a special character",
+});
+
+//TODO add uniques
+
 /*export const*/
 Patients = new Mongo.Collection('patients')
 Drugs = new Mongo.Collection('drugs')
@@ -84,11 +98,11 @@ creator = {
     },
 }
 
- snFld = {
-                type: 'summernote',
-                class: 'editor' ,// optional
-                settings: { height: 90 }
-            }
+snFld = {
+    type: 'summernote',
+    class: 'editor',// optional
+    settings: { height: 90 }
+}
 
 
 Wards = new Mongo.Collection('wards')
@@ -244,7 +258,7 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
     lineItemTotal: {
         type: Number,
         optional: true,
-        defaultValue: 0 ,
+        defaultValue: 0,
         autoform: {
             readonly: true
         }
@@ -282,21 +296,26 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     },
     patientName: patientName,
     comments: { type: String, optional: true },
-    items: { type: [LineItemSchema], optional: true ,
+    items: {
+        type: [LineItemSchema], optional: true,
         autoValue: function () {
-            _.map(this.value , x => { 
-                x.lineItemTotal = x.units * x.appliedPrice; return x   }  )
+            _.map(this.value, x => {
+                x.lineItemTotal = x.units * x.appliedPrice; return x
+            })
         }
     },
     autoCreatedItems: {
         type: [LineItemACSchema],
         optional: true,
         autoform: {
-            type: "hidden"
+            readonly: true
         },
         autoValue: function () {
-            _.map(this.value , x => { 
-                x.lineItemTotal = x.units * x.appliedPrice; return x   }  )
+            // if (!this.value)
+            //     return [];
+            _.map(this.value, x => {
+                x.lineItemTotal = x.units * x.appliedPrice; return x
+            })
         }
 
     },
@@ -327,7 +346,12 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     //         readonly: true
     //     }
     // },
-    total: { type: Number, optional: true },
+    total: {
+        type: Number, optional: true,
+        autoform: {
+            type: "hidden"
+        },
+    },
     amountPaid: { type: Number, optional: true },
     datePaid: {
         type: Date, optional: true
@@ -397,7 +421,7 @@ ImagingSchema = new SimpleSchema({
     type: {
         type: String,
         allowedValues: ['XRay', 'CT', 'MRI', 'Other'],
-          autoform: {
+        autoform: {
             type: "select-radio"
         }
     },
@@ -622,7 +646,8 @@ FrequencySchema = new SimpleSchema({
     },
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
-        type: String
+        type: String,
+        label: "per "
     }
 })
 
@@ -715,8 +740,43 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         type: [ScriptItem],
         optional: true,
         autoValue: function () {
-            console.log(this.value)
-            return utils.massageScriptItems(this.value);
+            ptFld = this.field("patient");
+            if (ptFld.isSet) {
+                return utils.massageScriptItems(this.value);
+            }
+            return this.value;
+        },
+        custom: function () {
+            ptFld = this.field("patient");
+            if (Meteor.isClient && this.isSet && ptFld.isSet) {
+                allergicDrugs = Patients.findOne(ptFld.value).drugAllergies;
+                // patients.findOne
+                let items = this.value
+                let prescribed = _(items).map('drug').value();
+
+                let allergies = _(prescribed)
+                    //${utils.findByProp(allergicDrugs, 'drug', x).severity}
+                    .map(x => {
+                        if (_(allergicDrugs).map('drug').includes(x)) {
+                            allergySev = utils.findByProp(allergicDrugs, 'drug', x).severity
+                            return `Patient has ${allergySev} allergy to ${utils.drugName(x)}`
+                        }
+                    }).filter(x => !!x)
+                    .value()
+
+                if (allergies && allergies.count() > 0) {
+                    console.log(allergies)
+                    Bert.alert(allergies.join(' '), 'danger', 'fixed-top', 'fa-frown-o');
+                    //Bert.warning()
+                    return 'allergicMeds';
+                }
+
+                // Meteor.call("accountsIsUsernameAvailable", this.value, function (error, result) {
+                //     if (!result) {
+                //         Meteor.users.simpleSchema().namedContext("createUserForm").addInvalidKeys([{ name: "username", type: "notUnique" }]);
+                //     }
+                // });
+            }
         }
     },
 }])
@@ -725,7 +785,7 @@ ScriptTemplateSchema = new SimpleSchema([ScriptSchema, {
     name: {
         type: String
     },
-    script: { type: ScriptSchema }
+    // script: { type: ScriptSchema }
 }])
 
 
@@ -1178,7 +1238,7 @@ Beds.helpers({
 })
 Rooms.helpers({
     fullName: function () {
-        return this.wardObj().name + '-' + (this.name && this.name != "__" ?this.name: "");
+        return this.wardObj().name + '-' + (this.name && this.name != "__" ? this.name : "");
     },
     wardObj: function () { return Wards.findOne({ _id: this.ward }) }
 })
@@ -1234,23 +1294,30 @@ Admissions.helpers({
         _.forEach(tempStays, function (stay) {
             //if(stay.bed)
             let bed = Beds.findOne({ _id: stay.bed });
-            stay.price = bed.roomObj().wardObj().price
+            if (bed) {
+                try {
+                    stay.price = bed.roomObj().wardObj().price
 
-            stay.bed = bed
+                    stay.bed = bed
 
-            if (!stay.toDate) {
-                stay.toDate = new Date();
+                    if (!stay.toDate) {
+                        stay.toDate = new Date();
+                    }
+
+                    let a = moment(stay.toDate);
+                    let b = moment(stay.fromDate);
+                    days = a.diff(b, 'days')
+                    stay.days = days == 0 ? 1 : days;
+
+                    stay.total = stay.days * stay.price
+
+                    total += stay.total
+
+                    stays.push(stay)
+                } catch (err) {
+                    console.error(err)
+                }
             }
-
-            let a = moment(stay.toDate);
-            let b = moment(stay.fromDate);
-            days = a.diff(b, 'days')
-            stay.days = days == 0 ? 1 : days;
-
-            stay.total = stay.days * stay.price
-
-            total += stay.total
-            stays.push(stay)
         });
 
         return { "stays": stays, "total": total };
@@ -1274,22 +1341,24 @@ Invoices.helpers({
     admissionObj: function () {
         return Admissions.findOne(this.admission)
     },
-    patientName: function () {
-        this.admissionObj().patientName();
-    },
+    // patientName: function () {
+    //     this.admissionObj().patientName();
+    // },
     allItems: function () {
         return _(this.items).concat(this.autoCreatedItems ? this.autoCreatedItems : []).value();
     },
     totalCurrent: function () { return findInvTotal(this); },
+
     grandTotal: function () {
         adm = this.admissionObj();
-        bedStayTotal = adm.bedStaysObj().total;
         invTotal = findInvTotal(this)
         console.log(invTotal)
-        if (adm) {
+
+        if (adm && adm.isCurrent) {
+            bedStayTotal = adm.bedStaysObj().total;
             return (this) ? bedStayTotal + invTotal : bedStayTotal;
         }
-        return 0;
+        return invTotal;
     },
 })
 
@@ -1399,23 +1468,26 @@ updateDate = {
     render: (val, type, doc) => moment(val).calendar()
 },
 
-    createDate = {
-        data: "createdAt", title: "Created ",
-        render: (val, type, doc) => moment(val).calendar()
-    },
+createDate = {
+    data: "createdAt", title: "Created ",
+    render: (val, type, doc) => moment(val).calendar()
+},
 
-    invcols = [
-        //{ data: "fullName()", title: "Full Name" },
-        { data: "patientName", title: "Patient" },
-        { data: "admission", title: "Admission" },
-        { data: "total", title: "Total" },
-        {
-            data: "_id",
-            render: (val, type, doc) =>
-                `<a href='editInvoice/${val}'> <i class='fa fa-map'/></a>`
-        },
-        updateDate,
-    ]
+invcols = [
+    //{ data: "fullName()", title: "Full Name" },
+    { data: "patientName", title: "Patient" },
+    { data: "admission", title: "Admission" },
+    { data: "totalCurrent()", title: "Total" },
+    {
+        data: "_id",
+        render: (val, type, doc) =>
+            `<a href='editInvoice/${val}'> <i class='fa fa-map'/></a>`
+    },
+    updateDate,
+    {data: "items", visible:false},
+    {data: "autoCreatedItems", visible:false}
+    
+]
 
 new Tabular.Table({
     name: "InvoicesTbl",
@@ -1442,7 +1514,7 @@ new Tabular.Table({
         {
             data: "createdAt", title: "Admitted ",
             render: (val, type, doc) => moment(val).calendar()
-        }, 
+        },
         { data: "currentBedName()", title: "Bed" },
         { data: "currentBedStay", visible: false },
         {
@@ -1478,9 +1550,9 @@ new Tabular.Table({
         {
             data: "_id",
             render: (val, type, doc) => `<a href='editPatient/${val}' class='btn btn-primary'> <i class='fa fa-pencil'> Edit</a>`
-            
+
             //Roles.userIsInRole(Meteor.userId(), ['admin', 'physician']) ?
-               // "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>" : ""
+            // "<a href='editPatient/" + val + "'>  <i class='fa fa-pencil'/></a>" : ""
         },
     ]
 });

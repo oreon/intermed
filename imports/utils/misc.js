@@ -172,14 +172,19 @@ export const findInvTotal2 = (inv) =>
 
 
 export const findInvTotal = (inv) => {
-    if (!inv.allItems()) return 0;
+    items = inv.allItems()? inv.allItems():inv.items ;
 
-    total = _(inv.allItems()).reduce((sum, item) => {
+    total = _(items).reduce((sum, item) => {
         item.total = item.appliedPrice * item.units
         return sum + (item.total ? item.total : 0);
     }, 0);
     return total;
 }
+
+export const findByProp  = (coll, prop, val) => _(coll).find(x => x[prop] === val)
+
+export const drugName = (id) => { drug = Drugs.findOne({ _id: id })
+return drug ? drug.name : "Unknown"}
 
 export const taskDbUpdate = (coll, id, exp) => new Task((rej, res) =>
     coll.update({ "_id": id }, exp, (err, success) => err ? rej(err) : res(success)))

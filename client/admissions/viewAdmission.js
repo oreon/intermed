@@ -202,6 +202,13 @@ AutoForm.hooks({
             doc.items = utils.massageScriptItems(doc.items)
             return doc;
         },
+
+        cv:function(doc){
+            allergicDrugs = Patients.findOne(doc.patient).drugAllergies;
+
+           return  _(doc.items).map( 'drug')
+            .map(x => (_pt.drugAllergies).map( 'drug').includes(x) )
+        }
     },
 
     newTodoForm: {
