@@ -1,4 +1,8 @@
-public:{
-
-
+{
+  "galaxy.meteor.com": { 
+     "env": { 
+       "MONGO_URL": "mongodb://root:Jogkohli1@ds145138.mlab.com:45138/cerebrum"
+     } 
+   }
 }
+

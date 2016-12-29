@@ -823,9 +823,12 @@ VisitSchema = new SimpleSchema([BaseSchema, {
     note: {
         type: String,
         autoform: {
-            type: "summernote",
-            afFieldInput: snFld
+            type: "textarea",
         }
+        // autoform: {
+        //     type: "summernote",
+        //     afFieldInput: snFld
+        // }
     },
     createdBy: {
         type: String,
