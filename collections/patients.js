@@ -3,6 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import moment from 'moment'
 import { userFullName, userFullNameById, findInvTotal } from '/imports/utils/misc.js';
 
+import { BaseSchema } from '/imports/api/schemas.js';
+
 import * as utils from '/imports/utils/misc.js';
 
 
@@ -136,73 +138,6 @@ class ChartsCollection extends Mongo.Collection {
 export const Lists = new ChartsCollection('Charts');
 
 
-
-BaseSchema = new SimpleSchema({
-
-    createdAt: {
-        type: Date,
-        optional: true,
-        autoValue: function () {
-            try {
-                if (this.isInsert) {
-                    return new Date();
-                } else if (this.isUpsert) {
-                    return { $setOnInsert: new Date() };
-                } else {
-                    this.unset();  // Prevent user from supplying their own value
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        },
-        autoform: {
-            type: "hidden"
-        }
-    },
-
-    createdBy: {
-        type: String,
-        optional: true,
-        autoValue: function () {
-            try {
-                if (this.isInsert) {
-                    return this.userId
-                } else if (this.isUpsert) {
-                    return { $setOnInsert: this.userId };
-                } else {
-                    this.unset();  // Prevent user from supplying their own value
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        autoform: {
-            type: "hidden"
-        }
-    },
-
-
-    // Force value to be current date (on server) upon update
-    // and don't allow it to be set upon insert.
-    updatedAt: {
-        type: Date,
-        autoValue: function () {
-            try {
-                if (this.isUpdate) {
-                    return new Date();
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        denyInsert: true,
-        optional: true,
-        autoform: {
-            type: "hidden"
-        }
-    },
-})
-
 ChronicDiseaseSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
 LabTestSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
 
@@ -235,8 +170,8 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: false }).map(function (c) {
-                    return { label: c.name + " - Rs" + c.price, value: c.name };
+                return Services.find({ autoCreated: false }, {sort:{'name':1}}).map(function (c) {
+                    return { label: c.name + " - Rs" + c.price, value: c._id };
                 });
             }
         },
@@ -254,7 +189,7 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         // },
 
     },
-    units: { type: Number },
+    units: { type: Number , defaultValue: 1},
     lineItemTotal: {
         type: Number,
         optional: true,
@@ -277,7 +212,7 @@ LineItemACSchema = new SimpleSchema([LineItemSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: true }).map(function (c) {
+                return Services.find({ autoCreated: true }, {sort:{'name':1}}).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c.name };
                 });
             }
@@ -300,6 +235,11 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
         type: [LineItemSchema], optional: true,
         autoValue: function () {
             _.map(this.value, x => {
+                if(!x.units) x.units =1 
+                if(x && !x.appliedPrice) { 
+                    x.appliedPrice = Services.findOne(x.service).price
+                    
+                }
                 x.lineItemTotal = x.units * x.appliedPrice; return x
             })
         }
@@ -865,6 +805,20 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true
     },
+    primaryPhysician:{
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select",
+            options: function () {
+                users = Meteor.users.find({},{sort:{'profile.firstName':1}});
+                return users.map(function (c) {
+                    return { label: userFullNameById(c._id).fork(e => "drx", s => s), value: c._id };
+                });
+            }
+        }
+    },
+
     chronicConditions: {
         type: [String],
         optional: true,
@@ -1462,6 +1416,7 @@ Invoices.before.insert((userId, doc) => {
 //   doc.patientName = 
 // });
 
+defSelector =  (userId) => { return{ facility: Meteor.users.findOne({_id:userId}).profile.facility } }
 
 //import {admHelpers} from '/imports/api/helpers'
 defSearch = { caseInsensitive: true, smart: false, onEnterOnly: true, }
@@ -1494,6 +1449,7 @@ invcols = [
 
 new Tabular.Table({
     name: "InvoicesTbl",
+    selector(userId) { return defSelector(userId) },
     collection: Invoices,
     search: defSearch,
     columns: invcols
@@ -1501,6 +1457,7 @@ new Tabular.Table({
 
 new Tabular.Table({
     name: "allInvoicesTbl",
+    selector(userId) { return defSelector(userId) },
     collection: Invoices,
     search: defSearch,
     columns: invcols
@@ -1511,6 +1468,7 @@ new Tabular.Table({
     name: "AdmissionsTbl",
     collection: Admissions,
     search: defSearch,
+    selector(userId) { return defSelector(userId) },
     columns: [
         //{ data: "fullName()", title: "Full Name" },
         { data: "patientName", title: "Patient" },
@@ -1535,10 +1493,12 @@ new Tabular.Table({
 })
 
 
+
 new Tabular.Table({
     name: "PatientsTbl",
     collection: Patients,
     search: defSearch,
+    selector(userId) { return defSelector(userId) },
     columns: [
         { data: "fullName()", title: "Full Name" },
         { data: "age()", title: "Age" },

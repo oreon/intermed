@@ -21,7 +21,7 @@ AccountsTemplates.addFields([
     	re: /(?=.*[a-z])(?=.*[A-Z])/,
     	errStr: '1 lowercase and 1 uppercase letter reqiured'		
 	}, 
-		{
+	{
 		_id: 'lastName',
 		type: 'text',
 		displayName: 'Last Name',
@@ -29,6 +29,15 @@ AccountsTemplates.addFields([
     	re: /(?=.*[a-z])(?=.*[A-Z])/,
     	errStr: '1 lowercase and 1 uppercase letter reqiured'		
 	}, 
+	{
+		_id: 'facility',
+		type: 'text',
+		//displayName: 'Last Name',
+		required: true,
+    	//re: /(?=.*[a-z])(?=.*[A-Z])/,
+    	//errStr: '1 lowercase and 1 uppercase letter reqiured'		
+	}, 
+
 	
 	{
 		_id: 'profession',

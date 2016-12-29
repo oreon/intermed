@@ -4,6 +4,7 @@ Template.EditPatient.onCreated(function () {
         var id = FlowRouter.getParam('id');
         console.log(id)
         self.subscribe('compPt', id);
+        self.subscribe('Physicians')
     });
 
 });

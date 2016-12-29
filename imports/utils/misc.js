@@ -227,4 +227,16 @@ export const massageScriptItems = (items) =>
     }).value() 
 
 
- export const  setPtName = (doc)=>  doc.patientName = Patients.findOne(doc.patient).fullName()
+export const  setPtName = (doc)=>  doc.patientName = Patients.findOne(doc.patient).fullName()
+
+export const  getUserFacility = (userId)=> Meteor.users.findOne(userId).profile.facility
+
+export const  tenatendFinder = (id, userColl = false) => {
+    user = Meteor.users.findOne(id)
+    if (user) {
+       return userColl ? { 'profile.facility': user.profile.facility }:{ facility: user.profile.facility }
+    }
+    console.warn("no user found returing empty ")
+    return {}
+}
+ 

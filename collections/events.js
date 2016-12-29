@@ -1,4 +1,5 @@
 import * as utils from '/imports/utils/misc.js';
+import { BaseSchema } from '/imports/api/schemas.js';
 
 Events = new Mongo.Collection( 'events' );
 
@@ -14,7 +15,7 @@ Events.deny({
   remove: () => true
 });
 
-let EventSchema = new SimpleSchema({
+let EventSchema = new SimpleSchema([BaseSchema,{
   'title': {
     type: String,
     optional:true,
@@ -56,8 +57,11 @@ let EventSchema = new SimpleSchema({
   //   type: Number,
   //   label: 'The number of guests expected at this event.'
   // }
-});
+}]);
 
 Events.attachSchema( EventSchema );
 
-Events.before.insert( (userId, doc) => utils.setPtName(doc));
+Events.before.insert( (userId, doc) => {
+ utils.setPtName(doc)
+ doc.facility = utils.getUserFacility(userId)
+} );
