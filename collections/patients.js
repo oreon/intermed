@@ -107,6 +107,9 @@ snFld = {
 }
 
 
+
+
+
 Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
@@ -135,6 +138,9 @@ class ChartsCollection extends Mongo.Collection {
     }
 }
 
+
+
+
 export const Lists = new ChartsCollection('Charts');
 
 
@@ -158,6 +164,7 @@ ServiceSchema = new SimpleSchema([BaseSchema, {
     price: { type: Number },
     autoCreated: {
         type: Boolean,
+        defaultValue:false,
         autoform: {
             type: "hidden"
         }
@@ -421,12 +428,15 @@ WardSchema = new SimpleSchema([BaseSchema, {
     price: { type: Number, decimal: true, optional: true },
     //rooms: {type: [RoomSchema]},
     //beds: {type: [BedSchema], optional:true },
-    facility: {
-        type: String,
-        autoValue: function () {
-            return Facilities.findOne()._id;  //TODO change to current user's facility
-        }
-    }
+    // facility: {
+    //     type: String,
+    //     autoValue: function () {
+    //         return Facilities.findOne()._id;  //TODO change to current user's facility
+    //     },
+    //     autoform: {
+    //         type: "hidden",
+    //     }
+    // }
 }
 ])
 
@@ -1074,6 +1084,32 @@ TodoSchema = new SimpleSchema([BaseSchema, {
 }])
 
 
+Schema = {};
+Schema.wardTemp = new SimpleSchema({
+    ward: {
+        type: WardSchema,
+        label: "Ward name",
+        max: 50
+    },
+    numberOfRooms:{
+        type: Number,
+        optional:true,
+    },
+    prefix:{
+        type: String,
+        optional:true,
+        label: "For a ward with beds 101 to 120 , enter 100 for 201-220 enter 200 ",
+    },
+    beds: {
+        type: [String],
+        optional:true,
+        //regEx: SimpleSchema.RegEx.Email,
+        label: "Bed Name"
+    }
+}); 
+
+///////////  End of schema defs ///////////////////
+
 
 
 Patients.allow({
@@ -1356,7 +1392,12 @@ TestResults.helpers({
 
 ////////////////// Hooks /////////////////
 
-Admissions.before.insert((userId, doc) => utils.setPtName(doc));
+//if(Meteor.isServer){
+
+Admissions.before.insert((userId, doc) => { 
+    utils.setPtName(doc)
+    doc.facility = utils.getUserFacility(userId)
+});
 
 Admissions.after.insert((userId, doc) => {
     inv = { "admission": doc._id }
@@ -1376,8 +1417,21 @@ Beds.before.update((userId, doc, fieldNames, modifier, options) => {
 })
 
 Beds.before.insert((userId, doc) => {
-    doc.ward = Beds.findOne(bed.room).ward
+    doc.ward = Rooms.findOne(doc.room).ward
+    doc.facility = utils.getUserFacility(userId)
 })
+
+Wards.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+Rooms.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+Services.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+ChronicDiseases.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+
+//}
+//Beds.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
 // massageScriptItems = (items) =>
 // _(items).map(item => {
@@ -1398,10 +1452,10 @@ Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
 Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
 
 
-
 Invoices.before.insert((userId, doc) => {
     admission = Admissions.findOne(doc.admission)
     doc.patientName = admission.patientName;
+    doc.facility = utils.getUserFacility(userId)
 });
 
 
@@ -1495,7 +1549,7 @@ new Tabular.Table({
 
 
 new Tabular.Table({
-    name: "PatientsTbl",
+    name: "Patients",
     collection: Patients,
     search: defSearch,
     selector(userId) { return defSelector(userId) },

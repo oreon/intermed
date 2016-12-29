@@ -235,7 +235,7 @@ Meteor.publishComposite('compWards', {
 Meteor.publishComposite('compAdmissions', {
     find: function () {
         return Admissions.find(
-        Object.assing(utils.tenatendFinder(this.userId),{ "currentBedStay": { $exists: true } }), 
+        Object.assign(utils.tenatendFinder(this.userId),{ "currentBedStay": { $exists: true } }), 
         { sort: { name: -1 },
          limit: 100 });
     },
@@ -254,7 +254,7 @@ Meteor.publishComposite('compAdmission', function (id) {
     return {
         find: function () {
             return Admissions.find(
-            Object.assing(utils.tenatendFinder(this.userId),  
+            Object.assign(utils.tenatendFinder(this.userId),  
             { /*"currentBedStay": {$exists: true},*/ _id: id }),
              { sort: { name: -1 }, limit: 1 });
         },
