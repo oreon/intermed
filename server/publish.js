@@ -20,7 +20,8 @@ Meteor.publish('userData', function () {
 });
 
 Meteor.publish('Physicians', function () {
-    compFinder = Object.assign(utils.tenatendFinder(this.userId, true),  {'profile.profession': 'physician'});
+    compFinder = Object.assign(utils.tenatendFinder(this.userId, true), 
+         {'profile.profession': 'physician'});
     console.log(compFinder)
     return Meteor.users.find(compFinder,
         { fields: { profile: 1 } });
@@ -250,6 +251,18 @@ Meteor.publishComposite('compAdmissions', {
     ]
 })
 
+        
+Meteor.publishComposite('admin_tabular_Patients', function (id) {
+    return {
+        find: function () {
+            return Admissions.find(
+            Object.assign(utils.tenatendFinder(this.userId),  
+            { /*"currentBedStay": {$exists: true},*/ _id: id }),
+             { sort: { lastName: -1 }, limit: 1000 });
+        }
+    }
+})
+
 Meteor.publishComposite('compAdmission', function (id) {
     return {
         find: function () {
@@ -313,6 +326,8 @@ Meteor.publish('counts', function () {
 Meteor.publish('MyPendingTodos', function () {
     return Todos.find({ forUser: this.userId, completed: false });
 });
+
+
 
 
 if (Meteor.isServer) {

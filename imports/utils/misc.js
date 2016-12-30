@@ -154,8 +154,14 @@ export const roomsWithPatients = () =>
 export const userFullName = (user) => {
     if (user.profile) {
         spec = getDefault(user.profile.specialization)
+        
         profession = getDefault(user.profile.profession, "{NO ROLE}");
-        if (profession === "physician") profession = "Dr."
+
+        if (profession === "physician") 
+            profession = "Dr."
+        else 
+            spec = "" ; //spec != 'phsyician'?spec:"" TODO assign spec for a specialist nurse etc
+
         return `${profession} ${user.profile.firstName}  ${getDefault(user.profile.lastName)} ${spec}`
     } else {
         return user._id
@@ -217,8 +223,8 @@ export const createInvoiceItem = (inv, serviceName, price) => {
 
 export const massageScriptItems = (items) =>
     _(items).map(item => {
-        console.log(item.startDate)
-        item.startDate = item.startDate ? item.startDate : new Date();
+        console.log(item.startDate) 
+        item.startDate = item.startDate || new Date();
         if(item.duration)
         item.endDate = new moment(item.startDate).add(item.duration.for,
             item.duration.type.toLowerCase()).toDate();
@@ -229,14 +235,18 @@ export const massageScriptItems = (items) =>
 
 export const  setPtName = (doc)=>  doc.patientName = Patients.findOne(doc.patient).fullName()
 
-export const  getUserFacility = (userId)=> Meteor.users.findOne(userId).profile.facility
+export const  getUserFacility = (userId)=> 
+    safeTask(() => Meteor.users.findOne(userId))
+    .map(x => x.profile.facility)
+    .fork(e=> { throw new Meteor.error(500, e)}, s=> s )
+       
 
 export const  tenatendFinder = (id, userColl = false) => {
     user = Meteor.users.findOne(id)
     if (user) {
        return userColl ? { 'profile.facility': user.profile.facility }:{ facility: user.profile.facility }
     }
-    console.warn("no user found returing empty ")
+    console.warn("Cerebrum : no user found returing empty ")
     return {}
 }
  

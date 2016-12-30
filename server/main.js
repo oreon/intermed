@@ -7,7 +7,13 @@ Meteor.startup(() => {
             Drugs.insert({"name": "Penicillin"})
             Drugs.insert({"name": "Albendazole"})
             Drugs.insert({"name": "Aspirin"})
-            Drugs.insert({"name": "Aspirin"})
+            Drugs.insert({"name": "Captopril"})
+            Drugs.insert({"name": "Diclofenac"})
+            Drugs.insert({"name": "Metformin"})
+            Drugs.insert({"name": "Glipizide"})
+            
+            
+            
         }
         if (LabTests.find().count() == 0) {
             LabTests.insert({"name": "CBC"})

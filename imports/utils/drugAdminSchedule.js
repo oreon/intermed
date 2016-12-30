@@ -62,11 +62,11 @@ export function calcShedForIterval(item, start, end) {
     scheds = [sched1x, sched2x, sched3x, sched4x]
 
     later.date.localTime();
-    console.log( later.schedule(sched3x).next(3) );
-    console.log ( later.schedule(sched3x).prev(3) ) ;
+    // console.log( later.schedule(sched3x).next(3) );
+    // console.log ( later.schedule(sched3x).prev(3) ) ;
     
 
-    j = 1;
+    j = 0; // oncePerX ==1 ?0 :1 ;
     let occurence = new moment(item.startDate)
     //for (j = 0; j < total; j++) {
     while (occurence.isBefore(end)) {

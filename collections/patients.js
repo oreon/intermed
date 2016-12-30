@@ -7,6 +7,8 @@ import { BaseSchema } from '/imports/api/schemas.js';
 
 import * as utils from '/imports/utils/misc.js';
 
+import { AccountsCommon } from 'meteor/accounts-base'
+
 
 SimpleSchema.messages({
     'allergicMeds': 'Patient has allergy to prescribed Medicines',
@@ -592,12 +594,13 @@ DrugSchema = new SimpleSchema([BaseSchema, {
 FrequencySchema = new SimpleSchema({
     every: {
         type: Number,
-        label: "Times "
+        label: "Times"
     },
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
         type: String,
-        label: "per "
+        label: "per ",
+        defaultValue:'Day'
     }
 })
 
@@ -607,7 +610,8 @@ DurationSchema = new SimpleSchema({
     },
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
-        type: String
+        type: String,
+        defaultValue:'Day'
     }
 })
 
@@ -620,6 +624,11 @@ RecurringAssessmentItemSchema = new SimpleSchema({
         type: FrequencySchema,
     },
     instructions: { type: String, optional: true },
+    startDate: {
+        type: Date,
+        optional: true,
+        label: "Start Date (Leave empty for now)",
+    },
 })
 
 
@@ -691,15 +700,21 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         optional: true,
         autoValue: function () {
             ptFld = this.field("patient");
-            if (ptFld.isSet) {
+            //  console.log(ptFld.value)
+            // if (ptFld.isSet) {
+            //     console.log(ptFld.value)
                 return utils.massageScriptItems(this.value);
-            }
-            return this.value;
+            // }
+            // return this.value;
         },
-        custom: function () {
-            ptFld = this.field("patient");
-            if (Meteor.isClient && this.isSet && ptFld.isSet) {
-                allergicDrugs = Patients.findOne(ptFld.value).drugAllergies;
+         custom: function () {
+            
+            if (Meteor.isClient && this.isSet ) {
+
+                pt= this.field("patient").value;
+                if(!pt) 
+                    pt = Session.get('patient')
+                allergicDrugs = Patients.findOne(pt).drugAllergies;
                 // patients.findOne
                 let items = this.value
                 let prescribed = _(items).map('drug').value();
@@ -720,12 +735,6 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
                     //Bert.warning()
                     return 'allergicMeds';
                 }
-
-                // Meteor.call("accountsIsUsernameAvailable", this.value, function (error, result) {
-                //     if (!result) {
-                //         Meteor.users.simpleSchema().namedContext("createUserForm").addInvalidKeys([{ name: "username", type: "notUnique" }]);
-                //     }
-                // });
             }
         }
     },
@@ -802,7 +811,8 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         label: "Last Name",
     },
     dob: {
-        type: Date
+        type: Date,
+        label:'Date of Birth'
     },
     gender: {
         type: String,
@@ -815,20 +825,23 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         type: String,
         optional: true
     },
+    pregnant: {
+        type: Boolean,
+        optional: true,
+    },
     primaryPhysician:{
         type: String,
         optional: true,
         autoform: {
             type: "select",
             options: function () {
-                users = Meteor.users.find({},{sort:{'profile.firstName':1}});
+                users = Meteor.users.find({ 'profile.profession': 'physician' },{sort:{'profile.firstName':1}});
                 return users.map(function (c) {
                     return { label: userFullNameById(c._id).fork(e => "drx", s => s), value: c._id };
                 });
             }
         }
     },
-
     chronicConditions: {
         type: [String],
         optional: true,
@@ -841,10 +854,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-    pregnant: {
-        type: Boolean,
-        optional: true,
-    },
+   
     pastMedicalHistory: {
         type: String,
         optional: true,
@@ -980,7 +990,6 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             // options:   ['Recovering','Stable', 'Critical']
         }
     },
-
     visits: {
         type: [VisitSchema],
         optional: true,
@@ -992,6 +1001,9 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     recurringAssessments: {
         type: [RecurringAssessmentItemSchema],
         optional: true,
+        autoValue: function () {
+            return utils.massageScriptItems(this.value);
+        },
     },
     labsAndImages: {
         type: LabsAndImagingSchema,
@@ -1392,16 +1404,49 @@ TestResults.helpers({
 
 ////////////////// Hooks /////////////////
 
-//if(Meteor.isServer){
+
+
+if(Meteor.isServer){
 
 Admissions.before.insert((userId, doc) => { 
     utils.setPtName(doc)
+    console.log(userId)
     doc.facility = utils.getUserFacility(userId)
 });
 
+Patients.before.find(function (userId, selector, options) {
+    //console.log(this.userId)
+  
+  //if(!userId)
+    //userId = Meteor.userId()
+  //console.log(currentUser)
+  //console.log(AccountsCommon || AccountsCommon.user())
+
+  console.log('user pt ' + userId)
+  //if(userId)
+  //  selector = Object.assign(selector, { facility: utils.getUserFacility(userId) })
+  //console.log(options)
+});
+
+ChronicDiseases.before.find(function (userId, selector, options) {
+//   console.log('user drugs ' + this._super.userId)
+//   console.log(this.context )
+//   console.log(`super ${this._super}` )
+  
+  
+//   if(!userId)
+//     userId = Meteor.userId
+//   selector = Object.assign(selector, { facility: 'grWAwxGbdb9is6FAR' })
+  //console.log(options)
+});
+
+
 Admissions.after.insert((userId, doc) => {
+    //debugger
     inv = { "admission": doc._id }
     InvoiceSchema.clean(inv);
+    console.log("in inv")
+    console.log(inv)
     check(inv, InvoiceSchema);
     Invoices.insert(inv)
 })
@@ -1410,6 +1455,13 @@ Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
     modifier.$set = modifier.$set || {};
     modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
 });
+
+Admissions.before.find(function (userId, selector, options) {
+  //console.log(selector)
+  //console.log(options)
+});
+
+
 
 Beds.before.update((userId, doc, fieldNames, modifier, options) => {
     modifier.$set = modifier.$set || {};
@@ -1421,26 +1473,26 @@ Beds.before.insert((userId, doc) => {
     doc.facility = utils.getUserFacility(userId)
 })
 
-Wards.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+//CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
-Rooms.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+_.each([Meteor.users, Wards, Rooms, Services, Admissions], function(collection) {
+    collection.before.insert(
+        //console.log(userId)
+        (userId, doc) => doc.facility = utils.getUserFacility(userId)
+    );
+});
 
-Services.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+// Wards.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
-ChronicDiseases.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+// Rooms.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+// Services.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+// ChronicDiseases.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
 
-//}
+}
 //Beds.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
-
-// massageScriptItems = (items) =>
-// _(items).map(item => {
-//                     item.startDate = item.startDate ? item.startDate: new Date();
-//                     item.endDate = new moment(item.startDate).add(item.duration.for,
-//                     item.duration.type.toLowerCase()).toDate();
-//                     console.log(item)
-//                    }).value() 
-
 
 Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
     console.log("before scirpt update")
@@ -1459,16 +1511,7 @@ Invoices.before.insert((userId, doc) => {
 });
 
 
-// Invoices.before.update( (userId, doc, fieldNames, modifier, options) => {
-//      modifier.$set = modifier.$set || {};
-//      (itemsVal, function (sum, item) {
-//                     item.total = item.appliedPrice * item.units
-//      modifier.$set.total = findInvTotal(Invoices.findOne(doc._id))
-//  });
 
-// Admissions.after.insert(function (userId, doc) {
-//   doc.patientName = 
-// });
 
 defSelector =  (userId) => { return{ facility: Meteor.users.findOne({_id:userId}).profile.facility } }
 
@@ -1549,7 +1592,7 @@ new Tabular.Table({
 
 
 new Tabular.Table({
-    name: "Patients",
+    name: "PatientsTbl",
     collection: Patients,
     search: defSearch,
     selector(userId) { return defSelector(userId) },
