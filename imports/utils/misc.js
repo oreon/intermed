@@ -37,6 +37,7 @@ export const createTask = (f) => new Task((rej, res) => {
 
 
 
+
 //Always returns a value - fails on null or undefined
 export const safeTask = (f) => new Task((rej, res) => {
     try {
@@ -53,6 +54,12 @@ export const safeTask = (f) => new Task((rej, res) => {
     }
 })
 
+
+
+export const arrTasks = () =>
+    safeTask(() => [1, 2, 3])
+        .ap(x => x * x)
+        .fork(e => { throw new Meteor.error(500, e) }, s => console.log(s))
 
 
 function groupBy(dataToGroupOn, fieldNameToGroupOn, fieldNameForGroupName, fieldNameForChildren) {
@@ -100,20 +107,20 @@ export const userFullNameById = (id) => {
 
 //export const userFullNameById = (id) => Meteor.users.findOne({ _id: this.forUser })
 
-export const busyBedIds =() => _(Admissions.find().fetch())
-        .map('currentBedStay.bed').value()
+export const busyBedIds = () => _(Admissions.find().fetch())
+    .map('currentBedStay.bed').value()
 
 export const busyBeds = () =>
-        _(Admissions.find().fetch())
+    _(Admissions.find().fetch())
         .map('currentBedStay.bed')
         .map(x => Beds.findOne(x))
         .filter(x => !!x)
         .value()
 
 export const freeBeds = () =>
-    Beds.find({_id:{$nin : busyBedIds()  }}).fetch()
-    .map(x =>  Beds.findOne(x) )
-    
+    Beds.find({ _id: { $nin: busyBedIds() } }).fetch()
+        .map(x => Beds.findOne(x))
+
 
 export const busyBedsByWard = (ward) =>
     _(busyBeds())
@@ -129,7 +136,7 @@ export const wardHasBedsAvailable = (ward) =>
 
 export const wardsWithBedsAvailable = () =>
     _(freeBeds())
-        .map(x => { if(x) return x.wardObj() } )
+        .map(x => { if (x) return x.wardObj() })
         .uniqBy(x => x.name)
         .value()
 
@@ -154,13 +161,13 @@ export const roomsWithPatients = () =>
 export const userFullName = (user) => {
     if (user.profile) {
         spec = getDefault(user.profile.specialization)
-        
+
         profession = getDefault(user.profile.profession, "{NO ROLE}");
 
-        if (profession === "physician") 
+        if (profession === "physician")
             profession = "Dr."
-        else 
-            spec = "" ; //spec != 'phsyician'?spec:"" TODO assign spec for a specialist nurse etc
+        else
+            spec = ""; //spec != 'phsyician'?spec:"" TODO assign spec for a specialist nurse etc
 
         return `${profession} ${user.profile.firstName}  ${getDefault(user.profile.lastName)} ${spec}`
     } else {
@@ -178,7 +185,7 @@ export const findInvTotal2 = (inv) =>
 
 
 export const findInvTotal = (inv) => {
-    items = inv.allItems()? inv.allItems():inv.items ;
+    items = inv.allItems() ? inv.allItems() : inv.items;
 
     total = _(items).reduce((sum, item) => {
         item.total = item.appliedPrice * item.units
@@ -187,10 +194,12 @@ export const findInvTotal = (inv) => {
     return total;
 }
 
-export const findByProp  = (coll, prop, val) => _(coll).find(x => x[prop] === val)
+export const findByProp = (coll, prop, val) => _(coll).find(x => x[prop] === val)
 
-export const drugName = (id) => { drug = Drugs.findOne({ _id: id })
-return drug ? drug.name : "Unknown"}
+export const drugName = (id) => {
+    drug = Drugs.findOne({ _id: id })
+    return drug ? drug.name : "Unknown"
+}
 
 export const taskDbUpdate = (coll, id, exp) => new Task((rej, res) =>
     coll.update({ "_id": id }, exp, (err, success) => err ? rej(err) : res(success)))
@@ -223,30 +232,67 @@ export const createInvoiceItem = (inv, serviceName, price) => {
 
 export const massageScriptItems = (items) =>
     _(items).map(item => {
-        console.log(item.startDate) 
+        //debugger
+        console.log(item.startDate)
         item.startDate = item.startDate || new Date();
-        if(item.duration)
-        item.endDate = new moment(item.startDate).add(item.duration.for,
-            item.duration.type.toLowerCase()).toDate();
+        if (item.duration) {
+            item.endDate = new moment(item.startDate).add(item.duration.for,
+                item.duration.type.toLowerCase()).toDate();
+        }
         console.log(item)
         return item;
-    }).value() 
+    }).value()
 
 
-export const  setPtName = (doc)=>  doc.patientName = Patients.findOne(doc.patient).fullName()
+export const setPtName = (doc) => doc.patientName = Patients.findOne(doc.patient).fullName()
 
-export const  getUserFacility = (userId)=> 
+export const getUserFacility = (userId) =>
     safeTask(() => Meteor.users.findOne(userId))
-    .map(x => x.profile.facility)
-    .fork(e=> { throw new Meteor.error(500, e)}, s=> s )
-       
+        .map(x => x.profile.facility)
+        .fork(e => { throw new Meteor.error(500, e) }, s => s)
 
-export const  tenatendFinder = (id, userColl = false) => {
+
+export const tenatendFinder = (id, userColl = false) => {
     user = Meteor.users.findOne(id)
     if (user) {
-       return userColl ? { 'profile.facility': user.profile.facility }:{ facility: user.profile.facility }
+        return userColl ? { 'profile.facility': user.profile.facility } : { facility: user.profile.facility }
     }
     console.warn("Cerebrum : no user found returing empty ")
     return {}
 }
- 
+
+export const findPatientAllergies = (pt, items) =>
+    _(pt)
+        .map('drugAllergies.drug')
+        .intersectionBy(items, 'drug')
+        .map(x => utils.findByProp(pt.drugAllergies, 'drug', x))
+        .value();
+
+
+// export const findPatientAllergies = (pt , items) => {
+//     safeTask(() => _(pt).map('drugAllergies.drug').intersect( _.map(items,'drug')) )
+//     .map(x => utils.findByProp(pt.drugAllergies, 'drug', x))
+
+
+//                 // patients.findOne
+//                 let items = this.value
+//                 let prescribed =.value();
+
+//                 let allergies = _(prescribed)
+//                     //${utils.findByProp(allergicDrugs, 'drug', x).severity}
+//                     .map(x => {
+//                         if (_(allergicDrugs).map('drug').includes(x)) {
+//                             allergySev = utils.findByProp(allergicDrugs, 'drug', x).severity
+//                             return `Patient has ${allergySev} allergy to ${utils.drugName(x)}`
+//                         }
+//                     }).filter(x => !!x)
+//                     .value()
+
+//                 if (allergies && allergies.count() > 0) {
+//                     console.log(allergies)
+//                     Bert.alert(allergies.join(' '), 'danger', 'fixed-top', 'fa-frown-o');
+//                     //Bert.warning()
+//                     return 'allergicMeds';
+//                 }
+
+// }

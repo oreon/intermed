@@ -82,7 +82,8 @@
 		<div id="script" class="tab-pane fade ">
 			<h3>Current Order </h3>
 			{{>scriptTbl script=admission.script}}
-			{{> recurringMsmtTmpl amdission=admission recurringAssessments = admission.recurringAssessments}}
+			{{> recurringMsmtTmpl amdission=admission 
+				recurringAssessments = admission.recurringAssessments}}
 	
 			{{#if isInRole 'physician'}}
 			<button class="btn btn-primary" 
@@ -152,12 +153,17 @@
 
 <template name="updateScriptForm">
 	
-		{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
-		 {{> afQuickField name='script'}}
-		<button type="submit" class="btn btn-primary">Update</button> 
-		{{/autoForm}}
+	<!--{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" 
+	doc=admission }}
+		{{> afQuickField name='script'}}
+	<button type="submit" class="btn btn-primary">Update</button> 
+	{{/autoForm}}-->
 
-		{{>quickForm fields='recurringAssessments' collection="Admissions" id="updateAdmissionScriptForm" type="update" doc=admission }}
+	{{>quickForm collection="Admissions" id="updateAdmissionScriptForm" type="update" 
+	doc=admission fields='script, recurringAssessments'}}
+
+	<!--{{>quickForm fields='recurringAssessments' collection="Admissions" 
+		id="updateAssessmentForm" type="update" doc=admission }}-->
 </template>
 
 
@@ -202,8 +208,11 @@
 
 <template name="measurementTmpl">
 	{{> msmtTbl admission=admission}}
+
+	<div>
     {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
       doc=admission scope="measurements"}}
+	</div>
 </template>
 
 <template name="msmtTbl">

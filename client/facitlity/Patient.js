@@ -1,9 +1,9 @@
 import moment from 'moment';
 require('moment-recur');
-import {scriptEnhanced} from '/imports/utils/drugAdminSchedule.js';
- import {findUnits} from '/imports/utils/drugAdminSchedule.js';
+import {scriptEnhanced,findUnits} from '/imports/utils/drugAdminSchedule.js';
+ //import {} from '/imports/utils/drugAdminSchedule.js';
 //import {itemEndDate} from '/imports/utils/drugAdminSchedule.js';
-
+import * as utils from '/imports/utils/misc.js';
 
 //var later = require('later');
 //import result from 'myfunctional'
@@ -13,6 +13,7 @@ import {scriptEnhanced} from '/imports/utils/drugAdminSchedule.js';
 Template.Patient.onCreated(function () {
     var self = this;
     self.autorun(function () {
+        //utils.arrTasks();
         var id = FlowRouter.getParam('id');
         self.id = id;
         self.subscribe('compPt', id);

@@ -628,6 +628,7 @@ RecurringAssessmentItemSchema = new SimpleSchema({
         type: Date,
         optional: true,
         label: "Start Date (Leave empty for now)",
+        autoValue:function(){ if (!this.value) return new Date(); }
     },
 })
 
@@ -715,8 +716,16 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
                 if(!pt) 
                     pt = Session.get('patient')
                 allergicDrugs = Patients.findOne(pt).drugAllergies;
+
                 // patients.findOne
                 let items = this.value
+
+                //TODO this version is not working
+                // allergies = utils.findPatientAllergies(pt, items)
+                // .map(x =>`Patient has ${x.severity} allergy to ${utils.drugName(x.drug)}`)
+
+                console.log(allergies)
+
                 let prescribed = _(items).map('drug').value();
 
                 let allergies = _(prescribed)
@@ -1001,9 +1010,9 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
     recurringAssessments: {
         type: [RecurringAssessmentItemSchema],
         optional: true,
-        autoValue: function () {
-            return utils.massageScriptItems(this.value);
-        },
+        // autoValue: function () {
+        //     return utils.massageScriptItems(this.value);
+        // },
     },
     labsAndImages: {
         type: LabsAndImagingSchema,
@@ -1498,10 +1507,10 @@ Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
     console.log("before scirpt update")
     modifier.$set = modifier.$set || {};
     console.log(fieldNames)
-    modifier.$set.items = massageScriptItems(modifier.$set.items)
+    //modifier.$set.items = massageScriptItems(modifier.$set.items)
 });
 
-Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
+//Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
 
 
 Invoices.before.insert((userId, doc) => {

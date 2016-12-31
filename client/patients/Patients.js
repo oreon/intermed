@@ -1,7 +1,11 @@
 
 import {resColor} from '/imports/utils/myfunctional.js';
 
+
+
 Template.Patients.helpers({
+
+
 
     patient: function () {
         //console.log(this)

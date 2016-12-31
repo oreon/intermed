@@ -93,6 +93,7 @@ didericis:callpromise-mixin
 ziarno:restrict-mixin
 
 practicalmeteor:mocha
+practicalmeteor:munit
 
 xolvio:cleaner
 

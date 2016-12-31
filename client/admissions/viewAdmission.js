@@ -152,9 +152,9 @@ Template.ViewAdmission.events({
         template.editMode.set(!template.editMode.get());
     },
     'click .fac': function (event, template) {
-         Meteor.call('setupFaciltiy');
+        Meteor.call('setupFaciltiy');
     },
-    
+
 });
 
 
@@ -170,11 +170,11 @@ Template.invoiceTmpl.onCreated(function () {
 
 Template.invoiceTmpl.helpers({
 
-    getBedStayTotal(adm){
+    getBedStayTotal(adm) {
         let adms = Admissions.findOne(adm._id)
-        return adms.bedStaysObj()['total'] 
+        return adms.bedStaysObj()['total']
     },
-    
+
 
 })
 
@@ -197,18 +197,29 @@ AutoForm.hooks({
         },
     },
 
-    updateAdmissionScriptForm:{
-         formToDoc: function (doc) {
-            doc.items = utils.massageScriptItems(doc.items)
+    updateAssessmentForm: {
+        formToDoc: function (doc) {
+            console.log(doc)
+            //doc.items = utils.massageScriptItems(doc.items)
+            //console.log(doc)
+            return doc;
+        },
+    },    
+
+    updateAdmissionScriptForm: {
+        formToDoc: function (doc) {
+            console.log(doc)
+            //doc.items = utils.massageScriptItems(doc.items)
+            //console.log(doc)
             return doc;
         },
 
-        cv:function(doc){
-            allergicDrugs = Patients.findOne(doc.patient).drugAllergies;
+        // cv: function (doc) {
+        //     allergicDrugs = Patients.findOne(doc.patient).drugAllergies;
 
-           return  _(doc.items).map( 'drug')
-            .map(x => (_pt.drugAllergies).map( 'drug').includes(x) )
-        }
+        //     return _(doc.items).map('drug')
+        //         .map(x => (_pt.drugAllergies).map('drug').includes(x))
+        // }
     },
 
     newTodoForm: {
@@ -243,8 +254,8 @@ AutoForm.hooks({
                 { "_id": adm._id },
                 { "$pull": { "labsAndImages.tests": test } },
                 function (err, res) {
-                    if(err) console.error(err);
-                    console.log("successfully removed test from scheduled " + test );
+                    if (err) console.error(err);
+                    console.log("successfully removed test from scheduled " + test);
                 }
             );
 
