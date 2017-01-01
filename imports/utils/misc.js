@@ -268,6 +268,15 @@ export const findPatientAllergies = (pt, items) =>
         .map(x => utils.findByProp(pt.drugAllergies, 'drug', x))
         .value();
 
+export const tv = (varName) =>
+    Template.instance()[varName].get()
+
+export const textVal = (template , varName) =>   template.find(`[name="${varName}"]`).value
+
+export const radioVal = (template, varName) => {
+    var element = template.find(`input:radio[name=${varName}]:checked`);
+    return $(element).val()
+}
 
 // export const findPatientAllergies = (pt , items) => {
 //     safeTask(() => _(pt).map('drugAllergies.drug').intersect( _.map(items,'drug')) )

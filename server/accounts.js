@@ -20,7 +20,7 @@ var postSignUp = function (userId, info) {
 
 Accounts.validateNewUser(function (user) {
 	console.log(user.profile.facility)
-	fac = Facilities.findOne({ '_id': user.profile.facility })
+	let fac = Facilities.findOne({ '_id': user.profile.facility })
 	if (fac) return true;
 		
 	throw new Meteor.Error(403, `The facitlity code ${user.profile.facility} is invalid - contact sales@oreonsconslting.com to register your facility`  );

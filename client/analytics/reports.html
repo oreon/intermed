@@ -5,27 +5,38 @@
   <button type="button" class="btn btn-success inv">Invoices</button>
   <button type="button" class="btn btn-primary tst">Tests</button>
 </div>
-
+<br/>
+<div class="well">
 <form>
 	<div class="row">
-    <div class="col-xs-5">
-		<input  type="text" name="from" class="form-control" value="{{from}}">
+    <div class="col-xs-4">
+		  <input  type="date" name="from" class="form-control" value="{{from}}">
     </div>
-    <div class="col-xs-5">
-		<input  type="text" name="to" class="form-control" value="{{to}}">
+    <div class="col-xs-4">
+		  <input  type="date" name="to" class="form-control" value="{{to}}">
     </div>
-	<div class="col-xs-2">
-	<button type="submit" class="btn btn-success">Fetch</button>
-	</div>
+    <div class="col-xs-4">
+     <input type="radio" name="period" value="D" checked>Day
+    <input type="radio" name="period" value="M"> Mon
+    <input type="radio" name="period" value="Y"> Year 
+     <button type="submit" class="btn btn-success">Fetch</button>
+    </div>
   </div>
-  </form>
+</form>
+</div>
 
+<div class="well">  
   <table class="table table-striped"> 
 	  <tbody>
 	{{#each admissions}}
-		<tr> <td> {{datesm dt}} </td><td>{{summary}} {{type}}</td></tr>
+		<tr> <td> {{ dt}} </td><td>{{summary}}</td><td> {{count}}</td></tr>
 	{{/each}}
-    <tr> <td> <b> Total : {{total}} </b></td> </tr>
+    <tr>
+       <td> <b> {{#if total}} Total : {{total}}  {{/if}}</b></td> 
+       <td> <b> {{#if totalCount}} Count : {{totalCount}}  {{/if}}</b></td> 
+    </tr>
 	  </tbody>
   </table>
+</div>
+
 </template>

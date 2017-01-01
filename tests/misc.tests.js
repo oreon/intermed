@@ -1,11 +1,16 @@
 
 // import { Meteor } from 'meteor/meteor';
 // import { Random } from 'meteor/random';
-// import { assert } from 'meteor/practicalmeteor:chai';
-require('babel-core/register');
+ 
+//require('babel-core/register');
+import { assert } from 'meteor/practicalmeteor:chai';
 import * as utils from '/imports/utils/misc';
 
-describe('my module', function () {
+// Tinytest.add('test title', function(test){
+//   test.equal(true, true);
+// });
+
+describe('misc', function () {
   it('does something that should be tested', function () {
     assert.equal(utils.getDefault('aaa'), 'aaa')
     assert.equal(utils.getDefault(null, 'bb'), 'bb')
