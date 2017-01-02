@@ -95,7 +95,8 @@ Meteor.publish('Beds', function () {
 });
 
 Meteor.publish('Services', function () {
-    return Services.find(utils.tenatendFinder(this.userId));
+    //special case need autocreated services such as 
+    return Services.find(utils.tenatendFinderOrNone(this.userId));
 });
 
 Meteor.publish('TestResults', function () {

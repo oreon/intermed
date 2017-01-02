@@ -238,6 +238,15 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
+     type: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "hidden"
+        },
+        defaultValue:'InPatient'
+    },
+    
     patientName: patientName,
     comments: { type: String, optional: true },
     items: {
@@ -1456,6 +1465,15 @@ Admissions.after.insert((userId, doc) => {
     InvoiceSchema.clean(inv);
     console.log("in inv")
     console.log(inv)
+    check(inv, InvoiceSchema);
+    Invoices.insert(inv)
+})
+
+Encounters.after.insert((userId, doc) => {
+    //debugger
+    inv = { "admission": doc._id, type: 'OutPatient' }
+    //inv.type = 
+    InvoiceSchema.clean(inv);
     check(inv, InvoiceSchema);
     Invoices.insert(inv)
 })

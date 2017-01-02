@@ -1,5 +1,6 @@
 import moment from 'moment'
 import * as utils from '/imports/utils/misc.js';
+import Highcharts from 'Highcharts'
 
 let fetchData = (template) => {
     meth = template.stat.get();
@@ -33,7 +34,7 @@ Template.reports.events({
     'submit form'(event, template) {
         event.preventDefault();
 
-    
+
         Template.instance().from.set(template.find('[name="from"]').value)
         Template.instance().to.set(template.find('[name="to"]').value)
 
@@ -50,7 +51,7 @@ Template.reports.events({
         fetchData(Template.instance());
     },
 
-     'click .tst': function (event, template) {
+    'click .tst': function (event, template) {
         Template.instance().stat.set('tst')
         fetchData(Template.instance());
     }
@@ -75,25 +76,67 @@ Template.reports.helpers({
         _(utils.tv('totalRevenue')).reduce((sum, n) => sum + n.count, 0),
 
     admissions: function () {
-        let revenueItems = Template.instance().totalRevenue.get();
+        return utils.getRptData(utils.tv('totalRevenue'));
+    },
 
-        if (revenueItems) {
-            items = revenueItems.map((item, index) => {
-                let grp = item._id;
+    hasSummary: function () {
+        let data = utils.getRptData(utils.tv('totalRevenue'));
+        return data && data.count > 0 && data[0].summary
+    },
 
-                return {
-                    _id: index,
+    lnChart: function () {
+        let data = utils.getRptData(utils.tv('totalRevenue'));
+        let title = utils.tv('stat') + ' ' + utils.radioVal(Template.instance(), 'period')
 
-                    dt: `${grp.year}-${utils.getDefault(grp.month)}-${utils.getDefault(grp.day)}`,
-                    // month:item._id.month,
-                    // year:item._id.year,
-                    type: grp.type,
-                    summary: item.summary,
-                    count: item.count
-                };
+
+        Meteor.defer(function () {
+
+            Highcharts.chart('lnChartCnt', {
+                title: {
+                    text: title
+                },
+                xAxis: {
+                    //type: 'datetime',
+                    //categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    categories: _.map(data, 'dt')
+                },
+                series: [
+                    {
+                        type: 'line',
+                        name: 'Billed',
+                        data: _.map(data, 'count')
+                    }
+                ]
             });
 
-            return _.orderBy(items, 'dt', ['asc']);
-        }
+
+            Highcharts.chart('lnChartSummary', {
+                title: {
+                    text: title
+                },
+                xAxis: {
+                    //type: 'datetime',
+                    //categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    categories: _.map(data, 'dt')
+                },
+                series: [
+                    {
+                        type: 'line',
+                        name: 'data',
+                        data: _.map(data, 'summary')
+                    }
+                ]
+            });
+
+
+
+        })
+
+
     },
+
+
+    // lnChart:function(){
+
+    // }
 })

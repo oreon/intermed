@@ -261,6 +261,16 @@ export const tenatendFinder = (id, userColl = false) => {
     return {}
 }
 
+export const tenatendFinderOrNone = (id) => {
+    console.log(getUserFacility(id))
+    return {
+        '$or': [{ facility: null }, { facility: getUserFacility(id) }]
+    };
+
+    // console.warn("Cerebrum : no user found returing empty ")
+    // return {}
+}
+
 export const findPatientAllergies = (pt, items) =>
     _(pt)
         .map('drugAllergies.drug')
@@ -271,11 +281,29 @@ export const findPatientAllergies = (pt, items) =>
 export const tv = (varName) =>
     Template.instance()[varName].get()
 
-export const textVal = (template , varName) =>   template.find(`[name="${varName}"]`).value
+export const textVal = (template, varName) => template.find(`[name="${varName}"]`).value
 
 export const radioVal = (template, varName) => {
     var element = template.find(`input:radio[name=${varName}]:checked`);
     return $(element).val()
+}
+
+export const getRptData = (inData) => {
+    if (inData) {
+        items = inData.map((item, index) => {
+            let grp = item._id;
+
+            return {
+                _id: index,
+                dt: `${grp.year}-${getDefault(grp.month)}-${getDefault(grp.day)}`,
+                type: grp.type,
+                summary: item.summary,
+                count: item.count
+            };
+        });
+
+        return _.orderBy(items, 'dt', ['asc']);
+    }
 }
 
 // export const findPatientAllergies = (pt , items) => {

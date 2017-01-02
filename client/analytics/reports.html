@@ -1,42 +1,67 @@
 <template name="reports">
 
-<div class="btn-group">
-  <button type="button" class="btn btn-primary adm" >Admissions</button>
-  <button type="button" class="btn btn-success inv">Invoices</button>
-  <button type="button" class="btn btn-primary tst">Tests</button>
-</div>
-<br/>
-<div class="well">
-<form>
-	<div class="row">
-    <div class="col-xs-4">
-		  <input  type="date" name="from" class="form-control" value="{{from}}">
-    </div>
-    <div class="col-xs-4">
-		  <input  type="date" name="to" class="form-control" value="{{to}}">
-    </div>
-    <div class="col-xs-4">
-     <input type="radio" name="period" value="D" checked>Day
-    <input type="radio" name="period" value="M"> Mon
-    <input type="radio" name="period" value="Y"> Year 
-     <button type="submit" class="btn btn-success">Fetch</button>
-    </div>
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary adm">Admissions</button>
+    <button type="button" class="btn btn-success inv">Invoices</button>
+    <button type="button" class="btn btn-primary tst">Tests</button>
+    <button type="button" class="btn btn-primary pat">Patients</button>
   </div>
-</form>
-</div>
+  <br/>
+  <div class="well">
+    <form>
+      <div class="row">
+        <div class="col-xs-4">
+          <input type="date" name="from" class="form-control" value="{{from}}">
+        </div>
+        <div class="col-xs-4">
+          <input type="date" name="to" class="form-control" value="{{to}}">
+        </div>
+        <div class="col-xs-4">
+          <input type="radio" name="period" value="D" checked>Day
+          <input type="radio" name="period" value="M"> Mon
+          <input type="radio" name="period" value="Y"> Year
+          <button type="submit" class="btn btn-success">Fetch</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
-<div class="well">  
-  <table class="table table-striped"> 
-	  <tbody>
-	{{#each admissions}}
-		<tr> <td> {{ dt}} </td><td>{{summary}}</td><td> {{count}}</td></tr>
-	{{/each}}
-    <tr>
-       <td> <b> {{#if total}} Total : {{total}}  {{/if}}</b></td> 
-       <td> <b> {{#if totalCount}} Count : {{totalCount}}  {{/if}}</b></td> 
-    </tr>
-	  </tbody>
-  </table>
-</div>
+  <div class="well">
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#tbl">Tabular</a></li>
+      <li><a data-toggle="tab" href="#graph">Graph</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="tbl" class="tab-pane fade in active">
+        <h3> Tabular Reports </h3>
+        <table class="table table-striped">
+          <tbody>
+            {{#each admissions}}
+            <tr>
+              <td> {{ dt}} </td>
+              <td>{{summary}}</td>
+              <td> {{count}}</td>
+            </tr>
+            {{/each}}
+            <tr>
+              <td> <b> {{#if total}} Total : {{total}}  {{/if}}</b></td>
+              <td> <b> {{#if totalCount}} Count : {{totalCount}}  {{/if}}</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="graph" class="tab-pane fade ">
+        <h3> Due invoices </h3>
+        <div id="lnChartCnt">{{lnChart}}</div>
+        <!--{{#if hasSummary}}-->
+        <div id="lnChartSummary">{{lnChart}}</div>
+        <!--{{/if}}-->
+      </div>
+    </div>
+
+
+  </div>
 
 </template>

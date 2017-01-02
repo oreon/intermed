@@ -249,6 +249,7 @@ AutoForm.hooks({
             console.log(test)
             //Session.set("editEncounterForm", false);
             adm = Session.get('adm');
+            debugger
 
             Admissions.update(
                 { "_id": adm._id },
@@ -260,7 +261,11 @@ AutoForm.hooks({
             );
 
             service = Services.findOne({ name: "Lab Tests" })
+            if(!service){
+                throw ('Could not find service Lab Tests' )
+            }
             svc = service.name + '-' + testObj.labTestName()
+            
             inv = Invoices.findOne({ "admission": adm._id })
             utils.createInvoiceItem(inv, svc, 200)
 

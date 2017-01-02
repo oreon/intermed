@@ -39,47 +39,49 @@
 		{{/if}}
 
 
-			<table class="table table-striped ">
-				<thead>
-				<tr style="background:navy; color: #fff">
-					<th>Service</th>
-					<th> Units</th>
-					<th> Price</th>
-					<th> Date </th>
-					<th> Total</th>
-				</tr>
-				</thead>
-				<tbody>
-				{{#each admission.invoice.allItems}}
-				<tr>
-					<td>{{service}}</td>
-					<td> {{units}} </td>
-					<td> {{appliedPrice}} </td>
-					<td> {{datef updatedAt}} </td>
-					<td> {{lineItemTotal}} </td>
-				</tr>
-				{{/each}}
-				<tr style="background:#dde; ">
-					<td colspan="6">
-						<b> Total :  <i class="fa fa-rupee"> </i>{{ admission.invoice.totalCurrent }}</b>
-					</td>
-				</tr>
-				</tbody>
-			</table>
+		<table class="table table-striped ">
+			<thead>
+			<tr style="background:navy; color: #fff">
+				<th>Service</th>
+				<th> Units</th>
+				<th> Price</th>
+				<th> Date </th>
+				<th> Total</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each admission.invoice.allItems}}
+			{{# if service}}
+			<tr>
+				<td>{{service}}</td>
+				<td> {{units}} </td>
+				<td> {{appliedPrice}} </td>
+				<td> {{datef updatedAt}} </td>
+				<td> {{lineItemTotal}} </td>
+			</tr>
+			{{/if}}
+			{{/each}}
+			<tr style="background:#dde; ">
+				<td colspan="6">
+					<b> Total :  <i class="fa fa-rupee"> </i>{{ admission.invoice.totalCurrent }}</b>
+				</td>
+			</tr>
+			</tbody>
+		</table>
 
-			<button class="btn btn-primary" 
-				data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
+		<button class="btn btn-primary" 
+			data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
 
-			<div class="collapse" id="editInvoice">
-			{{#if flds}}
-                  {{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-			        autosave=true }}
-            {{else}}
-                    {{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-			autosave=true omitFields="autoCreatedItems, amountPaid, datePaid, paymentType,total"}}
-            {{/if}}
-			</div>
-			<br/>
-			Bed Stay : <i class="fa fa-rupee"></i> <b> {{getBedStayTotal admission}} </b>
-			<br/> Grand Total : <b> <i class="fa fa-rupee"></i> {{admission.invoice.grandTotal}}</b>
+		<div class="collapse" id="editInvoice">
+		{{#if flds}}
+				{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
+				autosave=true }}
+		{{else}}
+				{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
+		autosave=true omitFields="autoCreatedItems, amountPaid, datePaid, paymentType,total"}}
+		{{/if}}
+		</div>
+		<br/>
+		Bed Stay : <i class="fa fa-rupee"></i> <b> {{getBedStayTotal admission}} </b>
+		<br/> Grand Total : <b> <i class="fa fa-rupee"></i> {{admission.invoice.grandTotal}}</b>
 </template>

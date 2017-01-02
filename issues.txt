@@ -1,5 +1,8 @@
 #BUGS
-discharge
+#discharge
 drugs are overwritten when recurreing assements added/changed
-invoice reports and admission reports not working
+#invoice reports and admission reports not working
 create autocreated services on facility creation
+visit not working
+
+
