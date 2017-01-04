@@ -14,7 +14,7 @@ export const BaseSchema = new SimpleSchema({
                     this.unset();  // Prevent user from supplying their own value
                 }
             } catch (e) {
-                console.log(e)
+                //console.log(e)
             }
         },
         autoform: {
@@ -35,7 +35,7 @@ export const BaseSchema = new SimpleSchema({
                     this.unset();  // Prevent user from supplying their own value
                 }
             } catch (error) {
-                console.log(error)
+                //console.log(error)
             }
         },
         autoform: {
@@ -54,7 +54,7 @@ export const BaseSchema = new SimpleSchema({
                     return new Date();
                 }
             } catch (error) {
-                console.log(error)
+                //console.log(error)
             }
         },
         denyInsert: true,

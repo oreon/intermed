@@ -62,26 +62,26 @@ Template.ViewAdmission.helpers({
         title = "Mr. H is a 65 year old white male with a past medical history significant for an MI ";
         content = cleanText;
 
-        //console.log(content)
+        ////console.log(content)
 
         // SummaryTool.getSortedSentences(content, 1, function (err, sorted_sentences) {
         //     if (err) {
-        //         console.log("There was an error " + err); // Need better error reporting
+        //         //console.log("There was an error " + err); // Need better error reporting
         //         Template.instance().summary.set("XXXX");
         //     }
         //     Template.instance().summary.set(sorted_sentences);
         // });
 
         // SummaryTool.summarize(title, content, function (err, summary) {
-        //     if (err) console.log("Something went wrong man!");
+        //     if (err) //console.log("Something went wrong man!");
 
-        //     //console.log(summary);
+        //     ////console.log(summary);
         //     //Template.instance().summary.set(summary);
         //     //return summary;
 
-        //     console.log("Original Length " + (title.length + cleanText.length));
-        //     console.log("Summary Length " + summary.length);
-        //     console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
+        //     //console.log("Original Length " + (title.length + cleanText.length));
+        //     //console.log("Summary Length " + summary.length);
+        //     //console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
         // });
         return Template.instance().summary.get()
     },
@@ -126,15 +126,15 @@ Template.ViewAdmission.helpers({
     },
     summaryCalc: function () {
         return SummaryTool.summarize(title, content, function (err, summary) {
-            if (err) console.log("Something went wrong man!");
+            if (err) //console.log("Something went wrong man!");
 
-            console.log(summary);
+            //console.log(summary);
             Template.instance().summary.set(summary);
             //return summary;
 
-            // console.log("Original Length " + (title.length + content.length));
-            // console.log("Summary Length " + summary.length);
-            // console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
+            // //console.log("Original Length " + (title.length + content.length));
+            // //console.log("Summary Length " + summary.length);
+            // //console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
         });
     }
 });
@@ -189,31 +189,31 @@ AutoForm.hooks({
     editInvoiceForm: {
 
         // formToDoc: function (doc) {
-        //     console.log(doc)
+        //     //console.log(doc)
         //     doc.admission = FlowRouter.getParam('id');
         //     return doc;
         // },
         onSuccess: function (operation, result) {
-            //console.log(result)
-            //console.log(this.template.parent())
+            ////console.log(result)
+            ////console.log(this.template.parent())
             //this.template.parent().editMode.set(false);
         },
     },
 
     updateAssessmentForm: {
         formToDoc: function (doc) {
-            console.log(doc)
-            //doc.items = utils.massageScriptItems(doc.items)
             //console.log(doc)
+            //doc.items = utils.massageScriptItems(doc.items)
+            ////console.log(doc)
             return doc;
         },
     },    
 
     updateAdmissionScriptForm: {
         formToDoc: function (doc) {
-            console.log(doc)
-            //doc.items = utils.massageScriptItems(doc.items)
             //console.log(doc)
+            //doc.items = utils.massageScriptItems(doc.items)
+            ////console.log(doc)
             return doc;
         },
 
@@ -243,13 +243,13 @@ AutoForm.hooks({
             return doc;
         },
         onSuccess: function (operation, result) {
-            //console.log(operation)
-            console.log(result)
+            ////console.log(operation)
+            //console.log(result)
 
             testObj = TestResults.findOne(result)
             test = testObj.labTest;
 
-            console.log(test)
+            //console.log(test)
             //Session.set("editEncounterForm", false);
             adm = Session.get('adm');
             //debugger
@@ -259,7 +259,7 @@ AutoForm.hooks({
                 { "$pull": { "labsAndImages.tests": test } },
                 function (err, res) {
                     if (err) console.error(err);
-                    console.log("successfully removed test from scheduled " + test);
+                    //console.log("successfully removed test from scheduled " + test);
                 }
             );
 
@@ -277,7 +277,7 @@ AutoForm.hooks({
 
     newEncounterForm22: {
         formToDoc: function (doc) {
-            //console.log(getCurrentPatient());
+            ////console.log(getCurrentPatient());
             doc.patient = FlowRouter.getParam('id') //getCurrentPatient();
             return doc;
         },
@@ -295,13 +295,13 @@ AutoForm.hooks({
     updateDischargeForm: {
         onSuccess: function (operation, result) {
             adm = getAdmission();
-            console.log(adm)
+            //console.log(adm)
             Meteor.call('discharge', adm, function (error, response) {
                 if (error) {
                     Bert.alert(error.reason, "danger");
-                    console.log(error)
+                    //console.log(error)
                 } else {
-                    console.log(adm)
+                    //console.log(adm)
 
                     Bert.alert('Successfully discharged patient !', 'success', 'growl-top-right');
                     FlowRouter.go('/patient/' + adm.patient)

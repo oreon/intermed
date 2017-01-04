@@ -9,12 +9,12 @@ let fetchData = (template) => {
         to: template.to.get(),
         prd: utils.radioVal(template, 'period')
     }
-    console.log(meth)
+    //console.log(meth)
     Meteor.call(meth + 'Stats', filters, (error, response) => {
         if (error) {
             Bert.alert(error.reason);
         } else {
-            console.log(response)
+            //console.log(response)
             template.totalRevenue.set(response);
         }
     });

@@ -82,7 +82,7 @@ Meteor.startup(() => {
 
     //   if (Wards.find().count() > 0) {
     //     wd = Wards.insert({"name": "Female General" , price:150}, function(error, res){
-    //         console.log(res)
+    //         //console.log(res)
     //         Rooms.insert({"name": "RMG1" , ward:res}, function(error, res){
     //             for(i = 1; i < 5; i++)
     //                 Beds.insert({"name": "B" + i , room:res})

@@ -4,17 +4,17 @@ Template.EditInvoice.onCreated(function () {
 
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
-        console.log(id)
+        //console.log(id)
         self.subscribe('InvoiceSingle', id);
         //self.subscribe()
         let invc = Invoices.findOne(id)
         self.subscribe('Rooms')
         self.subscribe('Beds')
-        //console.log(inv)
+        ////console.log(inv)
         if (invc) {
             self.inv.set(invc);
             adm = invc.admissionObj();
-            console.log(adm)
+            //console.log(adm)
             self.subscribe('compAdmission', invc.admission);
         }
     });
@@ -23,7 +23,7 @@ Template.EditInvoice.onCreated(function () {
 
 Template.EditInvoice.helpers({
     admission: function () {
-        //console.log(Patients.findOne(FlowRouter.getParam('id')))
+        ////console.log(Patients.findOne(FlowRouter.getParam('id')))
         return Template.instance().inv.get().admissionObj();
     },//Invoices.findOne(id).admissionObj()
     inv: function () {

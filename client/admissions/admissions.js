@@ -15,7 +15,7 @@ Template.Admissions.onCreated(function () {
 Template.Admissions.helpers({
 
     wards: function () {
-        console.log(utils.wardsWithPatients());
+        //console.log(utils.wardsWithPatients());
         return Wards.find();
     },
 
@@ -68,7 +68,7 @@ Template.Admitted.helpers({
     // },
     // // msmtVals: function (adm, key) {
     // //     adm = Admissions.findOne({ 'currentBedStay.bed': this._id })
-    // //     console.log(adm.recentMeasurements().get(key));
+    // //     //console.log(adm.recentMeasurements().get(key));
     // //     return adm.recentMeasurements().get(key)
     // // },
 

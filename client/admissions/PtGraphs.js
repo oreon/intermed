@@ -19,9 +19,9 @@ Template.PtGraphs.helpers({
     createChartData: function (adm) {
 
         let testResults = TestResults.find({ admission: adm._id }).fetch();
-        //console.log(testResults)
+        ////console.log(testResults)
         testsByType = _.groupBy(testResults, function (a) { return a.labTestName() })
-        // console.log(testsByType)
+        // //console.log(testsByType)
         let subTests = [];
 
         _.forOwn(testsByType, function (val, key) {
@@ -40,15 +40,15 @@ Template.PtGraphs.helpers({
             })
         });
 
-        //console.log(Template.instance().mapResults.get())
+        ////console.log(Template.instance().mapResults.get())
         subTests = _.flatten(subTests)
-        //console.log(subTests)
+        ////console.log(subTests)
 
         testsByType = _.groupBy(subTests, function (a) { return a.name })
 
         _.forOwn(testsByType, function (vals, key) {
             arr = []
-            //console.log("chart si " + key);
+            ////console.log("chart si " + key);
             _.forEach(vals, function (elem) {
                 arr.push([moment(elem.createdAt).format("DD-MM-YY hh:mm" ), elem.value])
             })
@@ -94,7 +94,7 @@ Template.PtGraphs.helpers({
                 cats.push(elem[0])
             })
 
-            //console.log(`${key}: ${value}`) 
+            ////console.log(`${key}: ${value}`) 
             Highcharts.chart(key, {
                 title: {
                     text: key

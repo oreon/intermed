@@ -11,7 +11,7 @@ Template.addEditEventModal.helpers({
     modalType(type) {
         let eventModal = Session.get('eventModal');
         if (eventModal) {
-            console.log(eventModal)
+            //console.log(eventModal)
             return eventModal.type === type;
         }
     },
@@ -30,7 +30,7 @@ Template.addEditEventModal.helpers({
     },
     event() {
         let eventModal = Session.get('eventModal');
-      //  console.log( new moment(eventModal.date).add(15,'minute'))
+      //  //console.log( new moment(eventModal.date).add(15,'minute'))
 
         if (eventModal) {
             return eventModal.type === 'edit' ? Events.findOne(eventModal.event) : {
@@ -67,7 +67,7 @@ Template.addEditEventModal.events({
         }
 
         Meteor.call(submitType, eventItem, (error) => {
-            console.log(eventItem);
+            //console.log(eventItem);
             if (error) {
                 Bert.alert(error.reason, 'danger');
             } else {

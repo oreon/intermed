@@ -1,17 +1,17 @@
 import { AccountsCommon } from 'meteor/accounts-base'
 
 var postSignUp = function (userId, info) {
-	console.log(userId);
-	console.log(info.profile.profession);
+	//console.log(userId);
+	//console.log(info.profile.profession);
 	Roles.addUsersToRoles(userId, info.profile.profession, Roles.GLOBAL_GROUP);
 
 }
 
 // var preSignUp = function (passwd, info) {
-// 	console.log(info)
+// 	//console.log(info)
 // 	fac = Facilities.findOne({ '_id': info.profile.facility })
 // 	if (fac) {
-// 		console.log(fac)
+// 		//console.log(fac)
 // 		//user.facility = fac._id;
 // 	} else {
 // 		throw new Meteor.error(400, "Invalid facility")
@@ -19,7 +19,7 @@ var postSignUp = function (userId, info) {
 // }
 
 Accounts.validateNewUser(function (user) {
-	console.log(user.profile.facility)
+	//console.log(user.profile.facility)
 	
 	if(!user.profile.facility){
 		Roles.setUserRoles(user._id, 'patient', Roles.GLOBAL_GROUP)
@@ -37,7 +37,7 @@ Accounts.validateNewUser(function (user) {
 
 // var onLogin = function(obj){
 //   var currentUser = obj.user
-//   console.log(currentUser)
+//   //console.log(currentUser)
 // }
 
 AccountsTemplates.configure({

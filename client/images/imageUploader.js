@@ -4,7 +4,7 @@ Template.imageUploader.onCreated(function () {
     var id = FlowRouter.getParam('id');
     self.id = id;
     Meteor.subscribe('images', Session.get('patient'))
-    //console.log(result)
+    ////console.log(result)
   });
 });
 
@@ -16,7 +16,7 @@ Template.imageUploader.helpers({
 
 Template.imageUploader.events({
   'change #files': function (event, temp) {
-    console.log('files changed');
+    //console.log('files changed');
     FS.Utility.eachFile(event, function (file) {
       var fileObj = new FS.File(file);
       fileObj.metadata = { owner: Session.get('patient') };
@@ -24,7 +24,7 @@ Template.imageUploader.events({
     });
   },
   'dropped #dropzone': function (event, temp) {
-    console.log('files droped');
+    //console.log('files droped');
     FS.Utility.eachFile(event, function (file) {
       var fileObj = new FS.File(file);
       fileObj.metadata = { owner: Session.get('patient') };

@@ -25,7 +25,7 @@ Template.Patient.onCreated(function () {
         Session.set('adm', null)
         Session.set('editEncounterForm', false)
         self.subscribe('PtImages', id)
-        //console.log(result)
+        ////console.log(result)
     });
 });
 
@@ -41,11 +41,11 @@ Template.Patient.helpers({
 
     isAdmitted: function () {
         adm = Admissions.findOne({ patient: FlowRouter.getParam('id') })
-        //console.log(adm)
+        ////console.log(adm)
         return !!adm
     },
     images:function(){
-        console.log(Images.find().count())
+        //console.log(Images.find().count())
         return Images.find()
     }
 
@@ -73,21 +73,21 @@ Template.Patient.events({
         FlowRouter.go('visit', { id: adm._id })
     },
     'click .fa-trash': function () {
-        console.log("hi from trash")
+        //console.log("hi from trash")
         Meteor.call('deleteRecipe', this._id);
     },
     'click .deleteAllergy': function (event, template) {
         event.preventDefault();
         drg = event.currentTarget.name;
-        console.log(drg)
+        //console.log(drg)
 
         //TODO not working as expected
         Patients.update(
             { "_id": FlowRouter.getParam('id') },
             { "$pull": { "drugAllergies": { "drug": drg } } },
             function (err, res) {
-                console.log(err);
-                console.log(res);
+                //console.log(err);
+                //console.log(res);
             }
         );
     }
@@ -99,9 +99,9 @@ Template.Patient.events({
 Template.scriptTbl.helpers({
 
     enhItems:function(script){
-        //console.log(script)
+        ////console.log(script)
         items =  scriptEnhanced(script).items
-        //console.log(items)
+        ////console.log(items)
         return items;
     },
    
@@ -127,7 +127,7 @@ Template.basicWizard.helpers({
             title: 'Labs And Images',
             schema: LabsAndImagingSchema,
             onSubmit: function (data, wizard) {
-                console.log(wizard)
+                //console.log(wizard)
             }
         }]
     }
@@ -136,7 +136,7 @@ Template.basicWizard.helpers({
 
 Template.imageView.helpers({
     images: function () {
-        console.log(PatientFiles.find().count())
+        //console.log(PatientFiles.find().count())
         return PatientFiles.find(); // Where Images is an FS.Collection instance
     }
 });

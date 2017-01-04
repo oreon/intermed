@@ -33,12 +33,12 @@ Template.MySchedule.helpers({
     findSchedule: function () {
         arrSched = []
         let now = new Date()
-        console.log(now)
+        //console.log(now)
         let start = moment(now).add(-4, 'hours')
-        //console.log(start.format('LLLL'))
-        //console.log (new moment(start).format('LLLL'))
+        ////console.log(start.format('LLLL'))
+        ////console.log (new moment(start).format('LLLL'))
         let end = moment(now).add(20, 'hours')
-        //console.log(end.format('LLLL'))
+        ////console.log(end.format('LLLL'))
 
         adms = Admissions.find().fetch();
         _.map(adms, (adm) => {
@@ -59,7 +59,7 @@ Template.MySchedule.helpers({
                     arrSched.push(itemsWithAdm)
                 })
 
-               // console.log(adm.recurringAssessments)
+               // //console.log(adm.recurringAssessments)
 
             //  _.map(adm.recurringAssessments, (item) => {
             //     retItems = calcShedForIterval(item, start, end)
@@ -70,7 +70,7 @@ Template.MySchedule.helpers({
             //     arrSched.push(itemsWithAdm)
             // })
         })
-        //console.log(arrSched)
+        ////console.log(arrSched)
         return _(arrSched)
             .flatten()
             .orderBy(['dateToAdmin'], ['asc'])

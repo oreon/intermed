@@ -17,7 +17,7 @@ export function calcHours(type) {
 
 export function findUnits(item, durationHrs = 0) {
     durationHrs = durationHrs > 0 ? durationHrs : item.duration.for * calcHours(item.duration.type)
-    //console.log(durationHrs)
+    ////console.log(durationHrs)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
     return durationHrs / oncePerX
 }
@@ -49,7 +49,7 @@ export function calcShedForIterval(item, start, end) {
     listRetDates = []
     //total = findUnits(item)
     //let hrs = end.diff(start, 'hours')
-    //console.log(`diff is ${hrs} ${total}`)
+    ////console.log(`diff is ${hrs} ${total}`)
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
     if(item.frequency.type == "Day" && item.route != 'IV'){
 
@@ -62,8 +62,8 @@ export function calcShedForIterval(item, start, end) {
     scheds = [sched1x, sched2x, sched3x, sched4x]
 
     later.date.localTime();
-    // console.log( later.schedule(sched3x).next(3) );
-    // console.log ( later.schedule(sched3x).prev(3) ) ;
+    // //console.log( later.schedule(sched3x).next(3) );
+    // //console.log ( later.schedule(sched3x).prev(3) ) ;
     
 
     j = 0; // oncePerX ==1 ?0 :1 ;
@@ -93,7 +93,7 @@ export function calcShedByHours(item, total) {
     for (j = 0; j < total; j++) {
         //TODO inefficient calculation - starts counting by start day - should be by  
         let occurence = new moment(item.startDate).add(oncePerX * j, 'hour')
-        //console.log(occurence.format('D MMM YY hh:mm'))
+        ////console.log(occurence.format('D MMM YY hh:mm'))
         listRetDates.push(
             {
                 dateToAdmin: occurence,
@@ -103,7 +103,7 @@ export function calcShedByHours(item, total) {
 
     // var s = later.parse.text('every ' + oncePerX + "  hours");
     // occurences = later.schedule(s).next(total);
-    //console.log(listRetDates)
+    ////console.log(listRetDates)
 
     return listRetDates;
 }

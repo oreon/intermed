@@ -29,14 +29,14 @@ export const tryCatch = f => {
     try{
         return Right(f())
     }catch(e){
-        //console.log(e)
+        ////console.log(e)
         return Left(e)
     }
 }
 
 //const readFl = () => "{\"port\":888}"
 
-//console.log( tryCatch( () => "{port:888}" ) )
+////console.log( tryCatch( () => "{port:888}" ) )
 
 // const getPort = () =>
 // tryCatch( () => readFl() ) //fs.readFileSync('config.json'))

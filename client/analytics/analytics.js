@@ -47,7 +47,7 @@ Template.Analytics.helpers({
                 Bert.alert(error.reason, "danger");
                 console.error(error)
             } else {
-                console.log(response)
+                //console.log(response)
 
                 //FlowRouter.go('/viewAdmission/' + response)
             }
@@ -103,7 +103,7 @@ Template.Analytics.helpers({
     todosChart: function () {
         // Gather data: 
         let allTasks = Todos.find().count()
-        console.log(allTasks)
+        //console.log(allTasks)
 
         let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
         let tasksData = [{
@@ -133,7 +133,7 @@ Template.Analytics.helpers({
     admissionCategoryChart: function () {
         // Gather data: 
         let allTasks = Todos.find().count()
-        console.log(allTasks)
+        //console.log(allTasks)
 
         let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
         let tasksData = [{
@@ -175,7 +175,7 @@ Template.Analytics.helpers({
     opdChart: function () {
         // Gather data: 
         let allTasks = Todos.find().count()
-        console.log(allTasks)
+        //console.log(allTasks)
 
         let incompleteTask = Todos.find({ completed: { $ne: true } }).count()
         let tasksData = [{

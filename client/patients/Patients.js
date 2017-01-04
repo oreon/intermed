@@ -8,12 +8,12 @@ Template.Patients.helpers({
 
 
     patient: function () {
-        //console.log(this)
+        ////console.log(this)
         return Patients.findOne(FlowRouter.getParam('id'));
     },
 
     test: function(){
-        console.log(resColor)
+        //console.log(resColor)
     }
 })
 

@@ -20,9 +20,9 @@ export const logret = (f) => { v = f(); console.log(v); return v }
 
 
 const mkf = (f) => {
-    console.log(f)
+    //console.log(f)
     ret = (f != undefined && typeof f === "function") ? f : () => f
-    console.log(ret)
+    //console.log(ret)
     return ret;
 }
 
@@ -56,15 +56,15 @@ export const safeTask = (f) => new Task((rej, res) => {
 
 
 
-export const arrTasks = () =>
-    safeTask(() => [1, 2, 3])
-        .ap(x => x * x)
-        .fork(e => {
-            if (Meteor.isServer)
-                throw new Meteor.Error(500, e)
-            else console.error(e)
-        },
-        s => console.log(s))
+// export const arrTasks = () =>
+//     safeTask(() => [1, 2, 3])
+//         .ap(x => x * x)
+//         .fork(e => {
+//             if (Meteor.isServer)
+//                 throw new Meteor.Error(500, e)
+//             else console.error(e)
+//         },
+//         s => console.log(s))
 
 
 function groupBy(dataToGroupOn, fieldNameToGroupOn, fieldNameForGroupName, fieldNameForChildren) {
@@ -82,7 +82,7 @@ function groupBy(dataToGroupOn, fieldNameToGroupOn, fieldNameForGroupName, field
 
 export const admissionsByWards = () => _(Admissions.find().fetch())
     .groupBy((a) => {
-        console.log(a);
+        //console.log(a);
         return Beds.findOne(a.currentBedStay.bed).roomObj().wardObj().name
     })
     .map((value, key) => ({ ward: key, adms: value }))
@@ -105,7 +105,7 @@ export const userFullNameById = (id) => {
     //return userFullName(user)
 
 }
-//map(id => {console.log(id); id })
+//map(id => {//console.log(id); id })
 // tryCatch( () => user /* Meteor.users.findOne(id)*/  ) 
 // .chain( (c) => tryCatch( (c) => userFullName(c) )  )
 
@@ -183,10 +183,10 @@ export const userFullName = (user) => {
 
 export const itemTotal = (item) => item && item.appliedPrice ? item.appliedPrice * item.units : 0
 
-export const findInvTotal2 = (inv) =>
-    _(inv.items)
-        .map(console.log)
-        .reduce((sum, item) => sum + itemTotal(item), 0);
+// export const findInvTotal2 = (inv) =>
+//     _(inv.items)
+//         .map(//console.log)
+//         .reduce((sum, item) => sum + itemTotal(item), 0);
 
 
 export const findInvTotal = (inv) => {
@@ -232,7 +232,6 @@ export const createInvoiceItem = (inv, serviceName, price) => {
     taskDbUpdate(Invoices, inv._id, { $pull: { "autoCreatedItems": { "service": "Room Stay XXXXX" } } })
         .chain(() => taskDbUpdate(Invoices, inv._id, { $addToSet: { "autoCreatedItems": invoiceItem } }))
         .fork(console.error, console.log)
-
 }
 
 export const getEvery = (type) => {
@@ -258,14 +257,16 @@ export const massageScriptItems = (items) =>
             item.frequency.every = getEvery(item.frequencySimple);  //item.frequencySimple
             item.frequency.type = 'Day'
         }
+
+        if(!item.quantity ) item.quantity = 1
         //debugger
-        console.log(item)
+        //console.log(item)
         item.startDate = item.startDate || new Date();
         if (item.duration) {
             item.endDate = new moment(item.startDate).add(item.duration.for,
                 item.duration.type.toLowerCase()).toDate();
         }
-        console.log(item)
+        //console.log(item)
         return item;
     }).value()
 
@@ -275,7 +276,7 @@ export const setPtName = (doc) => doc.patientName = Patients.findOne(doc.patient
 export const getUserFacility = (userId) =>
     safeTask(() => Meteor.users.findOne(userId))
         .map(x => x.profile.facility)
-        .fork(e => { /*throw new Meteor.Error(500, e)*/  console.log(userId) ; console.log(e) }, s => s)
+        .fork(e => { console.log(userId) ; console.log(e) }, s => s)
 
 
 export const tenatendFinder = (id, userColl = false) => {
@@ -288,7 +289,7 @@ export const tenatendFinder = (id, userColl = false) => {
 }
 
 export const tenatendFinderOrNone = (id) => {
-    console.log(getUserFacility(id))
+    //console.log(getUserFacility(id))
     return {
         '$or': [{ facility: null }, { facility: getUserFacility(id) }]
     };
@@ -338,30 +339,3 @@ export const insertValidated = (schema, coll, data) => {
     coll.insert(data)
 }
 
-// export const findPatientAllergies = (pt , items) => {
-//     safeTask(() => _(pt).map('drugAllergies.drug').intersect( _.map(items,'drug')) )
-//     .map(x => utils.findByProp(pt.drugAllergies, 'drug', x))
-
-
-//                 // patients.findOne
-//                 let items = this.value
-//                 let prescribed =.value();
-
-//                 let allergies = _(prescribed)
-//                     //${utils.findByProp(allergicDrugs, 'drug', x).severity}
-//                     .map(x => {
-//                         if (_(allergicDrugs).map('drug').includes(x)) {
-//                             allergySev = utils.findByProp(allergicDrugs, 'drug', x).severity
-//                             return `Patient has ${allergySev} allergy to ${utils.drugName(x)}`
-//                         }
-//                     }).filter(x => !!x)
-//                     .value()
-
-//                 if (allergies && allergies.count() > 0) {
-//                     console.log(allergies)
-//                     Bert.alert(allergies.join(' '), 'danger', 'fixed-top', 'fa-frown-o');
-//                     //Bert.warning()
-//                     return 'allergicMeds';
-//                 }
-
-// }

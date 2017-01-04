@@ -14,7 +14,7 @@ Template.LabAdmin.onCreated(function () {
 Template.LabAdmin.helpers({
 
     wards: function () {
-        //console.log(utils.wardsWithPatients());
+        ////console.log(utils.wardsWithPatients());
         return Wards.find( { name: { $in: utils.wardsWithPatients() } });
     },
 
@@ -36,7 +36,7 @@ Template.LabAdmin.helpers({
 Template.UploadLabResults.helpers({
      formId: function (testName) {
         wds = utils.admissionsByWards()
-        console.log(wds);
+        //console.log(wds);
         utils.logret( ()=> Object.keys(wds) );
     },
     prepDoc:function(testName){

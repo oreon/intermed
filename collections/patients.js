@@ -283,8 +283,8 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
     //     optional: true,
     //     autoValue: function () {
     //         let dueFld = this.field("isDue");
-    //         //console.log(dueFld)
-    //         //console.log(this.doc.total)
+    //         ////console.log(dueFld)
+    //         ////console.log(this.doc.total)
 
     //         if (dueFld.isSet && dueFld["value"] == true) { return this.field("total")["value"] }
 
@@ -490,7 +490,7 @@ BedStaySchema = new SimpleSchema({
     // total: {
     //     type: Number,
     //     autoValue: function () {
-    //         console.log(this)
+    //         //console.log(this)
     //         return 25; //
     //     }
     // }
@@ -667,9 +667,10 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     quantity: { 
         type: Number, 
         defaultValue: 1,
-        // autoform: {
-        //     type: "hidden"
-        // },
+        optional:true,
+        autoform: {
+            type: "hidden"
+        },
     },
     frequencySimple: {
         type: String,
@@ -705,11 +706,11 @@ ScriptItem = new SimpleSchema([BaseSchema, {
         //     let content = this.field("duration");
         //     if (content.isSet) {
         //         duration = content.value;
-        //         Console.log(dur);
+        //         //console.log(dur);
         //         enddt = new moment().duration.for, duration.type.toLowerCase()
         //         return enddt;
         //     } else {
-        //         console.log("No duration")
+        //         //console.log("No duration")
         //     }
         // },
         autoform: {
@@ -745,7 +746,7 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         optional: true,
         autoValue: function () {
             //debugger
-            console.log(utils.massageScriptItems(this.value));
+            //console.log(utils.massageScriptItems(this.value));
       
             return utils.massageScriptItems(this.value);
         },
@@ -765,7 +766,7 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
                 // allergies = utils.findPatientAllergies(pt, items)
                 // .map(x =>`Patient has ${x.severity} allergy to ${utils.drugName(x.drug)}`)
 
-                console.log(allergies)
+                //console.log(allergies)
 
                 let prescribed = _(items).map('drug').value();
 
@@ -780,7 +781,7 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
                     .value()
 
                 if (allergies && allergies.count() > 0) {
-                    console.log(allergies)
+                    //console.log(allergies)
                     Bert.alert(allergies.join(' '), 'danger', 'fixed-top', 'fa-frown-o');
                     //Bert.warning()
                     return 'allergicMeds';
@@ -1013,7 +1014,7 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
             options: function () {
                 //TODO - fix the find to use correct facility
                 fac = Facilities.findOne();
-                console.log(fac.specializations)
+                //console.log(fac.specializations)
                 return fac.specializations.map((c) => { return { label: c, value: c } })
             }
         }
@@ -1261,7 +1262,7 @@ Patients.helpers({
     currentBed: function () {
         adm = this.currentAdmisson();
         if (adm && adm.currentBedStay) {
-            //console.log("found bed " + adm.currentBedStay.bed)
+            ////console.log("found bed " + adm.currentBedStay.bed)
             return Beds.findOne(adm.currentBedStay.bed);
         }
         return null
@@ -1393,7 +1394,7 @@ Admissions.helpers({
                 .value();
             // = _.take(val, 2)
         });
-        //console.log(msmts)
+        ////console.log(msmts)
         return msmts;
     },
 
@@ -1414,7 +1415,7 @@ Invoices.helpers({
     grandTotal: function () {
         adm = this.admissionObj();
         invTotal = findInvTotal(this)
-        console.log(invTotal)
+        //console.log(invTotal)
 
         if (adm && adm.isCurrent) {
             bedStayTotal = adm.bedStaysObj().total;
@@ -1467,7 +1468,7 @@ if(Meteor.isServer){
 
 Admissions.before.insert((userId, doc) => { 
     utils.setPtName(doc)
-    console.log(userId)
+    //console.log(userId)
     doc.facility = utils.getUserFacility(userId)
 });
 
@@ -1481,29 +1482,29 @@ Admissions.before.findOne( (userId, selector, options) => {
 });
 
 Patients.before.find(function (userId, selector, options) {
-    //console.log(this.userId)
+    ////console.log(this.userId)
   
   //if(!userId)
     //userId = Meteor.userId()
-  //console.log(currentUser)
-  //console.log(AccountsCommon || AccountsCommon.user())
+  ////console.log(currentUser)
+  ////console.log(AccountsCommon || AccountsCommon.user())
 
-  console.log('user pt ' + userId)
+  //console.log('user pt ' + userId)
   //if(userId)
   //  selector = Object.assign(selector, { facility: utils.getUserFacility(userId) })
-  //console.log(options)
+  ////console.log(options)
 });
 
 ChronicDiseases.before.find(function (userId, selector, options) {
-//   console.log('user drugs ' + this._super.userId)
-//   console.log(this.context )
-//   console.log(`super ${this._super}` )
+//   //console.log('user drugs ' + this._super.userId)
+//   //console.log(this.context )
+//   //console.log(`super ${this._super}` )
   
   
 //   if(!userId)
 //     userId = Meteor.userId
 //   selector = Object.assign(selector, { facility: 'grWAwxGbdb9is6FAR' })
-  //console.log(options)
+  ////console.log(options)
 });
 
 
@@ -1527,8 +1528,8 @@ Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
 });
 
 Admissions.before.find(function (userId, selector, options) {
-  //console.log(selector)
-  //console.log(options)
+  ////console.log(selector)
+  ////console.log(options)
 });
 
 
@@ -1547,7 +1548,7 @@ Beds.before.insert((userId, doc) => {
 
 _.each([Meteor.users, Wards, Rooms, Services, Admissions], function(collection) {
     collection.before.insert(
-        //console.log(userId)
+        ////console.log(userId)
         (userId, doc) => doc.facility = utils.getUserFacility(userId)
     );
 });
@@ -1565,9 +1566,9 @@ _.each([Meteor.users, Wards, Rooms, Services, Admissions], function(collection) 
 //Beds.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
 Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
-    console.log("before scirpt update")
+    //console.log("before scirpt update")
     //modifier.$set = modifier.$set || {};
-    console.log(fieldNames)
+    //console.log(fieldNames)
     //modifier.$set.items = massageScriptItems(modifier.$set.items)
 });
 

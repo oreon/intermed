@@ -40,7 +40,7 @@ Template.registerHelper('allInvoicSelector', function () {
 Template.registerHelper('findAdmissionByInvoice', function (id) {
   if(!id)
   id = FlowRouter.getParam('id');
-  console.log(Invoices.findOne(id).admissionObj())
+  //console.log(Invoices.findOne(id).admissionObj())
   return Invoices.findOne(id).admissionObj()
 });
 

@@ -10,10 +10,10 @@ Template.signup.events({
         console.error( error.reason );
       }else {
           if(Meteor.users.count() == 1){
-              console.log("First user")
+              //console.log("First user")
               Roles.setUserRoles(Meteor.users.findOne(), 'admin', Roles.GLOBAL_GROUP)
           }else{
-              console.log("patient user")
+              //console.log("patient user")
                //Roles.setUserRoles(Meteor.users.find({}), 'patient', Roles.GLOBAL_GROUP)
           } 
       }

@@ -15,14 +15,14 @@ import * as utils from '/imports/utils/misc.js';
 // });
 
 Meteor.publish('userData', function () {
-    //console.log(this.user.profile.facility)
+    ////console.log(this.user.profile.facility)
     return Meteor.users.find(utils.tenatendFinder(this.userId, true), { fields: { profile: 1 } });
 });
 
 Meteor.publish('Physicians', function () {
     compFinder = Object.assign(utils.tenatendFinder(this.userId, true),
         { 'profile.profession': 'physician' });
-    console.log(compFinder)
+    //console.log(compFinder)
     return Meteor.users.find(compFinder,
         { fields: { profile: 1 } });
 });

@@ -4,9 +4,9 @@ Template.doneCell.events({
     Meteor.call('markDone', this._id, function (error, response) {
             if (error) {
                 Bert.alert(error.reason, "danger");
-                console.log(error)
+                //console.log(error)
             } else {
-                console.log(response)
+                //console.log(response)
                 Bert.alert('Successfully marked done !', 'success', 'growl-top-right');
                 //FlowRouter.go('/recipe/' + adm.patient)
             }
@@ -22,7 +22,7 @@ Template.doneCell.helpers({
 
 Template.removeTodoCell.helpers({
   show: function () {
-    // console.log(Meteor.userId())
+    // //console.log(Meteor.userId())
       return (this.createdBy == Meteor.userId());
   }
 });

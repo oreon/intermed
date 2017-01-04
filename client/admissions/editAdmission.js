@@ -18,13 +18,13 @@ Template.EditAdmission.helpers({
     },
     admission: function () {
         adm = Admissions.findOne({_id: FlowRouter.getParam('id')});
-        //console.log(adm)
+        ////console.log(adm)
         return adm
     },
 
     recipe:function(){
         rcp =  Recipes.findOne({});
-      //  console.log(rcp)
+      //  //console.log(rcp)
         return rcp;
     }
 })
@@ -34,7 +34,7 @@ AutoForm.hooks({
 
     //     onSubmit: function (insertDoc, updateDoc, currentDoc) {
     //         if (updateDoc) {
-    //             console.log(updateDoc)
+    //             //console.log(updateDoc)
     //             this.done();
     //         } else {
     //             this.done(new Error("Submission failed"));
@@ -42,8 +42,8 @@ AutoForm.hooks({
     //         return false;
     //     },
     //     onSuccess: function(operation, result) {
-    //         console.log(result)
-    //        // console.log(this.template.parent())
+    //         //console.log(result)
+    //        // //console.log(this.template.parent())
     //         //this.template.parent().editMode.set(false);
     //     },
     //     // onError: function(operation, error, template) {

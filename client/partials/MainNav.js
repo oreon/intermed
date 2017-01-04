@@ -20,7 +20,7 @@ Template.MainNav.helpers({
 	//labelClass
 
     user: function () {
-        //console.log(Patients.findOne(FlowRouter.getParam('id')))
+        ////console.log(Patients.findOne(FlowRouter.getParam('id')))
         return  Meteor.user().profile.firstName;
     },
 

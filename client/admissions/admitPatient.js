@@ -19,7 +19,7 @@ Template.AdmitPatient.helpers({
 
     currentBed: function () {
         admission =  Admissions.findOne({patient: FlowRouter.getParam('id')})
-        //console.log(admission)
+        ////console.log(admission)
         if(admission)
             return admission.currentBedStay.bed
         return null
@@ -69,21 +69,21 @@ Template.AvailableBed.helpers({
 
 Template.AvailableBed.events({
     'click .admit': function (event, template) {
-        console.log(this.id);
+        //console.log(this.id);
         pt = FlowRouter.getParam('id')
         patient = Patients.findOne({_id: pt});
 
         adm =  Admissions.findOne({patient:pt, isCurrent:true})
-        console.log(adm)
+        //console.log(adm)
 
         if (!adm ) {
 
             Meteor.call('admit', this, patient, function (error, response) {
                 if (error) {
                     Bert.alert(error.reason, "danger");
-                    console.log(error)
+                    //console.log(error)
                 } else {
-                    console.log(response)
+                    //console.log(response)
                     Bert.alert( 'Successfully admitted patient to  bed : ', 'success', 'growl-top-right' );
                     FlowRouter.go('/viewAdmission/' + response)
                 }
@@ -92,7 +92,7 @@ Template.AvailableBed.events({
         }
         else {
 
-            console.log("moving patient")
+            //console.log("moving patient")
             Meteor.call('move', this, adm, function (error, response) {
                 if (error) {
                     Bert.alert(error.reason, "danger");

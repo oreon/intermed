@@ -2,7 +2,7 @@ Template.EditPatient.onCreated(function () {
     var self = this;
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
-        console.log(id)
+        //console.log(id)
         self.subscribe('compPt', id);
         self.subscribe('Physicians')
     });
@@ -12,7 +12,7 @@ Template.EditPatient.onCreated(function () {
 Template.EditPatient.helpers({
 
     patient: function () {
-        //console.log(Patients.findOne(FlowRouter.getParam('id')))
+        ////console.log(Patients.findOne(FlowRouter.getParam('id')))
         return Patients.findOne(FlowRouter.getParam('id'));
     },
 
@@ -20,7 +20,7 @@ Template.EditPatient.helpers({
 
 let commonHooks = {
     onSuccess: function (operation, result) {
-        console.log(this)
+        //console.log(this)
         FlowRouter.go('patient',{ id: this.docId})
     }
     ,

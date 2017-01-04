@@ -39,7 +39,7 @@ var hooksObject = {
   onError: function(formType, error) {
     if(error.error === 403 )
       Bert.alert(error.reason, "danger");
-    console.log(error)
+    //console.log(error)
   },
 
   // Called every time an insert or typeless form

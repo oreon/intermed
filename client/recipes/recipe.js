@@ -21,7 +21,7 @@ Template.Recipe.events({
         Meteor.call('toggleMenuItem', this._id, this.inMenu);
     },
     'click .fa-trash': function () {
-        console.log("hi from trash")
+        //console.log("hi from trash")
         Meteor.call('deleteRecipe', this._id);
     },
     'click .fa-pencil': function (event, template) {

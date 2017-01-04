@@ -22,7 +22,7 @@ Template.Recipes.helpers({
 		return Patients.find({});
 	},
 	encounters: function(){
-		//console.log(this._id)
+		////console.log(this._id)
 		return PtEncounters.find({patient: this._id});
 	},
 	isAdmitted:function(){

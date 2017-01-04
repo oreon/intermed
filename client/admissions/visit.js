@@ -7,7 +7,7 @@ Template.Visit.onCreated(function () {
 });
 Template.Visit.helpers({
     admission: function () {
-        console.log(Admissions.findOne({_id: FlowRouter.getParam('id')}) )
+        //console.log(Admissions.findOne({_id: FlowRouter.getParam('id')}) )
         return Admissions.findOne({_id: FlowRouter.getParam('id')});
     }
 });
