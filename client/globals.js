@@ -25,6 +25,10 @@ Template.registerHelper('isCurrentAdmSelector', function () {
   return { 'isCurrent': true };
 });
 
+Template.registerHelper('currentPtSelector', function () {
+  return { 'patient': Session.get('patient') };
+});
+
 Template.registerHelper('isUnpaidInvoicSelector', function () {
   return { 'isDue': true ,amountPaid: {$exists: false } };
 });

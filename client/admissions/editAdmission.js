@@ -30,26 +30,26 @@ Template.EditAdmission.helpers({
 })
 
 AutoForm.hooks({
-    updateAdmissionScriptForm: {
+    // updateAdmissionScriptForm: {
 
-        onSubmit: function (insertDoc, updateDoc, currentDoc) {
-            if (updateDoc) {
-                console.log(updateDoc)
-                this.done();
-            } else {
-                this.done(new Error("Submission failed"));
-            }
-            return false;
-        },
-        onSuccess: function(operation, result) {
-            console.log(result)
-            console.log(this.template.parent())
-            //this.template.parent().editMode.set(false);
-        },
-        onError: function(operation, error, template) {
-            if(error){
-                alert(error);
-            }
-        }
-    }
+    //     onSubmit: function (insertDoc, updateDoc, currentDoc) {
+    //         if (updateDoc) {
+    //             console.log(updateDoc)
+    //             this.done();
+    //         } else {
+    //             this.done(new Error("Submission failed"));
+    //         }
+    //         return false;
+    //     },
+    //     onSuccess: function(operation, result) {
+    //         console.log(result)
+    //        // console.log(this.template.parent())
+    //         //this.template.parent().editMode.set(false);
+    //     },
+    //     // onError: function(operation, error, template) {
+    //     //     if(error){
+    //     //         alert(error);
+    //     //     }
+    //     // }
+    // }
 });

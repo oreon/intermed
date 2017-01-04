@@ -36,7 +36,7 @@ Template.Patient.helpers({
     },
 
     encounters: function () {
-        return Encounters.find({ patient: FlowRouter.getParam('id') });
+        return Encounters.find();
     },
 
     isAdmitted: function () {

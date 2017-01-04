@@ -59,7 +59,12 @@ export const safeTask = (f) => new Task((rej, res) => {
 export const arrTasks = () =>
     safeTask(() => [1, 2, 3])
         .ap(x => x * x)
-        .fork(e => { throw new Meteor.error(500, e) }, s => console.log(s))
+        .fork(e => {
+            if (Meteor.isServer)
+                throw new Meteor.Error(500, e)
+            else console.error(e)
+        },
+        s => console.log(s))
 
 
 function groupBy(dataToGroupOn, fieldNameToGroupOn, fieldNameForGroupName, fieldNameForChildren) {
@@ -230,10 +235,31 @@ export const createInvoiceItem = (inv, serviceName, price) => {
 
 }
 
+export const getEvery = (type) => {
+    if (type === "oid") return 1;
+    if (type === "bid") return 2;
+    if (type === "tid") return 3;
+    if (type === "qid") return 4;
+    if(type === "q4h") return 6;
+    if(type === "q2h") return 12;
+    if(type === "q1h") return 24;
+}
+
 export const massageScriptItems = (items) =>
     _(items).map(item => {
+        if (!item.duration || !item.duration.for) {
+            item.duration = {}
+            item.duration.for = item.durationSimple;  //item.frequencySimple
+            item.duration.type = 'Day'
+        }
+
+        if (!item.frequency || !item.frequency.type) {
+            item.frequency = {}
+            item.frequency.every = getEvery(item.frequencySimple);  //item.frequencySimple
+            item.frequency.type = 'Day'
+        }
         //debugger
-        console.log(item.startDate)
+        console.log(item)
         item.startDate = item.startDate || new Date();
         if (item.duration) {
             item.endDate = new moment(item.startDate).add(item.duration.for,
@@ -249,7 +275,7 @@ export const setPtName = (doc) => doc.patientName = Patients.findOne(doc.patient
 export const getUserFacility = (userId) =>
     safeTask(() => Meteor.users.findOne(userId))
         .map(x => x.profile.facility)
-        .fork(e => { throw new Meteor.error(500, e) }, s => s)
+        .fork(e => { /*throw new Meteor.Error(500, e)*/ console.log(e) }, s => s)
 
 
 export const tenatendFinder = (id, userColl = false) => {
@@ -304,6 +330,12 @@ export const getRptData = (inData) => {
 
         return _.orderBy(items, 'dt', ['asc']);
     }
+}
+
+export const insertValidated = (schema, coll, data) => {
+    schema.clean(data);
+    check(data, schema);
+    coll.insert(data)
 }
 
 // export const findPatientAllergies = (pt , items) => {

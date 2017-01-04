@@ -624,7 +624,7 @@ DurationSchema = new SimpleSchema({
     }
 })
 
-RecurringAssessmentItemSchema = new SimpleSchema({
+RecurringAssesmentItemSchema = new SimpleSchema({
     name: {
         type: String,
         label: 'Name of the measurement e.g Blood Pressure, Blood Sugar etc'
@@ -664,13 +664,34 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     amount: {
         type: String
     },
+    quantity: { 
+        type: Number, 
+        defaultValue: 1,
+        // autoform: {
+        //     type: "hidden"
+        // },
+    },
+    frequencySimple: {
+        type: String,
+        label: "How Often",
+        allowedValues: ['oid', 'bid', 'tid', 'qid', 'pid', 'q4h', 'q2h', 'q1h']
+    },
     frequency: {
         type: FrequencySchema,
+       autoform: {
+            type: "hidden"
+        },
     },
-    quantity: { type: Number, defaultValue: 1 },
-    duration: { type: DurationSchema },
+    durationSimple: {
+        type: Number,
+        label: "For Days",
+    },
+    duration: { type: DurationSchema, 
+       autoform: {
+            type: "hidden"
+        },
+    },
     prn: { type: Boolean, optional: true, label: ''/* 'PRN (as needed) ' */ },
-
     instructions: { type: String, optional: true },
     startDate: {
         type: Date,
@@ -698,6 +719,20 @@ ScriptItem = new SimpleSchema([BaseSchema, {
 }])
 
 ScriptSchema = new SimpleSchema([BaseSchema, {
+    encounter: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "hidden",
+        },
+    },
+    admission: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "hidden",
+        },
+    },
     notes: {
         type: String,
         optional: true,
@@ -709,13 +744,10 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         type: [ScriptItem],
         optional: true,
         autoValue: function () {
-            ptFld = this.field("patient");
-            //  console.log(ptFld.value)
-            // if (ptFld.isSet) {
-            //     console.log(ptFld.value)
-                return utils.massageScriptItems(this.value);
-            // }
-            // return this.value;
+            //debugger
+            console.log(utils.massageScriptItems(this.value));
+      
+            return utils.massageScriptItems(this.value);
         },
          custom: function () {
             
@@ -1012,12 +1044,12 @@ AdmissionSchema = new SimpleSchema([BaseSchema, {
         type: [VisitSchema],
         optional: true,
     },
-    script: {
-        type: ScriptSchema,
-        optional: true,
-    },
-    recurringAssessments: {
-        type: [RecurringAssessmentItemSchema],
+    // script: {
+    //     type: ScriptSchema,
+    //     optional: true,
+    // },
+    recurringAssesments: {
+        type: [RecurringAssesmentItemSchema],
         optional: true,
         // autoValue: function () {
         //     return utils.massageScriptItems(this.value);
@@ -1154,6 +1186,12 @@ Admissions.allow({
     update: function (userId, doc) {
         return !!userId
     }
+})
+
+Scripts.allow({
+    insert: (userId, doc) => !!userId,
+    update: (userId, doc) => !!userId,
+       //{ return Roles.userIsInRole(userId, ['admin', 'physician']) }
 })
 
 Invoices.allow({
@@ -1293,9 +1331,10 @@ Admissions.helpers({
         return Patients.findOne({ _id: this.patient })
     },
     invoice: function () {
-        inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
+        inv = Invoices.findOne({admission:this._id} ); //, { $set: {admission:this._id} });
         return inv;
     },
+    script: function () { return Scripts.findOne({admission:this._id} )  },
     tests: function () {
         if (!this.labsAndImages) return;
 
@@ -1432,6 +1471,15 @@ Admissions.before.insert((userId, doc) => {
     doc.facility = utils.getUserFacility(userId)
 });
 
+Admissions.after.remove((userId, doc) => { 
+   Invoices.remove({admission:doc._id})
+   Scripts.remove({admission:doc._id})
+});
+
+Admissions.before.findOne( (userId, selector, options) => { 
+
+});
+
 Patients.before.find(function (userId, selector, options) {
     //console.log(this.userId)
   
@@ -1460,22 +1508,17 @@ ChronicDiseases.before.find(function (userId, selector, options) {
 
 
 Admissions.after.insert((userId, doc) => {
-    //debugger
-    inv = { "admission": doc._id }
-    InvoiceSchema.clean(inv);
-    console.log("in inv")
-    console.log(inv)
-    check(inv, InvoiceSchema);
-    Invoices.insert(inv)
+   utils.insertValidated(InvoiceSchema, Invoices, { "admission": doc._id })
+   utils.insertValidated(ScriptSchema, Scripts, { "admission": doc._id}); 
 })
 
 Encounters.after.insert((userId, doc) => {
-    //debugger
-    inv = { "admission": doc._id, type: 'OutPatient' }
-    //inv.type = 
-    InvoiceSchema.clean(inv);
-    check(inv, InvoiceSchema);
-    Invoices.insert(inv)
+    // //debugger
+    // inv = { "admission": doc._id, type: 'OutPatient' }
+    // //inv.type = 
+    // InvoiceSchema.clean(inv);
+    // check(inv, InvoiceSchema);
+    // Invoices.insert(inv)
 })
 
 Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
@@ -1523,7 +1566,7 @@ _.each([Meteor.users, Wards, Rooms, Services, Admissions], function(collection) 
 
 Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
     console.log("before scirpt update")
-    modifier.$set = modifier.$set || {};
+    //modifier.$set = modifier.$set || {};
     console.log(fieldNames)
     //modifier.$set.items = massageScriptItems(modifier.$set.items)
 });
@@ -1605,12 +1648,12 @@ new Tabular.Table({
         {
             data: "_id",
             render: (val, type, doc) =>
-                `<a href='viewAdmission/${val}' class="btn btn-primary"> <i class='fa fa-arrow-circle-right'></i> View</a>`
+                `<a href='/viewAdmission/${val}' class="btn btn-primary"> <i class='fa fa-arrow-circle-right'></i> View</a>`
         },
         {
             data: "_id",
             render: (val, type, doc) =>
-                `<a href='visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`
+                `<a href='/visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`
         },
 
     ]

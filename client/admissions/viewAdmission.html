@@ -83,7 +83,7 @@
 			<h3>Current Order </h3>
 			{{>scriptTbl script=admission.script}}
 			{{> recurringMsmtTmpl amdission=admission 
-				recurringAssessments = admission.recurringAssessments}}
+				recurringAssessments = admission.recurringAssesments}}
 	
 			{{#if isInRole 'physician'}}
 			<button class="btn btn-primary" 
@@ -153,14 +153,17 @@
 
 <template name="updateScriptForm">
 	
-	<!--{{#autoForm collection="Admissions" id="updateAdmissionScriptForm" type="update" 
-	doc=admission }}
+	<!--{{#autoForm collection="Scripts" id="updateAdmissionScriptForm" type="update" 
+	doc=admission.script }}
 		{{> afQuickField name='script'}}
 	<button type="submit" class="btn btn-primary">Update</button> 
 	{{/autoForm}}-->
 
-	{{>quickForm collection="Admissions" id="updateAdmissionScriptForm" type="update" 
-	doc=admission fields='script, recurringAssessments'}}
+	{{>quickForm collection="Scripts" id="updateAdmissionScriptForm" type="update" 
+	doc=admission.script }}
+
+	{{>quickForm collection="Admissions" id="updateAdmissionAssessmentForm" type="update" 
+	doc=admission fields='recurringAssesments'}}
 
 	<!--{{>quickForm fields='recurringAssessments' collection="Admissions" 
 		id="updateAssessmentForm" type="update" doc=admission }}-->

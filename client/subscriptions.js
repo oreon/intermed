@@ -1,6 +1,6 @@
 Meteor.subscribe('Drugs')
 Meteor.subscribe('Patients')
-Meteor.subscribe('Scripts')
+//Meteor.subscribe('Scripts')
 //Meteor.subscribe('Encounters')
 
 Meteor.subscribe('Services')
@@ -26,3 +26,4 @@ Meteor.subscribe('Specializations')
 
 
 PtEncounters = new Mongo.Collection('ptEncounters');
+AdmScript = new Mongo.Collection('admScript');

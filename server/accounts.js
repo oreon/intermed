@@ -20,6 +20,11 @@ var postSignUp = function (userId, info) {
 
 Accounts.validateNewUser(function (user) {
 	console.log(user.profile.facility)
+	
+	if(!user.profile.facility){
+		Roles.setUserRoles(user._id, 'patient', Roles.GLOBAL_GROUP)
+		return true;
+	}
 	let fac = Facilities.findOne({ '_id': user.profile.facility })
 	if (fac) return true;
 		

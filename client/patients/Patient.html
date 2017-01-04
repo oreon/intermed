@@ -48,7 +48,7 @@
         <li><a data-toggle="tab" href="#ordered"><i class="fa fa-thermometer-full"></i>Labs</a></li>
 		<li><a data-toggle="tab" href="#testResults"> <i class="fa fa-list"></i>Results</a></li>
 		<li><a data-toggle="tab" href="#ptGraphs"><i class="fa fa-line-chart"></i>Graphs</a></li>
-
+        <li><a data-toggle="tab" href="#admissions"><i class="fa fa-line-chart"></i>Admissions</a></li>
         <li><a data-toggle="tab" href="#docs"><i class="fa fa-file-image-o"></i>Documents</a></li>
 	</ul>
 
@@ -76,6 +76,11 @@
 
 		<div id="ptGraphs" class="tab-pane fade">
 			No graphs yet.
+		</div>
+
+        <div id="admissions" class="tab-pane fade">
+			{{> tabular table=TabularTables.AdmissionsTbl selector=currentPtSelector
+			class="table table-striped table-bordered table-condensed"}}
 		</div>
 
         <div id="docs" class="tab-pane fade">

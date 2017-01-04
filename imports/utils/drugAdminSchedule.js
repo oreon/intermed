@@ -73,7 +73,7 @@ export function calcShedForIterval(item, start, end) {
         //TODO inefficient calculation - starts counting by start day - should be by  
         occurence = new moment(item.startDate).add(oncePerX * j++, 'hour')
 
-        if (occurence.isAfter(start)) {
+        if (occurence.isAfter(start) && occurence.isBefore(end))  {
             listRetDates.push(
                 {
                     dateToAdmin: occurence,

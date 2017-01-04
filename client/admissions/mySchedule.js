@@ -25,6 +25,9 @@ Template.MySchedule.helpers({
     },
     desc:  (item) =>
         (item.drug) ? ` ${item.amount} ${item.route}` : item.name ,
+
+    from: ()=> moment(new Date()).add(-4, 'hours').format('LLLL'),
+    to: ()=> moment(new Date()).add(20, 'hours').format('LLLL'),
     
 
     findSchedule: function () {
@@ -34,19 +37,21 @@ Template.MySchedule.helpers({
         let start = moment(now).add(-4, 'hours')
         //console.log(start.format('LLLL'))
         //console.log (new moment(start).format('LLLL'))
-        let end = moment(start).add(16, 'hours')
+        let end = moment(now).add(20, 'hours')
         //console.log(end.format('LLLL'))
 
         adms = Admissions.find().fetch();
         _.map(adms, (adm) => {
+            script = Admissions.findOne(adm._id).script();
+            drugAdmins = script ? script.items :[]
 
-            let allItems = _.concat(scriptEnhanced(adm.script).items, 
-                adm.recurringAssessments? adm.recurringAssessments: [])
+
+            let allItems = _.concat(scriptEnhanced(drugAdmins ), 
+                adm.recurringAssesments? adm.recurringAssesments: [])
             
-
             _.map(allItems,
                 (item) => {
-                    retItems = calcShedForIterval(item, start, end)
+                    let retItems = calcShedForIterval(item, start, end)
                     itemsWithAdm = _.map(retItems, (itemTemp) => {
                         itemTemp['adm'] = adm;
                         return itemTemp
@@ -54,7 +59,7 @@ Template.MySchedule.helpers({
                     arrSched.push(itemsWithAdm)
                 })
 
-                console.log(adm.recurringAssessments)
+               // console.log(adm.recurringAssessments)
 
             //  _.map(adm.recurringAssessments, (item) => {
             //     retItems = calcShedForIterval(item, start, end)

@@ -10,10 +10,24 @@
                 <p class="lead">Cloud based service to help you manage your patients!!</p>
             </div>
             <div class="col-lg-4 ">
-                {{> LoginModal}}
+                {{#if $not currentUser}} {{> LoginModal}}
+                 {{else}}
+                 <ul>
+                <li><a href="/mySchedule"><i class="fa fa-list"></i>Schedule</a></li>
+
+                <li><a href="/invoices"><i class="fa fa-list"></i>Invoices</a></li>
+
+                <li><a href="/analytics"><i class="fa fa-list"></i>Analytics</a></li>
+
+                <li><a href="/labTasks"><i class="fa fa-list"></i>Lab Tests</a></li>
+
+                <li><a href="/admin"><i class="fa fa-list"></i>Admin</a></li>
+                 </ul>
+                {{/if}}
+
             </div>
             <div>
-                
+
             </div>
         </div>
         <!-- /.row -->
@@ -23,6 +37,3 @@
 
 
 </template>
-
-
-

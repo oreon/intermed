@@ -27,9 +27,12 @@ Template.ViewAdmission.onCreated(function () {
     self.autorun(function () {
 
         var id = FlowRouter.getParam('id');
+       
         self.subscribe('compAdmission', id);
+        //self.subscribe('AdmScript')
         self.subscribe('Rooms')
         self.subscribe('Beds')
+       
         adm = getAdmission()
         this.adm = adm;
         if (adm) {
@@ -249,7 +252,7 @@ AutoForm.hooks({
             console.log(test)
             //Session.set("editEncounterForm", false);
             adm = Session.get('adm');
-            debugger
+            //debugger
 
             Admissions.update(
                 { "_id": adm._id },

@@ -116,20 +116,20 @@ Template.scriptTbl.helpers({
 })
 
 Template.basicWizard.helpers({
-    steps: function () {
-        return [{
-            id: 'script',
-            title: 'script',
-            schema: ScriptSchema
-        }, {
-            id: 'labs',
-            title: 'Labs And Images',
-            schema: LabsAndImagingSchema,
-            onSubmit: function (data, wizard) {
-                console.log(wizard)
-            }
-        }]
-    }
+    // steps: function () {
+    //     return [{
+    //         id: 'script',
+    //         title: 'script',
+    //         schema: ScriptSchema
+    //     }, {
+    //         id: 'labs',
+    //         title: 'Labs And Images',
+    //         schema: LabsAndImagingSchema,
+    //         onSubmit: function (data, wizard) {
+    //             console.log(wizard)
+    //         }
+    //     }]
+    // }
 });
 
 
