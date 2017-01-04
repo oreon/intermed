@@ -54,6 +54,11 @@ Template.reports.events({
     'click .tst': function (event, template) {
         Template.instance().stat.set('tst')
         fetchData(Template.instance());
+    },
+
+    'click .pat': function (event, template) {
+        Template.instance().stat.set('pat')
+        fetchData(Template.instance());
     }
 
 })

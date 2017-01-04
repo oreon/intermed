@@ -32,11 +32,13 @@ var hooksObject = {
 
   // Called when any submit operation succeeds
   onSuccess: function(formType, result) {
-      Bert.alert( 'Successfully updated !', 'success', 'growl-top-right' );
+      //Bert.alert( 'Successfully updated !', 'success', 'growl-top-right' );
   },
 
   // Called when any submit operation fails
   onError: function(formType, error) {
+    if(error.error === 403 )
+      Bert.alert(error.reason, "danger");
     console.log(error)
   },
 

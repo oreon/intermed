@@ -1184,13 +1184,13 @@ Patients.allow({
 Admissions.allow({
     insert: (userId, doc) => !!userId,
     update: function (userId, doc) {
-        return !!userId
+        return !!userId && doc.isCurrent
     }
 })
 
 Scripts.allow({
     insert: (userId, doc) => !!userId,
-    update: (userId, doc) => !!userId,
+    update: (userId, doc) =>  Roles.userIsInRole(userId, ['admin', 'physician']) //!!userId,
        //{ return Roles.userIsInRole(userId, ['admin', 'physician']) }
 })
 
@@ -1645,6 +1645,7 @@ new Tabular.Table({
         },
         { data: "currentBedName()", title: "Bed" },
         { data: "currentBedStay", visible: false },
+    //    { data: "isCurrent", title:"Current" },  
         {
             data: "_id",
             render: (val, type, doc) =>
@@ -1652,8 +1653,8 @@ new Tabular.Table({
         },
         {
             data: "_id",
-            render: (val, type, doc) =>
-                `<a href='/visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`
+            render: (val, type, doc) => doc.isCurrent ? 
+                `<a href='/visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`: ""
         },
 
     ]

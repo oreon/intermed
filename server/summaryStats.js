@@ -33,7 +33,8 @@ export const getSummary = (coll, filter, summary) => {
             $match: {
                 $and: [
                     { createdAt: { $gte: start } },
-                    { createdAt: { $lte: end } }
+                    { createdAt: { $lte: end } },
+                    { facility: Meteor.user().profile.facility }
                 ]
             }
         },
@@ -84,6 +85,8 @@ Meteor.methods({
 
     admStats(filter) { return getSummary(Admissions, filter) },
     tstStats(filter) { return getSummary(TestResults, filter) },
-    invStats (filter) { return  getSummary(Invoices, filter ,  { '$sum': '$total' })  }
+    invStats (filter) { return  getSummary(Invoices, filter ,  { '$sum': '$total' })  },
+    patStats (filter) { return  getSummary(Patients, filter )  }
+    
 
 });

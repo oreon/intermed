@@ -275,7 +275,7 @@ export const setPtName = (doc) => doc.patientName = Patients.findOne(doc.patient
 export const getUserFacility = (userId) =>
     safeTask(() => Meteor.users.findOne(userId))
         .map(x => x.profile.facility)
-        .fork(e => { /*throw new Meteor.Error(500, e)*/ console.log(e) }, s => s)
+        .fork(e => { /*throw new Meteor.Error(500, e)*/  console.log(userId) ; console.log(e) }, s => s)
 
 
 export const tenatendFinder = (id, userColl = false) => {
