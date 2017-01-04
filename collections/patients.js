@@ -1260,7 +1260,7 @@ Patients.helpers({
     },
     currentBed: function () {
         adm = this.currentAdmisson();
-        if (adm) {
+        if (adm && adm.currentBedStay) {
             //console.log("found bed " + adm.currentBedStay.bed)
             return Beds.findOne(adm.currentBedStay.bed);
         }

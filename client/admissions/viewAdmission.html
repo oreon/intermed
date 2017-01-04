@@ -3,12 +3,16 @@
 
 	<h3> {{> patInfo patient=patient}} {{patient.currentBed.fullName}} </h3>
 	<h4> {{admission.reason }}  </h4> <b> Admitted on: {{datef admission.created}} </b> 
-
+	<b> {{#unless admission.isCurrent}}
+			Discharged on: {{datef admission.dischargeSection.dischargeDate}}  {{/unless}}</b> 
+	<p>Admission Note : {{{admission.admissionNote}}}</p>  
 	<hr/>
 	
 	<!--<button class="btn fac">Facility</button>-->
 
-	<a href="/visit/{{admission._id}}" class="btn btn-primary"> New Visit  </a> 
+{{#if admission.isCurrent}}
+	<div class="well">
+			<a href="/visit/{{admission._id}}" class="btn btn-primary"> New Visit  </a> 
 	
 	<button class="btn btn-primary" 
 				data-toggle="collapse" data-target="#editCondition">{{admission.condition}}</button>
@@ -16,7 +20,38 @@
 	<div class="collapse" id="editCondition">
 	{{> quickForm collection="Admissions" id="editConditionForm" type="update" doc=admission 
 	autosave=true fields="condition"}} 
+		</div>
+		<article>
+				<br/>
+				{{#if isEditMode }} 
+					{{> updateAdmissionForm admission=admission }} 
+				{{else}} 
+					{{#if admission.eligibleForDischarge}}
+						<button class="btn btn-warn toggleDischarge">Remove eligible for discharge</button>
+						
+						<button class="btn btn-danger dischargePerform"  data-toggle="collapse" 
+							data-target="#editDischarge">
+							Perform Discharge
+						</button> 
+						
+						<div class="collapse" id="editDischarge">
+						{{> dischargeTmpl admission=admission}}
+						</div>
+						
+					{{else}}
+						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
+					{{/if}}
+
+					<a href="/admitPatient/{{admission.patient}}" class="btn btn-primary"> Move Patient </a>
+
+					<!--<a href="/editAdmission/{{admission._id}}" class="btn btn-primary"> Edit  </a>-->
+
+					<i class="fa fa-trash"></i>
+					<i class="fa fa-pencil"></i> 
+				{{/if}}
+			</article>
 	</div>
+	{{/if}}
 			 
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#visits">Visits</a></li>
@@ -33,50 +68,18 @@
 
 	<div class="tab-content">
 		
-
 		<div id="visits" class="tab-pane fade in active">
-			<article class="recipe">
-				<br/>
-				{{#if isEditMode }} 
-					{{> updateAdmissionForm admission=admission }} 
-				{{else}} 
-					{{#if admission.eligibleForDischarge}}
-						<button class="btn-deny toggleDischarge">Remove eligible for discharge</button>
-						
-						<button class="btn-deny dischargePerform"  data-toggle="collapse" 
-							data-target="#editDischarge">
-							Perform Discharge
-						</button> 
-						
-						<div class="collapse" id="editDischarge">
-						{{> dischargeTmpl admission=admission}}
-						</div>
-						
-					{{else}}
-						<button class="btn-primary toggleDischarge">Make eligible for discharge</button> 
-					{{/if}}
-
-					<a href="/admitPatient/{{admission.patient}}" class="btn btn-primary"> Move Patient </a>
-
-					<a href="/editAdmission/{{admission._id}}" class="btn btn-primary"> Edit  </a>
-
-					<br/> <b>Admission Note</b> {{{admission.admissionNote}}}
+			<div class="well">
 					<hr/>
 					<div class="panel-group">
-						{{#each visits admission}}
-						
+						{{#each admission.visits}}
 						<div class="panel panel-default">
 							<div class="panel-body">{{{note}}}</div>
 							<div class="panel-footer">{{visitCreator}} - {{datef updatedAt}}</div>
 						</div>
 						{{/each}}
 					</div>
-
-					<i class="fa fa-trash"></i>
-					<i class="fa fa-pencil"></i> 
-				{{/if}}
-
-			</article>
+			</div>
 		</div>
 
 		<div id="script" class="tab-pane fade ">
