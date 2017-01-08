@@ -212,7 +212,7 @@ export const drugName = (id) => {
 }
 
 export const findLookup = ( coll, id) => {
-    drug = coll.findOne({ _id: id })
+    drug = coll.findOne( id )
     return drug ? drug.name : "Unknown"
 }
 

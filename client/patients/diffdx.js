@@ -1,3 +1,5 @@
+import * as utils from '/imports/utils/misc.js';
+
 Template.diffdx.onCreated(function () {
     var self = this;
     this.diffs = new ReactiveVar([]);
@@ -14,13 +16,29 @@ Template.diffdx.onCreated(function () {
 
 Template.diffdx.helpers({
 
-    diffsGrp: function () {
-        console.log(Session.get('diffs'))
-        return _.groupBy(Session.get('diffs'), (a) => a.finding_id)
+    diffsPhys: function () {
+        let res = Session.get('diffs')
+        if (res) {
+            let phys = res['p']
+            return _.groupBy(phys, (a) => a.finding_id)
+        }
     },
 
+
+    diffsLabs: function () {
+        let res = Session.get('diffs')
+        if (res) {
+            let phys = res['l']
+            return _.groupBy(phys, (a) => a.finding_id)
+        }
+    },
+
+    findPhysical: (id) => PhysicalFindings.findOne(parseInt(id)).name,
+    findLab: (id) => LabFindings.findOne(parseInt(id)).name,
+
+
     diffs: function () {
-        return Session.get('diffs'); //Template.instance().diffs.get();
+        return _.flatMap(Session.get('diffs')); //Template.instance().diffs.get();
     },
 
     diffdxVar: function () {
@@ -69,7 +87,7 @@ AutoForm.hooks({
                     Bert.alert(error.reason, "danger");
                     //console.log(error)
                 } else {
-                    console.log(self.template.parent())
+                    console.log(response)
                     //Template.diffdx.set(response)
                     //self.template.parent().diffs.set(response);
                     Session.set('diffs', response)

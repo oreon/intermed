@@ -3,20 +3,32 @@
 
     {{>quickForm schema="PatientDiffDxSchema" id="diffDxForm"}}
 
-    <ul class="list-group">
+    <!--<ul class="list-group">
         {{#each diffs}}
         <li class="list-group-item"> {{name}} </li>
         {{else}}
         <li> No differentials found </li>
         {{/each}}
-    </ul>
+    </ul>-->
 
-    {{#each arrayify diffsGrp}}
-    <ul class="list-group"><b>{{name}} </b> 
+    <h3> Physical Findings</h3>
+    {{#each arrayify diffsPhys}}
+    <ul class="list-group"><b>{{findPhysical name}}  {{name}}</b> 
         {{#each value}}
         <li class="list-group-item"> {{name}}  </li>
         {{/each}}
     </ul>
     {{/each}} 
+
+    <h3> Lab Findings </h3>
+    {{#each arrayify diffsLabs}}
+    <ul class="list-group"><b>{{findLab name}} {{name}} </b> 
+        {{#each value}}
+        <li class="list-group-item"> {{name}}  </li>
+        {{/each}}
+    </ul>
+    {{/each}} 
+
+
 {{/if}}
 </template>
