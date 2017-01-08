@@ -1,0 +1,22 @@
+<template name="diffdx">
+{{#if Template.subscriptionsReady}} 
+
+    {{>quickForm schema="PatientDiffDxSchema" id="diffDxForm"}}
+
+    <ul class="list-group">
+        {{#each diffs}}
+        <li class="list-group-item"> {{name}} </li>
+        {{else}}
+        <li> No differentials found </li>
+        {{/each}}
+    </ul>
+
+    {{#each arrayify diffsGrp}}
+    <ul class="list-group"><b>{{name}} </b> 
+        {{#each value}}
+        <li class="list-group-item"> {{name}}  </li>
+        {{/each}}
+    </ul>
+    {{/each}} 
+{{/if}}
+</template>

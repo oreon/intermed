@@ -53,6 +53,20 @@ Meteor.publish('Specializations', function () {
     return Specializations.find({});
 })
 
+Meteor.publish('LabFindings', function () {
+    return LabFindings.find({});
+})
+
+Meteor.publish('PhysicalFindings', function () {
+    return PhysicalFindings.find({});
+})
+
+Meteor.publish('Differentials', function () {
+    return Differentials.find({});
+})
+
+
+
 //TODO should be per facility
 Meteor.publish('LabTests', function () {
     return LabTests.find();

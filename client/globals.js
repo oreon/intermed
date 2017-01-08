@@ -82,6 +82,7 @@ Template.registerHelper('arrayify', function (obj) {
   for (var key in obj) {
     result.push({ name: key, value: obj[key] });
   }
+  utils.print(result)
   return result;
 });
 

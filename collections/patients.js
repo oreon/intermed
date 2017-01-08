@@ -140,10 +140,21 @@ class ChartsCollection extends Mongo.Collection {
     }
 }
 
+// class LabFindingsCollection extends Mongo.Collection {}
+// class PhysicalFindingsCollection extends Mongo.Collection {}
+class DifferentialsCollection extends Mongo.Collection { }
 
 
+export const Charts = new ChartsCollection('charts');
 
-export const Lists = new ChartsCollection('Charts');
+LabFindings = new Mongo.Collection('labFindings');
+PhysicalFindings = new Mongo.Collection('physicalFindings');
+
+// export const LabFindings = new LabFindingsCollection('labFindings');
+// export const PhysicalFindings = new PhysicalFindingsCollection('physicalFindings');
+// export const
+Differentials = new DifferentialsCollection('differentials');
+
 
 
 ChronicDiseaseSchema = new SimpleSchema([BaseSchema, { name: { type: String, unique: true } }])
@@ -166,7 +177,7 @@ ServiceSchema = new SimpleSchema([BaseSchema, {
     price: { type: Number },
     autoCreated: {
         type: Boolean,
-        defaultValue:false,
+        defaultValue: false,
         autoform: {
             type: "hidden"
         }
@@ -179,7 +190,7 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: false }, {sort:{'name':1}}).map(function (c) {
+                return Services.find({ autoCreated: false }, { sort: { 'name': 1 } }).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c._id };
                 });
             }
@@ -198,7 +209,7 @@ LineItemSchema = new SimpleSchema([BaseSchema, {
         // },
 
     },
-    units: { type: Number , defaultValue: 1},
+    units: { type: Number, defaultValue: 1 },
     lineItemTotal: {
         type: Number,
         optional: true,
@@ -221,7 +232,7 @@ LineItemACSchema = new SimpleSchema([LineItemSchema, {
         autoform: {
             type: "select",
             options: function () {
-                return Services.find({ autoCreated: true }, {sort:{'name':1}}).map(function (c) {
+                return Services.find({ autoCreated: true }, { sort: { 'name': 1 } }).map(function (c) {
                     return { label: c.name + " - Rs" + c.price, value: c.name };
                 });
             }
@@ -229,6 +240,21 @@ LineItemACSchema = new SimpleSchema([LineItemSchema, {
         label: "Service"
     },
 }])
+
+DifferentialsSchema = new SimpleSchema({
+    name: { type: String },
+    finding_id: { type: String }
+})
+
+LabFindingSchema = new SimpleSchema({
+    name: { type: String },
+})
+
+PhysicalFindingSchema = new SimpleSchema({
+    name: { type: String },
+})
+
+
 
 InvoiceSchema = new SimpleSchema([BaseSchema, {
     admission: {
@@ -238,25 +264,25 @@ InvoiceSchema = new SimpleSchema([BaseSchema, {
             type: "hidden"
         }
     },
-     type: {
+    type: {
         type: String,
         optional: true,
         autoform: {
             type: "hidden"
         },
-        defaultValue:'InPatient'
+        defaultValue: 'InPatient'
     },
-    
+
     patientName: patientName,
     comments: { type: String, optional: true },
     items: {
         type: [LineItemSchema], optional: true,
         autoValue: function () {
             _.map(this.value, x => {
-                if(!x.units) x.units =1 
-                if(x && !x.appliedPrice) { 
+                if (!x.units) x.units = 1
+                if (x && !x.appliedPrice) {
                     x.appliedPrice = Services.findOne(x.service).price
-                    
+
                 }
                 x.lineItemTotal = x.units * x.appliedPrice; return x
             })
@@ -550,6 +576,39 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
 }
 ])
 
+PatientDiffDxSchema = new SimpleSchema({
+    labFindings: {
+        type: [Number],
+        optional: true,
+        autoform: {
+            type: "select2",
+            afFieldInput: {
+                multiple: true
+            },
+            options: function () {
+                return LabFindings.find().map(function (c) {
+                    return { label: c.name, value: c._id };
+                });
+            }
+        }
+    },
+    physicalFindings: {
+        type: [Number],
+        optional: true,
+        autoform: {
+            type: "select2",
+            afFieldInput: {
+                multiple: true
+            },
+            options: function () {
+                return PhysicalFindings.find().map(function (c) {
+                    return { label: c.name, value: c._id };
+                });
+            }
+        }
+    },
+})
+
 MeasurementSchema = new SimpleSchema([BaseSchema, {
     measurement: {
         type: String,
@@ -609,7 +668,7 @@ FrequencySchema = new SimpleSchema({
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
         type: String,
         label: "per ",
-        defaultValue:'Day'
+        defaultValue: 'Day'
     }
 })
 
@@ -620,7 +679,7 @@ DurationSchema = new SimpleSchema({
     type: {
         allowedValues: ['Hour', 'Day', 'Week', 'Month', 'Quarter', 'Year'],
         type: String,
-        defaultValue:'Day'
+        defaultValue: 'Day'
     }
 })
 
@@ -637,7 +696,7 @@ RecurringAssesmentItemSchema = new SimpleSchema({
         type: Date,
         optional: true,
         label: "Start Date (Leave empty for now)",
-        autoValue:function(){ if (!this.value) return new Date(); }
+        autoValue: function () { if (!this.value) return new Date(); }
     },
 })
 
@@ -664,10 +723,10 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     amount: {
         type: String
     },
-    quantity: { 
-        type: Number, 
+    quantity: {
+        type: Number,
         defaultValue: 1,
-        optional:true,
+        optional: true,
         autoform: {
             type: "hidden"
         },
@@ -679,7 +738,7 @@ ScriptItem = new SimpleSchema([BaseSchema, {
     },
     frequency: {
         type: FrequencySchema,
-       autoform: {
+        autoform: {
             type: "hidden"
         },
     },
@@ -687,8 +746,9 @@ ScriptItem = new SimpleSchema([BaseSchema, {
         type: Number,
         label: "For Days",
     },
-    duration: { type: DurationSchema, 
-       autoform: {
+    duration: {
+        type: DurationSchema,
+        autoform: {
             type: "hidden"
         },
     },
@@ -747,15 +807,15 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
         autoValue: function () {
             //debugger
             //console.log(utils.massageScriptItems(this.value));
-      
+
             return utils.massageScriptItems(this.value);
         },
-         custom: function () {
-            
-            if (Meteor.isClient && this.isSet ) {
+        custom: function () {
 
-                pt= this.field("patient").value;
-                if(!pt) 
+            if (Meteor.isClient && this.isSet) {
+
+                pt = this.field("patient").value;
+                if (!pt)
                     pt = Session.get('patient')
                 allergicDrugs = Patients.findOne(pt).drugAllergies;
 
@@ -863,7 +923,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     },
     dob: {
         type: Date,
-        label:'Date of Birth'
+        label: 'Date of Birth'
     },
     gender: {
         type: String,
@@ -880,13 +940,13 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         type: Boolean,
         optional: true,
     },
-    primaryPhysician:{
+    primaryPhysician: {
         type: String,
         optional: true,
         autoform: {
             type: "select",
             options: function () {
-                users = Meteor.users.find({ 'profile.profession': 'physician' },{sort:{'profile.firstName':1}});
+                users = Meteor.users.find({ 'profile.profession': 'physician' }, { sort: { 'profile.firstName': 1 } });
                 return users.map(function (c) {
                     return { label: userFullNameById(c._id).fork(e => "drx", s => s), value: c._id };
                 });
@@ -905,7 +965,7 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             }
         }
     },
-   
+
     pastMedicalHistory: {
         type: String,
         optional: true,
@@ -1154,22 +1214,22 @@ Schema.wardTemp = new SimpleSchema({
         label: "Ward name",
         max: 50
     },
-    numberOfRooms:{
+    numberOfRooms: {
         type: Number,
-        optional:true,
+        optional: true,
     },
-    prefix:{
+    prefix: {
         type: String,
-        optional:true,
+        optional: true,
         label: "For a ward with beds 101 to 120 , enter 100 for 201-220 enter 200 ",
     },
     beds: {
         type: [String],
-        optional:true,
+        optional: true,
         //regEx: SimpleSchema.RegEx.Email,
         label: "Bed Name"
     }
-}); 
+});
 
 ///////////  End of schema defs ///////////////////
 
@@ -1191,8 +1251,8 @@ Admissions.allow({
 
 Scripts.allow({
     insert: (userId, doc) => !!userId,
-    update: (userId, doc) =>  Roles.userIsInRole(userId, ['admin', 'physician']) //!!userId,
-       //{ return Roles.userIsInRole(userId, ['admin', 'physician']) }
+    update: (userId, doc) => Roles.userIsInRole(userId, ['admin', 'physician']) //!!userId,
+    //{ return Roles.userIsInRole(userId, ['admin', 'physician']) }
 })
 
 Invoices.allow({
@@ -1332,10 +1392,10 @@ Admissions.helpers({
         return Patients.findOne({ _id: this.patient })
     },
     invoice: function () {
-        inv = Invoices.findOne({admission:this._id} ); //, { $set: {admission:this._id} });
+        inv = Invoices.findOne({ admission: this._id }); //, { $set: {admission:this._id} });
         return inv;
     },
-    script: function () { return Scripts.findOne({admission:this._id} )  },
+    script: function () { return Scripts.findOne({ admission: this._id }) },
     tests: function () {
         if (!this.labsAndImages) return;
 
@@ -1464,102 +1524,102 @@ TestResults.helpers({
 
 
 
-if(Meteor.isServer){
+if (Meteor.isServer) {
 
-Admissions.before.insert((userId, doc) => { 
-    utils.setPtName(doc)
-    //console.log(userId)
-    doc.facility = utils.getUserFacility(userId)
-});
+    Admissions.before.insert((userId, doc) => {
+        utils.setPtName(doc)
+        //console.log(userId)
+        doc.facility = utils.getUserFacility(userId)
+    });
 
-Admissions.after.remove((userId, doc) => { 
-   Invoices.remove({admission:doc._id})
-   Scripts.remove({admission:doc._id})
-});
+    Admissions.after.remove((userId, doc) => {
+        Invoices.remove({ admission: doc._id })
+        Scripts.remove({ admission: doc._id })
+    });
 
-Admissions.before.findOne( (userId, selector, options) => { 
+    Admissions.before.findOne((userId, selector, options) => {
 
-});
+    });
 
-Patients.before.find(function (userId, selector, options) {
-    ////console.log(this.userId)
-  
-  //if(!userId)
-    //userId = Meteor.userId()
-  ////console.log(currentUser)
-  ////console.log(AccountsCommon || AccountsCommon.user())
+    Patients.before.find(function (userId, selector, options) {
+        ////console.log(this.userId)
 
-  //console.log('user pt ' + userId)
-  //if(userId)
-  //  selector = Object.assign(selector, { facility: utils.getUserFacility(userId) })
-  ////console.log(options)
-});
+        //if(!userId)
+        //userId = Meteor.userId()
+        ////console.log(currentUser)
+        ////console.log(AccountsCommon || AccountsCommon.user())
 
-ChronicDiseases.before.find(function (userId, selector, options) {
-//   //console.log('user drugs ' + this._super.userId)
-//   //console.log(this.context )
-//   //console.log(`super ${this._super}` )
-  
-  
-//   if(!userId)
-//     userId = Meteor.userId
-//   selector = Object.assign(selector, { facility: 'grWAwxGbdb9is6FAR' })
-  ////console.log(options)
-});
+        //console.log('user pt ' + userId)
+        //if(userId)
+        //  selector = Object.assign(selector, { facility: utils.getUserFacility(userId) })
+        ////console.log(options)
+    });
+
+    ChronicDiseases.before.find(function (userId, selector, options) {
+        //   //console.log('user drugs ' + this._super.userId)
+        //   //console.log(this.context )
+        //   //console.log(`super ${this._super}` )
 
 
-Admissions.after.insert((userId, doc) => {
-   utils.insertValidated(InvoiceSchema, Invoices, { "admission": doc._id })
-   utils.insertValidated(ScriptSchema, Scripts, { "admission": doc._id}); 
-})
-
-Encounters.after.insert((userId, doc) => {
-    // //debugger
-    // inv = { "admission": doc._id, type: 'OutPatient' }
-    // //inv.type = 
-    // InvoiceSchema.clean(inv);
-    // check(inv, InvoiceSchema);
-    // Invoices.insert(inv)
-})
-
-Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
-    modifier.$set = modifier.$set || {};
-    modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
-});
-
-Admissions.before.find(function (userId, selector, options) {
-  ////console.log(selector)
-  ////console.log(options)
-});
+        //   if(!userId)
+        //     userId = Meteor.userId
+        //   selector = Object.assign(selector, { facility: 'grWAwxGbdb9is6FAR' })
+        ////console.log(options)
+    });
 
 
+    Admissions.after.insert((userId, doc) => {
+        utils.insertValidated(InvoiceSchema, Invoices, { "admission": doc._id })
+        utils.insertValidated(ScriptSchema, Scripts, { "admission": doc._id });
+    })
 
-Beds.before.update((userId, doc, fieldNames, modifier, options) => {
-    modifier.$set = modifier.$set || {};
-    modifier.$set.ward = Beds.findOne(bed.room).ward
-})
+    Encounters.after.insert((userId, doc) => {
+        // //debugger
+        // inv = { "admission": doc._id, type: 'OutPatient' }
+        // //inv.type = 
+        // InvoiceSchema.clean(inv);
+        // check(inv, InvoiceSchema);
+        // Invoices.insert(inv)
+    })
 
-Beds.before.insert((userId, doc) => {
-    doc.ward = Rooms.findOne(doc.room).ward
-    doc.facility = utils.getUserFacility(userId)
-})
+    Admissions.before.update((userId, doc, fieldNames, modifier, options) => {
+        modifier.$set = modifier.$set || {};
+        modifier.$set.patientName = Patients.findOne(doc.patient).fullName()
+    });
 
-//CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+    Admissions.before.find(function (userId, selector, options) {
+        ////console.log(selector)
+        ////console.log(options)
+    });
 
-_.each([Meteor.users, Wards, Rooms, Services, Admissions], function(collection) {
-    collection.before.insert(
-        ////console.log(userId)
-        (userId, doc) => doc.facility = utils.getUserFacility(userId)
-    );
-});
 
-// Wards.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
-// Rooms.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+    Beds.before.update((userId, doc, fieldNames, modifier, options) => {
+        modifier.$set = modifier.$set || {};
+        modifier.$set.ward = Beds.findOne(bed.room).ward
+    })
 
-// Services.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+    Beds.before.insert((userId, doc) => {
+        doc.ward = Rooms.findOne(doc.room).ward
+        doc.facility = utils.getUserFacility(userId)
+    })
 
-// ChronicDiseases.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+    //CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+    _.each([Meteor.users, Wards, Rooms, Services, Admissions], function (collection) {
+        collection.before.insert(
+            ////console.log(userId)
+            (userId, doc) => doc.facility = utils.getUserFacility(userId)
+        );
+    });
+
+    // Wards.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+    // Rooms.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+    // Services.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
+
+    // ChronicDiseases.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
 
 }
@@ -1584,7 +1644,7 @@ Invoices.before.insert((userId, doc) => {
 
 
 
-defSelector =  (userId) => { return{ facility: Meteor.users.findOne({_id:userId}).profile.facility } }
+defSelector = (userId) => { return { facility: Meteor.users.findOne({ _id: userId }).profile.facility } }
 
 //import {admHelpers} from '/imports/api/helpers'
 defSearch = { caseInsensitive: true, smart: false, onEnterOnly: true, }
@@ -1594,26 +1654,26 @@ updateDate = {
     render: (val, type, doc) => moment(val).calendar()
 },
 
-createDate = {
-    data: "createdAt", title: "Created ",
-    render: (val, type, doc) => moment(val).calendar()
-},
-
-invcols = [
-    //{ data: "fullName()", title: "Full Name" },
-    { data: "patientName", title: "Patient" },
-    { data: "admission", title: "Admission" },
-    { data: "totalCurrent()", title: "Total" },
-    {
-        data: "_id",
-        render: (val, type, doc) =>
-            `<a href='editInvoice/${val}'> <i class='fa fa-map'/></a>`
+    createDate = {
+        data: "createdAt", title: "Created ",
+        render: (val, type, doc) => moment(val).calendar()
     },
-    updateDate,
-    {data: "items", visible:false},
-    {data: "autoCreatedItems", visible:false}
-    
-]
+
+    invcols = [
+        //{ data: "fullName()", title: "Full Name" },
+        { data: "patientName", title: "Patient" },
+        { data: "admission", title: "Admission" },
+        { data: "totalCurrent()", title: "Total" },
+        {
+            data: "_id",
+            render: (val, type, doc) =>
+                `<a href='editInvoice/${val}'> <i class='fa fa-map'/></a>`
+        },
+        updateDate,
+        { data: "items", visible: false },
+        { data: "autoCreatedItems", visible: false }
+
+    ]
 
 new Tabular.Table({
     name: "InvoicesTbl",
@@ -1646,7 +1706,7 @@ new Tabular.Table({
         },
         { data: "currentBedName()", title: "Bed" },
         { data: "currentBedStay", visible: false },
-    //    { data: "isCurrent", title:"Current" },  
+        //    { data: "isCurrent", title:"Current" },  
         {
             data: "_id",
             render: (val, type, doc) =>
@@ -1654,8 +1714,8 @@ new Tabular.Table({
         },
         {
             data: "_id",
-            render: (val, type, doc) => doc.isCurrent ? 
-                `<a href='/visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>`: ""
+            render: (val, type, doc) => doc.isCurrent ?
+                `<a href='/visit/${val}' class="btn btn-primary"><i class='fa fa-comment-o'></i> Visit</a>` : ""
         },
 
     ]
@@ -1827,3 +1887,7 @@ Services.attachSchema(ServiceSchema)
 
 Todos.attachSchema(TodoSchema);
 Specializations.attachSchema(SpecializationsSchema);
+
+LabFindings.attachSchema(LabFindingSchema)
+PhysicalFindings.attachSchema(PhysicalFindingSchema)
+Differentials.attachSchema(DifferentialsSchema)

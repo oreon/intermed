@@ -7,6 +7,11 @@ import moment from 'moment'
 user = { _id: 44, profile: { 'firstName': 'ddf' } }
 
 
+export const print = (x) =>{
+console.log(x);
+}
+
+
 export const getDefault = (x, y = "") => x ? x : y
 //export  const getDefault = (x, y) =>  x ? x : ""
 
@@ -203,6 +208,11 @@ export const findByProp = (coll, prop, val) => _(coll).find(x => x[prop] === val
 
 export const drugName = (id) => {
     drug = Drugs.findOne({ _id: id })
+    return drug ? drug.name : "Unknown"
+}
+
+export const findLookup = ( coll, id) => {
+    drug = coll.findOne({ _id: id })
     return drug ? drug.name : "Unknown"
 }
 

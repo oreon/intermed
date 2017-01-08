@@ -72,15 +72,18 @@
 		<button class="btn btn-primary" 
 			data-toggle="collapse" data-target="#editInvoice">Edit Invoice</button>
 
+		{{#unless readonly}}	
 		<div class="collapse" id="editInvoice">
-		{{#if flds}}
-				{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-				autosave=true }}
-		{{else}}
-				{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
-		autosave=true omitFields="autoCreatedItems, amountPaid, datePaid, paymentType,total"}}
-		{{/if}}
+			{{#if flds}}
+					{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
+					autosave=true }}
+			{{else}}
+					{{> quickForm collection="Invoices" id="editInvoiceForm" type="update" doc=admission.invoice 
+			autosave=true omitFields="autoCreatedItems, amountPaid, datePaid, paymentType,total"}}
+			{{/if}}
 		</div>
+		{{/unless}}
+
 		<br/>
 		Bed Stay : <i class="fa fa-rupee"></i> <b> {{getBedStayTotal admission}} </b>
 		<br/> Grand Total : <b> <i class="fa fa-rupee"></i> {{admission.invoice.grandTotal}}</b>
