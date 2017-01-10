@@ -207,8 +207,8 @@ export const findInvTotal = (inv) => {
 export const findByProp = (coll, prop, val) => _(coll).find(x => x[prop] === val)
 
 export const drugName = (id) => {
-    drug = Drugs.findOne({ _id: id })
-    return drug ? drug.name : "Unknown"
+    drug = Drugs.findOne(parseInt(id))
+    return drug ? drug.name : "Unknown" 
 }
 
 export const findLookup = ( coll, id) => {

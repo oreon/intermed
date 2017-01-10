@@ -67,6 +67,8 @@ Images.allow({
 
 patientName = { type: String, optional: true, autoform: { type: "hidden" }, }
 
+nameSorter = { sort: { 'name': 1 }  }
+
 tmStamp = {
     type: Date,
     optional: true,
@@ -576,6 +578,26 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
 }
 ])
 
+/////  Form Schemas /////////////////////////////
+WardFilterSchema = new SimpleSchema({
+    wards: {
+        type: [String],
+        optional: true,
+        autoform: {
+            type: "select-checkbox",
+            afFieldInput: {
+                multiple: true
+            },
+            options: function () {
+                return Wards.find({},nameSorter).map(function (c) {
+                    return { label: c.name, value: c._id };
+                });
+            }
+        }
+    },
+
+})
+
 PatientDiffDxSchema = new SimpleSchema({
     labFindings: {
         type: [Number],
@@ -608,6 +630,7 @@ PatientDiffDxSchema = new SimpleSchema({
         }
     },
 })
+/////////////  End of Form Schemas ///////////////////
 
 MeasurementSchema = new SimpleSchema([BaseSchema, {
     measurement: {
@@ -708,8 +731,8 @@ ScriptItem = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select2",
             options: function () {
-                return Drugs.find().map(function (c) {
-                    return { label: c.name, value: c._id };
+                return Drugs.find({},{ sort: { 'name': 1 } }).map(function (c) {
+                    return { label: c.name, value: c._id + "" };
                 });
             }
         }

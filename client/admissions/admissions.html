@@ -1,26 +1,30 @@
 <template name="Admissions">
     {{#if Template.subscriptionsReady}}
+    <button class="btn btn-primary" 
+				data-toggle="collapse" data-target="#wardFilterForm">Filter Wards</button>
+    <div class="collapse" id="wardFilterForm">
+     {{>quickForm schema="WardFilterSchema" id="wardFilterForm" template="bootstrap3-horizontal"}}
+    </div>
+
         {{# each wards }}
         {{#if wardHasPatients .}}
-            <article class="recipe">
+            <section class="recipe">
                 <h2> Ward {{name}} </h2>
                 <hr/>
                 {{#each rooms}}
                 {{#if roomHasPatients .}}
                  <div class="row">
-                    <h3> {{name}} </h3>
                     {{#each rbeds}}
-                    <div class="col-sm-6">
-                        {{#if admission}}
+                    {{#if admission}}
+                    <div class="col-sm-4">
                          {{> Admitted admission=admission}}
-                        {{/if}}
                     </div>
+                    {{/if}}
                     {{/each}}
-                    <hr/>
                  </div>
                  {{/if}}
                 {{/each}}
-            </article>
+            </section>
         {{/if}}
         {{/each}}
     {{/if}}

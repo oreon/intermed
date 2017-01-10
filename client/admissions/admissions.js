@@ -3,8 +3,7 @@ import * as utils from '/imports/utils/misc.js';
 Template.Admissions.onCreated(function () {
     var self = this;
     self.autorun(function () {
-        //var id = FlowRouter.getParam('id');
-        //self.subscribe('FullPatient', id);
+        Session.set('currentWards', { wards: null });
         self.subscribe('compWards')
         //self.subscribe('compPts')
         self.subscribe('compAdmissions')
@@ -14,9 +13,15 @@ Template.Admissions.onCreated(function () {
 
 Template.Admissions.helpers({
 
+    getCurrentWards: () => Session.get('currentWards'),
+
     wards: function () {
         //console.log(utils.wardsWithPatients());
-        return Wards.find();
+        currentWards = Session.get('currentWards');
+        if (currentWards && currentWards.wards)
+            return Wards.find({ _id: { $in: currentWards.wards } });
+        else
+            return Wards.find();
     },
 
     rooms: function () {
@@ -26,9 +31,9 @@ Template.Admissions.helpers({
     rbeds: function () {
         return Beds.find({ room: this._id });
     }
-,
-    adm:function(){
-        bed = (typeof this._id === "object")? this._id.toHexString() :this._id;
+    ,
+    adm: function () {
+        bed = (typeof this._id === "object") ? this._id.toHexString() : this._id;
         return Admissions.findOne({ 'currentBedStay.bed': bed })
     }
 
@@ -39,7 +44,7 @@ Template.Admitted.onCreated(function () {
     var self = this;
     this.mapResults = new ReactiveVar(new Map());
     this.autorun(function () {
-    
+
     });
 });
 
@@ -73,3 +78,22 @@ Template.Admitted.helpers({
     // // },
 
 });
+
+
+
+AutoForm.hooks({
+
+    wardFilterForm: {
+        onSubmit: function (insertDoc, updateDoc, currentDoc) {
+        //     console.log(insertDoc)
+        //     console.log(currentDoc)
+        //     console.log(updateDoc)
+
+
+            Session.set('currentWards', insertDoc)
+            this.done();
+            return false;
+        },
+    }
+
+ })
