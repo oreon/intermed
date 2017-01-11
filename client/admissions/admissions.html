@@ -1,16 +1,15 @@
 <template name="Admissions">
     {{#if Template.subscriptionsReady}}
     <button class="btn btn-primary" 
-				data-toggle="collapse" data-target="#wardFilterForm">Filter Wards</button>
-    <div class="collapse" id="wardFilterForm">
-     {{>quickForm schema="WardFilterSchema" id="wardFilterForm" template="bootstrap3-horizontal"}}
+				data-toggle="collapse" data-target="#wardFilterFormPanel">Filter Wards</button>
+    <div class="collapse" id="wardFilterFormPanel">
+     {{>quickForm schema="WardFilterSchema" id="wardFilterForm" template="bootstrap3-horizontal"
+     autosave=true}}
     </div>
 
         {{# each wards }}
-        {{#if wardHasPatients .}}
-            <section class="recipe">
-                <h2> Ward {{name}} </h2>
-                <hr/>
+           <div class="panel">
+                <div class="panel-heading"><strong> Ward {{name}} </strong></div>
                 {{#each rooms}}
                 {{#if roomHasPatients .}}
                  <div class="row">
@@ -24,8 +23,7 @@
                  </div>
                  {{/if}}
                 {{/each}}
-            </section>
-        {{/if}}
+            </div>
         {{/each}}
     {{/if}}
 </template>

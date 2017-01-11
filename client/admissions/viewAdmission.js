@@ -32,6 +32,8 @@ Template.ViewAdmission.onCreated(function () {
         //self.subscribe('AdmScript')
         self.subscribe('Rooms')
         self.subscribe('Beds')
+
+        Meteor.subscribe('ScriptTemplates')
        
         adm = getAdmission()
         this.adm = adm;

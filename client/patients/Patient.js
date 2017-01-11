@@ -39,7 +39,7 @@ Template.Patient.helpers({
     },
 
     isAdmitted: function () {
-        adm = Admissions.findOne({ patient: FlowRouter.getParam('id') })
+        adm = Admissions.findOne({ patient: FlowRouter.getParam('id') , isCurrent:true})
         ////console.log(adm)
         return !!adm
     },

@@ -356,7 +356,7 @@ Meteor.publishComposite('compAdmission', function (id) {
 //    return Scripts.find(utils.tenatendFinder(this.userId));
 //});
 
-Meteor.publish('ScriptTemplates', function (skip, limit) {
+Meteor.publish('ScriptTemplates', function () {
     //Counts.publish(this, 'total_recipes', Recipes.find(utils.tenatendFinder(this.userId)))
     return ScriptTemplates.find(utils.tenatendFinder(this.userId));
 });

@@ -161,6 +161,7 @@
 		{{> afQuickField name='script'}}
 	<button type="submit" class="btn btn-primary">Update</button> 
 	{{/autoForm}}-->
+	{{>quickForm schema="ScriptTemplateFormSchema" id="scriptTemplateSelectorForm" autosave=true}}
 
 	{{>quickForm collection="Scripts" id="updateAdmissionScriptForm" type="update" 
 	doc=admission.script }}

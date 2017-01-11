@@ -18,10 +18,11 @@ Template.Admissions.helpers({
     wards: function () {
         //console.log(utils.wardsWithPatients());
         currentWards = Session.get('currentWards');
+        console.log(currentWards)
         if (currentWards && currentWards.wards)
             return Wards.find({ _id: { $in: currentWards.wards } });
         else
-            return Wards.find();
+            return utils.wardsWithPatients();
     },
 
     rooms: function () {
@@ -85,11 +86,9 @@ AutoForm.hooks({
 
     wardFilterForm: {
         onSubmit: function (insertDoc, updateDoc, currentDoc) {
-        //     console.log(insertDoc)
-        //     console.log(currentDoc)
-        //     console.log(updateDoc)
-
-
+            // console.log(insertDoc)
+            // console.log(currentDoc)
+            // console.log(updateDoc)
             Session.set('currentWards', insertDoc)
             this.done();
             return false;

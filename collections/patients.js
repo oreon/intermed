@@ -67,7 +67,7 @@ Images.allow({
 
 patientName = { type: String, optional: true, autoform: { type: "hidden" }, }
 
-nameSorter = { sort: { 'name': 1 }  }
+nameSorter = { sort: { 'name': 1 } }
 
 tmStamp = {
     type: Date,
@@ -579,18 +579,31 @@ TestResultsSchema = new SimpleSchema([BaseSchema, {
 ])
 
 /////  Form Schemas /////////////////////////////
+ScriptTemplateFormSchema = new SimpleSchema({
+    template: {
+        type: String,
+        optional: true,
+        autoform: {
+            type: "select",
+            options:  () => 
+                 ScriptTemplates.find({},nameSorter).map( (c) => { return { label: c.name, value: c._id } } )
+        }     
+    },
+})
+
 WardFilterSchema = new SimpleSchema({
     wards: {
         type: [String],
         optional: true,
         autoform: {
             type: "select-checkbox",
-            afFieldInput: {
-                multiple: true
-            },
+            // afFieldInput: {
+            //     multiple: true
+            // },
             options: function () {
-                return Wards.find({},nameSorter).map(function (c) {
-                    return { label: c.name, value: c._id };
+                return utils.wardsWithPatients().map(function (c) {
+                   // if (_.includes(buysWards, c.name))
+                        return { label: c.name, value: c._id };
                 });
             }
         }
@@ -731,7 +744,7 @@ ScriptItem = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "select2",
             options: function () {
-                return Drugs.find({},{ sort: { 'name': 1 } }).map(function (c) {
+                return Drugs.find({}, { sort: { 'name': 1 } }).map(function (c) {
                     return { label: c.name, value: c._id + "" };
                 });
             }
@@ -840,6 +853,9 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
                 pt = this.field("patient").value;
                 if (!pt)
                     pt = Session.get('patient')
+
+                if (!pt)
+                    return;
                 allergicDrugs = Patients.findOne(pt).drugAllergies;
 
                 // patients.findOne
@@ -1358,7 +1374,7 @@ Patients.helpers({
     },
     isAdmitted: function () { return !!this.currentAdmisson() },
     currentAdmisson: function () {
-        return Admissions.findOne({ patient: this._id });
+        return Admissions.findOne({ patient: this._id , isCurrent:true});
     }
 })
 
@@ -1629,7 +1645,10 @@ if (Meteor.isServer) {
 
     //CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
-    _.each([Meteor.users, Wards, Rooms, Services, Admissions], function (collection) {
+    _.each([Meteor.users, Wards, Rooms, Beds, Services, Admissions, 
+    ScriptTemplates, Encounters, Scripts,
+    Patients
+    ], function (collection) {
         collection.before.insert(
             ////console.log(userId)
             (userId, doc) => doc.facility = utils.getUserFacility(userId)

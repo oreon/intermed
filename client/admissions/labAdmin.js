@@ -15,7 +15,7 @@ Template.LabAdmin.helpers({
 
     wards: function () {
         ////console.log(utils.wardsWithPatients());
-        return Wards.find( { name: { $in: utils.wardsWithPatients() } });
+        return utils.wardsWithPatients() ;//Wards.find( {} );
     },
 
     rooms: function () {

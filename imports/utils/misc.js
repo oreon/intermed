@@ -137,8 +137,8 @@ export const busyBedsByWard = (ward) =>
         .filter(x => x.wardObj()._id == ward._id)
 
 export const wardHasPatients = (ward) =>
-    wardsWithPatients()
-        .includes(ward.name)
+    _(wardsWithPatients())
+        .findIndex(x => x._id === ward._id ) >= 0 
 
 export const wardHasBedsAvailable = (ward) =>
     wardsWithBedsAvailable()
@@ -150,12 +150,17 @@ export const wardsWithBedsAvailable = () =>
         .uniqBy(x => x.name)
         .value()
 
-
 export const wardsWithPatients = () =>
     _(busyBeds())
-        .map(x => x.wardObj().name)
-        .uniq()
+        .map(x => x.wardObj())
+        .uniqBy(x => x._id)
         .value()
+
+// export const wardsWithPatients = () =>
+//     _(busyBeds())
+//         .map(x => x.wardObj().name)
+//         .uniq()
+//         .value()
 
 export const roomHasPatients = (room) =>
     roomsWithPatients()
@@ -256,6 +261,9 @@ export const getEvery = (type) => {
 
 export const massageScriptItems = (items) =>
     _(items).map(item => {
+        if(!item)
+            return;
+            
         if (!item.duration || !item.duration.for) {
             item.duration = {}
             item.duration.for = item.durationSimple;  //item.frequencySimple
