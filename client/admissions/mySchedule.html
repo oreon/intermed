@@ -1,5 +1,5 @@
 <template name="MySchedule">
-    From {{datef from}} - {{datef to}}
+   <div class="well"> <h4> From {{datef from}} - {{datef to}} </h4> </div>
     <ul class="list-group">
     {{#each findSchedule}}
         <li  class="list-group-item" style="background-color : {{getColor .}} " >

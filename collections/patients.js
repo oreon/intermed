@@ -1674,6 +1674,16 @@ Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
 
 //Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
 
+Scripts.after.findOne((userId, selector, options, doc) => 
+   
+    doc.scriptItems = _.map(doc.scriptItems, (item) => {
+        //item['unitsNeeded'] = item ? findUnits(item) : 0;
+        item['isCurrent'] = new moment(item.endDate).isAfter(new moment());
+        return item;
+    })
+    
+);
+
 
 Invoices.before.insert((userId, doc) => {
     admission = Admissions.findOne(doc.admission)

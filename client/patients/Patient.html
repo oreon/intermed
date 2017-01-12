@@ -125,7 +125,7 @@
 
 <template name="scriptTbl">
     
-    {{# if script.items}} 
+    {{# if script.scriptItems}} 
   
     <h5> {{script.notes}} </h5> <br/>
 
@@ -140,7 +140,7 @@
 		</tr>
         </thead>
         <tbody>
-        {{#each enhItems (script) }}
+        {{#each script.scriptItems }}
         <tr style = "{{rowColorOutdated}}" >
             <td>{{ drugName drug }} {{amount}} {{route}}
              {{frequency.every}} / {{frequency.type}} 
