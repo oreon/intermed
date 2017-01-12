@@ -76,6 +76,32 @@ Template.registerHelper('encounterFromId', () => Encounters.findOne(FlowRouter.g
 
 
 
+// Template.registerHelper('getScriptName', () => {
+//   let currScript = Scripts.findOne({admission:utils.getCurrentAdmission()._id})
+//   let currTemplate = Session.get('scriptTemplate');
+//   console.log(currTemplate)
+//   if(currTemplate && currScript.items.count() == 0 )
+//     return currTemplate.name;
+//   return "none"
+// })
+
+Template.registerHelper('getScriptItemsHelper', () => {
+  // if( currScript.scriptItems || currScript.scriptItems.count()  > 0)
+  //   return;
+
+  let currScript = Scripts.findOne({admission:utils.getCurrentAdmission()._id})
+  let currTemplate = Session.get('scriptTemplate');
+
+  return ['aaa','bbb']
+  
+  if(currTemplate /*&& currScript.scriptItems.count() == 0 */)
+    return utils.logret( () => _(currTemplate.items).map('drug').value ); 
+  //console.log(currTemplate.items)
+  return currScript.scriptItems
+})
+
+
+
 
 Template.registerHelper('arrayify', function (obj) {
   var result = [];

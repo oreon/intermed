@@ -837,18 +837,16 @@ ScriptSchema = new SimpleSchema([BaseSchema, {
             afFieldInput: snFld
         }
     },
-    items: {
+    scriptItems: {
         type: [ScriptItem],
-        optional: true,
+        optional: false,
         autoValue: function () {
-            //debugger
-            //console.log(utils.massageScriptItems(this.value));
-
             return utils.massageScriptItems(this.value);
         },
         custom: function () {
 
             if (Meteor.isClient && this.isSet) {
+                //debugger
 
                 pt = this.field("patient").value;
                 if (!pt)

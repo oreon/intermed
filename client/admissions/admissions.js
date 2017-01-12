@@ -86,9 +86,6 @@ AutoForm.hooks({
 
     wardFilterForm: {
         onSubmit: function (insertDoc, updateDoc, currentDoc) {
-            // console.log(insertDoc)
-            // console.log(currentDoc)
-            // console.log(updateDoc)
             Session.set('currentWards', insertDoc)
             this.done();
             return false;

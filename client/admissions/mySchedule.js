@@ -7,7 +7,7 @@ Template.MySchedule.onCreated(function () {
     var self = this;
     self.autorun(function () {
         var id = FlowRouter.getParam('id');
-        self.subscribe('compAdmissions');
+        self.subscribe('compAdmissionsCurrent');
     });
 });
 
@@ -41,10 +41,10 @@ Template.MySchedule.helpers({
         ////console.log(end.format('LLLL'))
 
         adms = Admissions.find().fetch();
+
         _.map(adms, (adm) => {
             script = Admissions.findOne(adm._id).script();
-            drugAdmins = script ? script.items :[]
-
+            drugAdmins = script ? script.scriptItems :[]
 
             let allItems = _.concat(scriptEnhanced(drugAdmins ), 
                 adm.recurringAssesments? adm.recurringAssesments: [])

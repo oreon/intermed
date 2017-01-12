@@ -161,10 +161,16 @@
 		{{> afQuickField name='script'}}
 	<button type="submit" class="btn btn-primary">Update</button> 
 	{{/autoForm}}-->
-	{{>quickForm schema="ScriptTemplateFormSchema" id="scriptTemplateSelectorForm" autosave=true}}
+	{{#unless admission.script.scriptItems }}
+		{{>quickForm schema="ScriptTemplateFormSchema" id="scriptTemplateSelectorForm" }}
+	{{/unless}}
 
-	{{>quickForm collection="Scripts" id="updateAdmissionScriptForm" type="update" 
+	{{#autoForm collection="Scripts" id="updateAdmissionScriptForm" type="update" 
 	doc=admission.script }}
+		{{> afQuickField name='notes'    }}
+		{{> afQuickField name='scriptItems' value=getScriptItemsHelper    }}
+		<button type="submit" class="btn btn-primary">Update</button>
+	{{/autoForm}}
 
 	{{>quickForm collection="Admissions" id="updateAdmissionAssessmentForm" type="update" 
 	doc=admission fields='recurringAssesments'}}

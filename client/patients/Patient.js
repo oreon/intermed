@@ -17,7 +17,7 @@ Template.Patient.onCreated(function () {
         self.id = id;
         self.subscribe('compPt', id);
         //self.subscribe('Drugs')
-        self.subscribe('compAdmissions')
+        self.subscribe('compAdmissionsPatient', id)
         // self.subscribe('TestResults')
         //self.subscribe('Encounters')
         Session.set('patient', id)
@@ -56,7 +56,7 @@ Template.Patient.events({
         FlowRouter.go('admitPatient', { id: FlowRouter.getParam('id') })
     },
     'click .viewAdmission': function () {
-        adm = Admissions.findOne({ patient: FlowRouter.getParam('id') });
+        adm = Admissions.findOne({ patient: FlowRouter.getParam('id'), isCurrent:true });
         FlowRouter.go('viewAdmission', { id: adm._id })
     },
     'click .encounter': function (event, template) {
@@ -99,7 +99,7 @@ Template.scriptTbl.helpers({
 
     enhItems:function(script){
         ////console.log(script)
-        items =  scriptEnhanced(script).items
+        items =  scriptEnhanced(script).scriptItems
         ////console.log(items)
         return items;
     },

@@ -27,14 +27,14 @@ Template.ViewAdmission.onCreated(function () {
     self.autorun(function () {
 
         var id = FlowRouter.getParam('id');
-       
+
         self.subscribe('compAdmission', id);
         //self.subscribe('AdmScript')
         self.subscribe('Rooms')
         self.subscribe('Beds')
 
         Meteor.subscribe('ScriptTemplates')
-       
+
         adm = getAdmission()
         this.adm = adm;
         if (adm) {
@@ -130,8 +130,8 @@ Template.ViewAdmission.helpers({
         return SummaryTool.summarize(title, content, function (err, summary) {
             if (err) //console.log("Something went wrong man!");
 
-            //console.log(summary);
-            Template.instance().summary.set(summary);
+                //console.log(summary);
+                Template.instance().summary.set(summary);
             //return summary;
 
             // //console.log("Original Length " + (title.length + content.length));
@@ -180,7 +180,6 @@ Template.invoiceTmpl.helpers({
         return adms.bedStaysObj()['total']
     },
 
-
 })
 
 
@@ -188,6 +187,17 @@ Template.invoiceTmpl.helpers({
 
 
 AutoForm.hooks({
+
+    scriptTemplateSelectorForm: {
+        onSubmit: function (insertDoc, updateDoc, currentDoc) {
+            Session.set('scriptTemplate', ScriptTemplates.findOne(insertDoc.template))
+            let currScript = Scripts.findOne({ admission: utils.getCurrentAdmission()._id })
+            currScript.scriptItems = ['a', 'bdf']
+            this.done();
+            return false;
+        },
+    },
+
     editInvoiceForm: {
 
         // formToDoc: function (doc) {
@@ -209,15 +219,30 @@ AutoForm.hooks({
             ////console.log(doc)
             return doc;
         },
-    },    
+    },
 
     updateAdmissionScriptForm: {
-        formToDoc: function (doc) {
+        // formToDoc: function (doc) {
+        //     console.log(doc)
+        //   //doc.items = utils.massageScriptItems(doc.items)
+        //     return doc;
+        // },
+
+        docToForm: function (doc) {
             //console.log(doc)
+            let currTemplate = Session.get('scriptTemplate');
+            if(currTemplate){
+                if(!doc.scriptItems )
+                    doc.scriptItems = currTemplate.items
+                console.log( AutoForm.getFieldValue('scriptTemplateSelectorForm','template') )
+                //Session.set ( 'scriptTemplate' ,null)
+            }
+
             //doc.items = utils.massageScriptItems(doc.items)
             ////console.log(doc)
             return doc;
         },
+
 
         // cv: function (doc) {
         //     allergicDrugs = Patients.findOne(doc.patient).drugAllergies;
@@ -237,7 +262,7 @@ AutoForm.hooks({
     newTestResultsForm: {
 
         formToDoc: function (doc) {
-            adm = Session.get('adm');
+            adm = utils.getCurrentAdmission();
             patient = Session.get('patient')
             doc.patient = patient
             if (!!adm)
@@ -253,7 +278,7 @@ AutoForm.hooks({
 
             //console.log(test)
             //Session.set("editEncounterForm", false);
-            adm = Session.get('adm');
+            adm = utils.getCurrentAdmission();
             //debugger
 
             Admissions.update(
@@ -266,11 +291,11 @@ AutoForm.hooks({
             );
 
             service = Services.findOne({ name: "Lab Tests" })
-            if(!service){
-                throw ('Could not find service Lab Tests' )
+            if (!service) {
+                throw ('Could not find service Lab Tests')
             }
             svc = service.name + '-' + testObj.labTestName()
-            
+
             inv = Invoices.findOne({ "admission": adm._id })
             utils.createInvoiceItem(inv, svc, 200)
 
@@ -315,13 +340,13 @@ AutoForm.hooks({
 
 Template.todosPt.helpers({
     selector() {
-        return { patient: Session.get('adm').patient };
+        return { patient: utils.getCurrentAdmission().patient };
     }
 });
 
 Template.testResults.helpers({
     selector() {
-        adm = Session.get('adm');
+        adm = utils.getCurrentAdmission();
         patient = Session.get('patient')
         if (adm && adm != null)
             return { admission: adm._id };

@@ -32,9 +32,10 @@ export function scheduleForTime(item, timeHrs) {
     return calcShedByHours(item, total)
 }
 
-
 export function scriptEnhanced(script) {
-    script.items = _.map(script.items, (item) => {
+    if(!script)
+        return;
+    script.scriptItems = _.map(script.scriptItems, (item) => {
         //TODO user must be able to specfiy the start date themselves
         // item['startDate'] =  item.createdAt ? item.createdAt : item.updatedAt ;
         //item['endDate'] = new moment(item['startDate']).add(item.duration.for, item.duration.type.toLowerCase())
@@ -50,6 +51,8 @@ export function calcShedForIterval(item, start, end) {
     //total = findUnits(item)
     //let hrs = end.diff(start, 'hours')
     ////console.log(`diff is ${hrs} ${total}`)
+    if(!item || !item.frequency)
+        return ;
     let oncePerX = calcHours(item.frequency.type) / item.frequency.every
     if(item.frequency.type == "Day" && item.route != 'IV'){
 

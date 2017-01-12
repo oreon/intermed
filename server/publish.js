@@ -259,16 +259,8 @@ Meteor.publishComposite('compWards', {
 
 })
 
-Meteor.publishComposite('compAdmissions', {
-    find: function () {
-        return Admissions.find(
-            Object.assign(utils.tenatendFinder(this.userId), { "currentBedStay": { $exists: true } }),
-            {
-                sort: { name: -1 },
-                limit: 100
-            });
-    },
-    children: [
+
+compAdmissionsChildren = [
         {
             find: function (adm) {
                 return Patients.find(
@@ -290,32 +282,33 @@ Meteor.publishComposite('compAdmissions', {
                     { admission: adm._id },
                     { sort: { name: -1 }, limit: 1/*, fields: {profile: 1}*/ });
             },
-        },
+},]
 
-    ]
+Meteor.publishComposite('compAdmissions', {
+    find: function () {
+        return Admissions.find(
+            Object.assign(utils.tenatendFinder(this.userId), { "currentBedStay": { $exists: true } }),
+            {
+                sort: { name: -1 },
+                limit: 100
+            });
+    },
+    children: compAdmissionsChildren
 })
 
-
-Meteor.publishComposite('admin_tabular_Patients', function (id) {
-    return {
-        find: function () {
-            return Admissions.find(
-                Object.assign(utils.tenatendFinder(this.userId),
-                    { /*"currentBedStay": {$exists: true},*/ _id: id }),
-                { sort: { lastName: -1 }, limit: 1000 });
-        }
-    }
+Meteor.publishComposite('compAdmissionsCurrent', {
+    find: function () {
+        return Admissions.find(
+            Object.assign(utils.tenatendFinder(this.userId), { "isCurrent": true  }),
+            {
+                sort: { name: -1 },
+                limit: 100
+            });
+    },
+    children: compAdmissionsChildren
 })
 
-Meteor.publishComposite('compAdmission', function (id) {
-    return {
-        find: function () {
-            return Admissions.find(
-                Object.assign(utils.tenatendFinder(this.userId),
-                    { /*"currentBedStay": {$exists: true},*/ _id: id }),
-                { sort: { name: -1 }, limit: 1 });
-        },
-        children: [
+export const admChildren = [
             {
                 find: function (adm) {
                     return Patients.find(
@@ -345,6 +338,29 @@ Meteor.publishComposite('compAdmission', function (id) {
                 },
             },
         ]
+
+
+Meteor.publishComposite('compAdmission', function (id) {
+    return {
+        find: function () {
+            return Admissions.find(
+                Object.assign(utils.tenatendFinder(this.userId),
+                    { /*"currentBedStay": {$exists: true},*/ _id: id }),
+                { sort: { name: -1 }, limit: 1 });
+        },
+        children: admChildren
+    }
+})
+
+Meteor.publishComposite('compAdmissionsPatient', function (ptId) {
+    return {
+        find: function () {
+            return Admissions.find(
+                Object.assign(utils.tenatendFinder(this.userId),
+                    { /*"currentBedStay": {$exists: true},*/ patient: ptId }),
+                { sort: { name: -1 }, limit: 1 });
+        },
+        children: admChildren
     }
 })
 

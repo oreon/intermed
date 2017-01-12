@@ -263,7 +263,7 @@ export const massageScriptItems = (items) =>
     _(items).map(item => {
         if(!item)
             return;
-            
+
         if (!item.duration || !item.duration.for) {
             item.duration = {}
             item.duration.for = item.durationSimple;  //item.frequencySimple
@@ -357,3 +357,5 @@ export const insertValidated = (schema, coll, data) => {
     coll.insert(data)
 }
 
+export const getCurrentAdmission = () => Session.get('adm')
+export const getCurrentPatient = () => Session.get('patient')
