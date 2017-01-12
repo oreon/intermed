@@ -1,25 +1,19 @@
 <template name="Patient">
+    {{#if Template.subscriptionsReady}}
+    <article class="recipe">
+        <h3> {{> patInfo patient=patient}} </h3>
+        {{#if patient.permanentMeds}} Permanent Meds: {{#each patient.permanentMeds}}
+        <b>{{.}},</b> {{/each}} {{/if}}
 
-	<article class="recipe">
-         <h3> {{> patInfo patient=patient}} </h3>
-         {{#if patient.permanentMeds}}
-         Permanent Meds: {{#each patient.permanentMeds}}
-         <b>{{.}},</b>
-         {{/each}}
-         {{/if}}
-
-         <div class="well well-sm">
-             {{#if isAdmitted}}
+        <div class="well well-sm">
+            {{#if isAdmitted}}
             <button class="btn btn-primary viewAdmission">Go to Admission</button>
-            <button class="btn btn-warning visit">Visit</button> 
-            {{else}}
+            <button class="btn btn-warning visit">Visit</button> {{else}}
             <br/>
-            <a class="btn btn-primary "  href="/admitPatient/{{patient._id}}" >Admit</a>
-            <a class="btn btn-primary " href="/events/{{patient._id}}"> New Appointment </a>
-            {{/if}}     
+            <a class="btn btn-primary " href="/admitPatient/{{patient._id}}">Admit</a>
+            <a class="btn btn-primary " href="/events/{{patient._id}}"> New Appointment </a> {{/if}}
 
-              <button class="btn btn-primary" 
-				data-toggle="collapse" data-target="#morePtInfo">More Info</button>  
+            <button class="btn btn-primary" data-toggle="collapse" data-target="#morePtInfo">More Info</button>
 
             <div class="collapse" id="morePtInfo">
                 {{#if patient.socialHistory}}
@@ -27,242 +21,258 @@
                     <div class="panel-heading">Social History</div>
                     <div class="panel-body">{{patient.socialHistory}}</div>
                 </div>
-                {{/if}}
-                    
-                {{#if patient.pastMedicalHistory}}     
+                {{/if}} {{#if patient.pastMedicalHistory}}
                 <div class="panel panel-primary">
                     <div class="panel-heading">Medical History</div>
                     <div class="panel-body">{{patient.pastMedicalHistory}}</div>
                 </div>
                 {{/if}}
-            </div>         
-                
-         </div>
-    
-       
-    <ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#enc"><i class="fa fa-database"></i>Encounters</a></li>
-		<li><a data-toggle="tab" href="#drugAllergies"><i class="fa  fa-exclamation-circle"></i> Allergies</a></li>
-		
-		<li><a data-toggle="tab" href="#immunizations"><i class="fa fa-bug"></i>Immunizations</a></li>
-        <li><a data-toggle="tab" href="#ordered"><i class="fa fa-thermometer-full"></i>Labs</a></li>
-		<li><a data-toggle="tab" href="#testResults"> <i class="fa fa-list"></i>Results</a></li>
-		<li><a data-toggle="tab" href="#ptGraphs"><i class="fa fa-line-chart"></i>Graphs</a></li>
-        <li><a data-toggle="tab" href="#admissions"><i class="fa fa-line-chart"></i>Admissions</a></li>
-        <li><a data-toggle="tab" href="#docs"><i class="fa fa-file-image-o"></i>Documents</a></li>
-	</ul>
+            </div>
 
-	<div class="tab-content">
-		<div id="enc" class="tab-pane fade in active">
-			{{> encountersTmpl patient=patient }} 
-		</div>
-        <div id="drugAllergies" class="tab-pane fade ">
-            {{> drugAllergies patient=patient }}
-		</div>
-        <div id="immunizations" class="tab-pane fade ">
-            {{> immunizationsTmpl patient=patient}}
-		</div>
-
-        <div id="ordered" class="tab-pane fade">
-            {{#autoForm collection="Patients" id="updatePtTestsForm" type="update" doc=patient}}
-                {{> afQuickField name='orderedLabsAndImages'}} 	
-                <button type="submit" class="btn btn-primary">Update</button> 
-            {{/autoForm}}
-		</div>
-
-		<div id="testResults" class="tab-pane fade">
-            {{> testResults}}
-		</div>
-
-		<div id="ptGraphs" class="tab-pane fade">
-			No graphs yet.
-		</div>
-
-        <div id="admissions" class="tab-pane fade">
-			{{> tabular table=TabularTables.AdmissionsTbl selector=currentPtSelector
-			class="table table-striped table-bordered table-condensed"}}
-		</div>
-
-        <div id="docs" class="tab-pane fade">
-            {{> imageUploader}}
         </div>
-	</div>
-		<i class="fa fa-trash"></i>
-		<a href="/editPatient/{{patient._id}}"><i class="fa fa-pencil"></i></a>
-	</article>
 
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#enc"><i class="fa fa-database"></i>Encounters</a></li>
+            <li><a data-toggle="tab" href="#drugAllergies"><i class="fa  fa-exclamation-circle"></i> Allergies</a></li>
+
+            <li><a data-toggle="tab" href="#immunizations"><i class="fa fa-bug"></i>Immunizations</a></li>
+            <li><a data-toggle="tab" href="#ordered"><i class="fa fa-thermometer-full"></i>Labs</a></li>
+            <li>
+                <a data-toggle="tab" href="#testResults"> <i class="fa fa-list"></i>Results</a>
+            </li>
+            <li><a data-toggle="tab" href="#ptGraphs"><i class="fa fa-line-chart"></i>Graphs</a></li>
+            <li><a data-toggle="tab" href="#admissions"><i class="fa fa-line-chart"></i>Admissions</a></li>
+            <li><a data-toggle="tab" href="#docs"><i class="fa fa-file-image-o"></i>Documents</a></li>
+            <li><a data-toggle="tab" href="#scheduleEvents"><i class="fa fa-calendar"></i>Upcoming</a></li>
+
+        </ul>
+
+        <div class="tab-content">
+            <div id="enc" class="tab-pane fade in active">
+                {{> encountersTmpl patient=patient }}
+            </div>
+            <div id="drugAllergies" class="tab-pane fade ">
+                {{> drugAllergies patient=patient }}
+            </div>
+            <div id="immunizations" class="tab-pane fade ">
+                {{> immunizationsTmpl patient=patient}}
+            </div>
+
+            <div id="ordered" class="tab-pane fade">
+                {{#autoForm collection="Patients" id="updatePtTestsForm" type="update" doc=patient}} {{> afQuickField name='orderedLabsAndImages'}}
+                <button type="submit" class="btn btn-primary">Update</button> {{/autoForm}}
+            </div>
+
+            <div id="testResults" class="tab-pane fade">
+                {{> testResults}}
+            </div>
+
+            <div id="ptGraphs" class="tab-pane fade">
+                No graphs yet.
+            </div>
+
+            <div id="admissions" class="tab-pane fade">
+                {{> tabular table=TabularTables.AdmissionsTbl selector=currentPtSelector class="table table-striped table-bordered table-condensed"}}
+            </div>
+
+            <div id="docs" class="tab-pane fade">
+                {{> imageUploader}}
+            </div>
+
+            <div id="scheduleEvents" class="tab-pane fade">
+                {{> scheduledEvents patient=patient}}
+            </div>
+
+
+        </div>
+        <i class="fa fa-trash"></i>
+        <a href="/editPatient/{{patient._id}}"><i class="fa fa-pencil"></i></a>
+    </article>
+    {{/if}}
 </template>
 
 <template name="encountersTmpl">
-<div class="well">
-{{#if isSet  'editEncounterForm'}} 
-    {{> quickForm collection="Encounters" id="newEncounterForm22" type="insert" 
-    validation="blur" class="form-horizontal"}} 
-    <button class="btn-primary cancelEditEncounter">CancelEdit</button> 
-{{else}} 
-    <button class="btn btn-primary encounter"><i class="fa fa-plus"></i> </button>
-    <p>
-    {{#each patient.encounters}} 
-    <div class="panel-group">
-          <div class="panel panel-default">
-            <div class="panel-heading"><b>Dr Raj Kohli {{datef createdAt}} {{reason}} 
+    <div class="well">
+        {{#if isSet 'editEncounterForm'}} {{> quickForm collection="Encounters" id="newEncounterForm22" type="insert" validation="blur"
+        class="form-horizontal"}}
+        <button class="btn-primary cancelEditEncounter">CancelEdit</button> {{else}}
+        <button class="btn btn-primary encounter"><i class="fa fa-plus"></i> </button>
+        <p>
+            {{#each patient.encounters}}
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><b>Dr Raj Kohli {{datef createdAt}} {{reason}} 
                 </b>
-                <a href="/editEncounter/{{_id}}" class="btn btn-primary"> <i class="fa fa-pencil"></i> </a>
+                        <a href="/editEncounter/{{_id}}" class="btn btn-primary"> <i class="fa fa-pencil"></i> </a>
+                    </div>
+                    <div class="panel-body">
+                        <h5> Dx: {{preliminaryDiagnosis}} </h5>
+                        {{> scriptTbl script = script}}
+                    </div>
+                </div>
+
             </div>
-            <div class="panel-body">
-                <h5> Dx: {{preliminaryDiagnosis}} </h5>
-                {{> scriptTbl script = script}}
-             </div>
-        </div>
-        
+            {{/each}}
+        </p>
+        {{/if}}
     </div>
-    {{/each}}
-    </p>
-{{/if}}
-</div>
+
 </template>
 
 
 <template name="scriptTbl">
-    
-    {{# if script.scriptItems}} 
-  
+
+    {{# if script.scriptItems}}
+
     <h5> {{script.notes}} </h5> <br/>
 
     <table class="table table-striped table-condensed">
         <thead>
-		<tr style="background:#88a; color: #ffd">
-			<th> Drug</th>
-            <th> Start Date </th> 
-            <th> End Date </th>
-            <th> Units </th>
-            <th> Instructions </th>
-		</tr>
-        </thead>
-        <tbody>
-        {{#each script.scriptItems }}
-        <tr style = "{{rowColorOutdated}}" >
-            <td>{{ drugName drug }} {{amount}} {{route}}
-             {{frequency.every}} / {{frequency.type}} 
-            {{duration.for}} {{duration.type}}(s)
-            </td>
-            <td> {{datef startDate }}</td>
-            <td> {{datef endDate }}</td>
-            <td> {{unitsNeeded }}</td>
-            <td> {{instructions}}</td>
-        </tr>
-        {{/each}} 
-        </tbody>
-	</table>
-    
-     {{/if}}
+            <tr style="background:#88a; color: #ffd">
+<th> Drug</th>
+<th> Start Date </th>
+<th> End Date </th>
+<th> Units </th>
+<th> Instructions </th>
+</tr>
+</thead>
+<tbody>
+    {{#each script.scriptItems }}
+    <tr style="{{rowColorOutdated}}" >
+<td>{{ drugName drug }} {{amount}} {{route}} {{frequency.every}} / {{frequency.type}} {{duration.for}} {{duration.type}}(s)
+</td>
+<td> {{datef startDate }}</td>
+<td> {{datef endDate }}</td>
+<td> {{unitsNeeded }}</td>
+<td> {{instructions}}</td>
+</tr>
+{{/each}}
+</tbody>
+</table>
+
+{{/if}}
 </template>
 
 <template name="recurringMsmtTmpl">
     {{admission.reason}}
-   <table class="table">
-       <thead>
-		<tr style="background:#88a; color: #ffd">
-			<th> Measurement</th>
-     		<th> Frequency</th>
-        	<th> Instructions </th>
-            <th> Start Date </th> 
-     	</tr>
-       </thead>
-         <tbody>
-        {{#each recurringAssessments }}
-        <tr>
-            <td>{{ name }}</td>
-            <td> {{frequency.every}} / {{frequency.type}}</td>
-            <td> {{instructions}}</td>
-            <td> {{datef startDate }}</td>
-        </tr>
-        {{/each}} 
-         </tbody>
-	</table>
+    <table class="table">
+        <thead>
+            <tr style="background:#88a; color: #ffd">
+<th> Measurement</th>
+<th> Frequency</th>
+<th> Instructions </th>
+<th> Start Date </th>
+</tr>
+</thead>
+<tbody>
+    {{#each recurringAssessments }}
+    <tr>
+        <td>{{ name }}</td>
+        <td> {{frequency.every}} / {{frequency.type}}</td>
+        <td> {{instructions}}</td>
+        <td> {{datef startDate }}</td>
+    </tr>
+    {{/each}}
+</tbody>
+</table>
 </template>
 
 <template name="drugAllergies">
-    {{#if patient.drugAllergies}} 
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
+    {{#if patient.drugAllergies}}
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
             <tr style="background:navy; color: #ffd">
-                <th>Drug</th>
-                <th> Allergy Serverity</th>
-                <th> </th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each patient.drugAllergies}}
-            <tr>
-                <td>{{drugName  drug }}</td>
-                <td> {{severity}} </td>
-                <td> <button class="btn btn-deny deleteAllergy" name='{{drug}}' > <i class="fa fa-trash"></i> </button> </td>
-            </tr>
-            {{/each}}
-            </tbody> 
-        </table>
-    {{else}}
-        No Allergies recorded.
-    {{/if}}
-
-    {{> quickForm id="insertDrugAllergyForm" type="update-pushArray" collection="Patients" 
-      doc=patient scope="drugAllergies"}}
+<th>Drug</th>
+<th> Allergy Serverity</th>
+<th> </th>
+</tr>
+</thead>
+<tbody>
+    {{#each patient.drugAllergies}}
+    <tr>
+        <td>{{drugName drug }}</td>
+        <td> {{severity}} </td>
+        <td> <button class="btn btn-deny deleteAllergy" name='{{drug}}'> <i class="fa fa-trash"></i> </button> </td>
+    </tr>
+    {{/each}}
+</tbody>
+</table>
+{{else}} No Allergies recorded. {{/if}} {{> quickForm id="insertDrugAllergyForm" type="update-pushArray" collection="Patients"
+doc=patient scope="drugAllergies"}}
 </template>
 
 <template name="immunizationsTmpl">
-    {{#if patient.immunizations}} 
-        <table class="table table-striped ">
-            <thead>
+    {{#if patient.immunizations}}
+    <table class="table table-striped ">
+        <thead>
             <tr style="background:navy; color: #ffd">
-                <th>Vaccine</th>
-                <th> Date</th>
-                <th> </th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each patient.immunizations}}
-            <tr>
-                <td>{{vaccine}}</td>
-                <td> {{datef updatedAt}} </td>
-                <td> <button class="btn btn-deny deleteVaccine" name='{{vaccine}}' > <i class="fa fa-trash"></i> </button> </td>
-            </tr>
-            {{/each}} 
-            </tbody>
-        </table>
-    {{else}}
-        No Immunizations recorded.
-    {{/if}}
-
-    {{> quickForm id="insertImmunizationForm" type="update-pushArray" collection="Patients" 
-      doc=patient scope="immunizations"}}
+<th>Vaccine</th>
+<th> Date</th>
+<th> </th>
+</tr>
+</thead>
+<tbody>
+    {{#each patient.immunizations}}
+    <tr>
+        <td>{{vaccine}}</td>
+        <td> {{datef updatedAt}} </td>
+        <td> <button class="btn btn-deny deleteVaccine" name='{{vaccine}}'> <i class="fa fa-trash"></i> </button> </td>
+    </tr>
+    {{/each}}
+</tbody>
+</table>
+{{else}} No Immunizations recorded. {{/if}} {{> quickForm id="insertImmunizationForm" type="update-pushArray" collection="Patients"
+doc=patient scope="immunizations"}}
 </template>
 
 <template name="basicWizard">
-  {{> wizard id="basic-wizard" steps=steps}}
+    {{> wizard id="basic-wizard" steps=steps}}
 </template>
 
 
 <template name="imageView">
-  <div class="imageView">
-    {{#each images}}
-      <div>
-        <a href="{{this.url}}" target="_blank"><img src="{{this.url store='thumbs' uploading='/images/uploading.gif' storing='/images/storing.gif'}}" alt="" class="thumbnail" /></a>
-      </div>
-    {{/each}}
-  </div>
+    <div class="imageView">
+        {{#each images}}
+        <div>
+            <a href="{{this.url}}" target="_blank"><img src="{{this.url store='thumbs' uploading='/images/uploading.gif' storing='/images/storing.gif'}}" alt=""
+                    class="thumbnail" /></a>
+        </div>
+        {{/each}}
+    </div>
 </template>
 
 
 <template name="patInfo">
-    <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> 
-        {{#if patient.pregnant}}<span style="color: red"><b> Pregnant </b> </span>{{/if}} 
-        {{extra}}
-        <h5> 
-        {{#each patient.chronicConditions}}
-            {{.}}
-        {{/each}} 
-        </h5>
+    <a href="/patient/{{patient._id}}">{{patient.fullName}}</a> {{#if patient.pregnant}}<span style="color: red"><b> Pregnant </b> </span>{{/if}} {{extra}}
+<h5>
+    {{#each patient.chronicConditions}} {{.}} {{/each}}
+</h5>
 </template>
 
 
+<template name="scheduledEvents">
+    <ul class="nav nav-tabs">
+        <li ><a data-toggle="tab" href="#byProc"><i class="fa fa-database"></i>By Procedure</a></li>
+        <li class="active"><a data-toggle="tab" href="#all"> By Date</a></li>
+    </ul>
+
+    <div class="tab-content">
+    <div id="byProc" class="tab-pane fade ">
+        {{# each getEvents patient}}
+        <ul class="list-group">{{item.name}} , Every {{item.frequency.every}} days {{#each dates}}
+            <li class="list-group-item">{{datef .}} </li> {{/each}}
+        </ul>
+        {{/each}}
+    </div>
+
+    <div id="all" class="tab-pane fade in active">
+          <ul class="list-group">
+         {{# each getEventsByDate patient}}
+           <li class="list-group-item"> {{item.name}}  -  {{datef date}} </li>
+         {{/each}}
+         </ul>
+    </div>
+    </div>
+
+</template>

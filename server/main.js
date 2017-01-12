@@ -72,11 +72,41 @@ Meteor.startup(() => {
         ChronicDiseases.insert({ "name": "Asthma" })
         ChronicDiseases.insert({ "name": "Cancer" })
         ChronicDiseases.insert({ "name": "CAD" })
-       // ChronicDiseases.insert({ "name": "Cancer " })
+        ChronicDiseases.insert({ "name": "Hypertension" })
         ChronicDiseases.insert({ "name": "CKD" })
         ChronicDiseases.insert({ "name": "Diabetes" })
         ChronicDiseases.insert({ "name": "Osteoporosis" })
         ChronicDiseases.insert({ "name": "Rheumatoid Arthritis" })
+    }
+    if (Charts.find().count() == 0) {
+        Charts.insert({
+            "name": "Diabetes",
+            assesments: [
+                { "name": "HbA1C", "frequency": { "every": 90, "type": "Day" } },
+                { "name": "Foot Exam", "frequency": { "every": 180, "type": "Day" } },
+                { "name": "Eye Exam", "frequency": { "every": 180, "type": "Day" } },
+                { "name": "Renal and Heart Exam", "frequency": { "every": 120, "type": "Day" } },
+            ]
+        })
+
+        Charts.insert({
+            "name": "Hypertension",
+            assesments: [
+                { "name": "Eye Exam", "frequency": { "every": 180, "type": "Day" } },
+                { "name": "Blood pressure", "frequency": { "every": 7, "type": "Day" } },
+                { "name": "Renal Panel", "frequency": { "every": 120, "type": "Day" } },
+                { "name": "Blood Lipids", "frequency": { "every": 180, "type": "Day" } },
+            ]
+        })
+
+        Charts.insert({
+            "name": "Asthma",
+            assesments: [
+                { "name": "Spirometry", "frequency": { "every": 180, "type": "Day" } },
+            ]
+        })
+
+
     }
 
 

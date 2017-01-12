@@ -16,6 +16,8 @@ Meteor.subscribe('Beds')
 
 Meteor.subscribe('Admissions')
 Meteor.subscribe('ScriptTemplates')
+Meteor.subscribe('Charts')
+
 
 Meteor.subscribe('userData')
 

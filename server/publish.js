@@ -49,6 +49,10 @@ Meteor.publish('Drugs', function () {
     return Drugs.find({});
 });
 
+Meteor.publish('Charts', function () {
+    return Charts.find({});
+});
+
 Meteor.publish('Specializations', function () {
     return Specializations.find({});
 })

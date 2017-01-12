@@ -120,26 +120,26 @@ Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
 
 class ChartsCollection extends Mongo.Collection {
-    insert(list, callback, language = 'en') {
-        const ourList = list;
-        if (!ourList.name) {
-            const defaultName = TAPi18n.__('lists.insert.list', null, language);
-            let nextLetter = 'A';
-            ourList.name = `${defaultName} ${nextLetter}`;
+    // insert(list, callback, language = 'en') {
+    //     const ourList = list;
+    //     if (!ourList.name) {
+    //         const defaultName = TAPi18n.__('lists.insert.list', null, language);
+    //         let nextLetter = 'A';
+    //         ourList.name = `${defaultName} ${nextLetter}`;
 
-            while (this.findOne({ name: ourList.name })) {
-                // not going to be too smart here, can go past Z
-                nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-                ourList.name = `${defaultName} ${nextLetter}`;
-            }
-        }
+    //         while (this.findOne({ name: ourList.name })) {
+    //             // not going to be too smart here, can go past Z
+    //             nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
+    //             ourList.name = `${defaultName} ${nextLetter}`;
+    //         }
+    //     }
 
-        return super.insert(ourList, callback);
-    }
-    remove(selector, callback) {
-        Todos.remove({ listId: selector });
-        return super.remove(selector, callback);
-    }
+    //     return super.insert(ourList, callback);
+    // }
+    // remove(selector, callback) {
+    //     Todos.remove({ listId: selector });
+    //     return super.remove(selector, callback);
+    // }
 }
 
 // class LabFindingsCollection extends Mongo.Collection {}
@@ -147,7 +147,7 @@ class ChartsCollection extends Mongo.Collection {
 class DifferentialsCollection extends Mongo.Collection { }
 
 
-export const Charts = new ChartsCollection('charts');
+/*export const*/ Charts = new ChartsCollection('charts');
 
 LabFindings = new Mongo.Collection('labFindings');
 PhysicalFindings = new Mongo.Collection('physicalFindings');
@@ -168,6 +168,8 @@ EventSchema = new SimpleSchema({
     creatorId: creatorId,
     date: tmStamp
 })
+
+
 
 
 SpecializationsSchema = new SimpleSchema([BaseSchema, {
@@ -585,9 +587,9 @@ ScriptTemplateFormSchema = new SimpleSchema({
         optional: true,
         autoform: {
             type: "select",
-            options:  () => 
-                 ScriptTemplates.find({},nameSorter).map( (c) => { return { label: c.name, value: c._id } } )
-        }     
+            options: () =>
+                ScriptTemplates.find({}, nameSorter).map((c) => { return { label: c.name, value: c._id } })
+        }
     },
 })
 
@@ -602,8 +604,8 @@ WardFilterSchema = new SimpleSchema({
             // },
             options: function () {
                 return utils.wardsWithPatients().map(function (c) {
-                   // if (_.includes(buysWards, c.name))
-                        return { label: c.name, value: c._id };
+                    // if (_.includes(buysWards, c.name))
+                    return { label: c.name, value: c._id };
                 });
             }
         }
@@ -1033,6 +1035,15 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             type: "select-radio"
         }
     },
+    appliedCharts:{
+        type: [String],
+        optional: true,
+        autoform: {
+            type: "select-checkbox",
+            options:() => Charts.find({}, nameSorter).map(c => {return {label: c.name, value: c.name} })
+        }
+    },
+   
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
     orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
@@ -1268,6 +1279,17 @@ Schema.wardTemp = new SimpleSchema({
     }
 });
 
+ChartSchema = new SimpleSchema({
+    name: { type: String },
+    assesments: {
+        type: [RecurringAssesmentItemSchema],
+        //optional: true,
+        // autoValue: function () {
+        //     return utils.massageScriptItems(this.value);
+        // },
+    },
+})
+
 ///////////  End of schema defs ///////////////////
 
 
@@ -1372,7 +1394,7 @@ Patients.helpers({
     },
     isAdmitted: function () { return !!this.currentAdmisson() },
     currentAdmisson: function () {
-        return Admissions.findOne({ patient: this._id , isCurrent:true});
+        return Admissions.findOne({ patient: this._id, isCurrent: true });
     }
 })
 
@@ -1643,9 +1665,9 @@ if (Meteor.isServer) {
 
     //CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
-    _.each([Meteor.users, Wards, Rooms, Beds, Services, Admissions, 
-    ScriptTemplates, Encounters, Scripts,
-    Patients
+    _.each([Meteor.users, Wards, Rooms, Beds, Services, Admissions,
+        ScriptTemplates, Encounters, Scripts,
+        Patients
     ], function (collection) {
         collection.before.insert(
             ////console.log(userId)
@@ -1674,14 +1696,14 @@ Scripts.before.update((userId, doc, fieldNames, modifier, options) => {
 
 //Scripts.before.insert((userId, doc) => doc.items = massageScriptItems(modifier.$set.items))
 
-Scripts.after.findOne((userId, selector, options, doc) => 
-   
+Scripts.after.findOne((userId, selector, options, doc) =>
+
     doc.scriptItems = _.map(doc.scriptItems, (item) => {
         //item['unitsNeeded'] = item ? findUnits(item) : 0;
         item['isCurrent'] = new moment(item.endDate).isAfter(new moment());
         return item;
     })
-    
+
 );
 
 
@@ -1941,3 +1963,5 @@ Specializations.attachSchema(SpecializationsSchema);
 LabFindings.attachSchema(LabFindingSchema)
 PhysicalFindings.attachSchema(PhysicalFindingSchema)
 Differentials.attachSchema(DifferentialsSchema)
+
+Charts.attachSchema(ChartSchema)
