@@ -98,13 +98,12 @@
 		</div>
 
 		<div id="measurements" class="tab-pane fade ">
-			{{> measurementTmpl admission=admission }} 
+			{{> measurementTmplAdm admission=admission }} 
 		</div>
 
 		<div id="invoice" class="tab-pane fade">
 			<br/>
 			{{> invoiceTmpl admission=admission}}
-		
 		</div>
 
 		<div id="todos" class="tab-pane fade">
@@ -219,43 +218,14 @@
 		fields="labsAndImages" doc=admission autosave=true  }} 
 </template>
 
-<template name="measurementTmpl">
-	{{> msmtTbl admission=admission}}
-	<!--<div>
-	{{>quickForm fields='recurringAssessments' collection="Admissions" 
-		id="updateAssessmentForm" type="update" doc=admission }}
-	</div>-->
-	<div>
-    {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
-      doc=admission scope="measurements"}}
-	</div>
-</template>
 
-<template name="msmtTbl">
-	    {{#if admission.measurements}} 
-        <table class="table table-striped table-bordered table-condensed">
-            <tr style="background:#88a; color: #ffd">
-                <th>Name</th>
-                <th>Value</th>
-				<th>Created</th>
-				<th> </th>
-            </tr>
-            {{#each admission.measurements}}
-            <tr>
-                <td>{{measurement}}</td>
-                <td> {{mainValue}} </td>
-				 <td> {{datef updatedAt}} </td>
-                <td> <button class="btn btn-deny deleteAllergy" name='{{drug}}' > Delete </button> </td>
-            </tr>
-            {{/each}} 
-        </table>
-    {{else}}
-        <h3> No Measurements recorded yet. </h3>
-    {{/if}}
-</template>
 
 <template name="PtGraphs">
-	{{createChartData admission}}
+	{{#if admission}}
+		{{createChartData admission}}
+	{{else}}
+		{{createChartDataPt patient}}
+	{{/if}}
 	{{#each chartNames}}
 		<div id={{.}}>{{drawChart .}}</div>
 		<hr/>

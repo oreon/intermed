@@ -7,8 +7,8 @@ import moment from 'moment'
 user = { _id: 44, profile: { 'firstName': 'ddf' } }
 
 
-export const print = (x) =>{
-console.log(x);
+export const print = (x) => {
+    console.log(x);
 }
 
 
@@ -138,7 +138,7 @@ export const busyBedsByWard = (ward) =>
 
 export const wardHasPatients = (ward) =>
     _(wardsWithPatients())
-        .findIndex(x => x._id === ward._id ) >= 0 
+        .findIndex(x => x._id === ward._id) >= 0
 
 export const wardHasBedsAvailable = (ward) =>
     wardsWithBedsAvailable()
@@ -213,11 +213,11 @@ export const findByProp = (coll, prop, val) => _(coll).find(x => x[prop] === val
 
 export const drugName = (id) => {
     drug = Drugs.findOne(parseInt(id))
-    return drug ? drug.name : "Unknown" 
+    return drug ? drug.name : "Unknown"
 }
 
-export const findLookup = ( coll, id) => {
-    drug = coll.findOne( id )
+export const findLookup = (coll, id) => {
+    drug = coll.findOne(id)
     return drug ? drug.name : "Unknown"
 }
 
@@ -254,14 +254,14 @@ export const getEvery = (type) => {
     if (type === "bid") return 2;
     if (type === "tid") return 3;
     if (type === "qid") return 4;
-    if(type === "q4h") return 6;
-    if(type === "q2h") return 12;
-    if(type === "q1h") return 24;
+    if (type === "q4h") return 6;
+    if (type === "q2h") return 12;
+    if (type === "q1h") return 24;
 }
 
 export const massageScriptItems = (items) =>
     _(items).map(item => {
-        if(!item)
+        if (!item)
             return;
 
         if (!item.duration || !item.duration.for) {
@@ -276,7 +276,7 @@ export const massageScriptItems = (items) =>
             item.frequency.type = 'Day'
         }
 
-        if(!item.quantity ) item.quantity = 1
+        if (!item.quantity) item.quantity = 1
         //debugger
         //console.log(item)
         item.startDate = item.startDate || new Date();
@@ -294,7 +294,7 @@ export const setPtName = (doc) => doc.patientName = Patients.findOne(doc.patient
 export const getUserFacility = (userId) =>
     safeTask(() => Meteor.users.findOne(userId))
         .map(x => x.profile.facility)
-        .fork(e => { console.log(userId) ; console.log(e) }, s => s)
+        .fork(e => { console.log(userId); console.log(e) }, s => s)
 
 
 export const tenatendFinder = (id, userColl = false) => {
@@ -359,3 +359,11 @@ export const insertValidated = (schema, coll, data) => {
 
 export const getCurrentAdmission = () => Session.get('adm')
 export const getCurrentPatient = () => Session.get('patient')
+
+
+export const getAggregated = (arr, val) =>
+    _(arr)
+        .map(val)
+        .flatten()
+        .filter(x => !!x)
+        .value()

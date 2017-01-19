@@ -30,16 +30,16 @@ Template.registerHelper('currentPtSelector', function () {
 });
 
 Template.registerHelper('isUnpaidInvoicSelector', function () {
-  return { 'isDue': true ,amountPaid: {$exists: false } };
+  return { 'isDue': true, amountPaid: { $exists: false } };
 });
 
 Template.registerHelper('allInvoicSelector', function () {
-  return {  };
+  return {};
 });
 
 Template.registerHelper('findAdmissionByInvoice', function (id) {
-  if(!id)
-  id = FlowRouter.getParam('id');
+  if (!id)
+    id = FlowRouter.getParam('id');
   //console.log(Invoices.findOne(id).admissionObj())
   return Invoices.findOne(id).admissionObj()
 });
@@ -69,10 +69,10 @@ Template.registerHelper('isSet', (arg) => {
   return Session.get(arg) === true
 });
 
-Template.registerHelper('drugName', (id) => utils.drugName(id) )
+Template.registerHelper('drugName', (id) => utils.drugName(id))
 
 
-Template.registerHelper('encounterFromId', () => Encounters.findOne(FlowRouter.getParam('id'))  )
+Template.registerHelper('encounterFromId', () => Encounters.findOne(FlowRouter.getParam('id')))
 
 
 
@@ -89,16 +89,18 @@ Template.registerHelper('getScriptItemsHelper', () => {
   // if( currScript.scriptItems || currScript.scriptItems.count()  > 0)
   //   return;
 
-  let currScript = Scripts.findOne({admission:utils.getCurrentAdmission()._id})
+  let currScript = Scripts.findOne({ admission: utils.getCurrentAdmission()._id })
   let currTemplate = Session.get('scriptTemplate');
 
-  return ['aaa','bbb']
-  
-  if(currTemplate /*&& currScript.scriptItems.count() == 0 */)
-    return utils.logret( () => _(currTemplate.items).map('drug').value ); 
+  return ['aaa', 'bbb']
+
+  if (currTemplate /*&& currScript.scriptItems.count() == 0 */)
+    return utils.logret(() => _(currTemplate.items).map('drug').value);
   //console.log(currTemplate.items)
   return currScript.scriptItems
 })
+
+
 
 
 

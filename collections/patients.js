@@ -654,7 +654,15 @@ MeasurementSchema = new SimpleSchema([BaseSchema, {
         allowedValues: ['BP', 'Temperature', 'PO2', 'Blood Sugar', 'Pulse', 'Breaths Per Minute']
     },
     mainValue: { type: Number, optional: true },
-    values: { type: [TestResultValue], optional: true }
+    values: { type: [TestResultValue], optional: true },
+    source: {
+        type: String,
+        defaultValue: 'A',
+        allowedValues: ['A', 'E', 'P'],
+        autoform: {
+            type: "hidden"
+        },
+    },
 }])
 
 DrugAllergySchema = new SimpleSchema([BaseSchema, {
@@ -920,6 +928,10 @@ EncounterSchema = new SimpleSchema([BaseSchema, {
         type: ScriptSchema,
         optional: true,
     },
+    measurements: {
+        type: [MeasurementSchema],
+        optional: true,
+    },
     // labsAndImages: {
     //     type: LabsAndImagingSchema,
     //     optional: true,
@@ -1035,15 +1047,15 @@ PatientSchema = new SimpleSchema([BaseSchema, {
             type: "select-radio"
         }
     },
-    appliedCharts:{
+    appliedCharts: {
         type: [String],
         optional: true,
         autoform: {
             type: "select-checkbox",
-            options:() => Charts.find({}, nameSorter).map(c => {return {label: c.name, value: c.name} })
+            options: () => Charts.find({}, nameSorter).map(c => { return { label: c.name, value: c.name } })
         }
     },
-   
+
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
     orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
@@ -1395,6 +1407,17 @@ Patients.helpers({
     isAdmitted: function () { return !!this.currentAdmisson() },
     currentAdmisson: function () {
         return Admissions.findOne({ patient: this._id, isCurrent: true });
+    },
+    admissions: function () {
+        return Admissions.find({ patient: this._id }).fetch();
+    },
+    allMeasurements: function () {
+        // ptid = Session.get('patient')
+        // if (!ptid) return;
+        // patient = Patients.findOne(ptid)
+        admMsmts = utils.getAggregated(this.admissions(), 'measurements')
+        encMsmts = utils.getAggregated(this.encounters(), 'measurements')
+        return admMsmts.concat(encMsmts)
     }
 })
 

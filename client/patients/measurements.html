@@ -1,0 +1,48 @@
+<template name="measurementTmplAdm">
+	{{> msmtTbl measurements=admission.measurements}}
+	<!--<div>
+	{{>quickForm fields='recurringAssessments' collection="Admissions" 
+		id="updateAssessmentForm" type="update" doc=admission }}
+	</div>-->
+	<div>
+    {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
+      doc=admission scope="measurements"}}
+	</div>
+</template>
+
+<template name="measurementTmplPt">
+	{{> msmtTbl measurements = patient.allMeasurements  }}
+	<div>
+    {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
+      doc=admission scope="measurements"}}
+	</div>
+</template>
+
+<template name="msmtTbl">
+	    {{#if measurements}} 
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+            <tr style="background:#88a; color: #ffd">
+                <th>Name</th>
+                <th>Value</th>
+				<th>Created</th>
+				<th> Source</th>
+                <th> </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each measurements}}
+            <tr>
+                <td>{{measurement}}</td>
+                <td> {{mainValue}} </td>
+				<td> {{datef updatedAt}} </td>
+                <td> {{source}} </td>
+                <td> <button class="btn btn-deny deleteMeasurement" name='{{drug}}' > Delete </button> </td>
+            </tr>
+            {{/each}} 
+            </tbody>
+        </table>
+    {{else}}
+        <h3> No Measurements recorded yet. </h3>
+    {{/if}}
+</template>
