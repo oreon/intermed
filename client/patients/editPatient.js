@@ -1,3 +1,5 @@
+import * as utils from '/imports/utils/misc.js';
+
 Template.EditPatient.onCreated(function () {
     var self = this;
     self.autorun(function () {
@@ -20,8 +22,8 @@ Template.EditPatient.helpers({
 
 let commonHooks = {
     onSuccess: function (operation, result) {
-        //console.log(this)
-        FlowRouter.go('patient',{ id: this.docId})
+        console.log(this)
+        FlowRouter.go('patient', { id: this.docId })
     }
     ,
     onError: function (operation, error, template) {
@@ -29,6 +31,18 @@ let commonHooks = {
             Bert.alert(error);
         }
     }
+    //,
+    // formToDoc: function (doc) {
+    //     doc.appliedCharts = utils.applyDobToCharts(doc);
+    //     return doc;
+    // },
+
+    // formToModifier: function (modifier) {
+    //     console.log(utils.applyDobToCharts(doc))
+    //     modifier.$set.appliedCharts = utils.applyDobToCharts(doc);
+    //      return modifier;
+    // },
+
 }
 
 AutoForm.hooks({

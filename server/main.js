@@ -106,6 +106,22 @@ Meteor.startup(() => {
             ]
         })
 
+         Charts.insert({
+            "name": "Pediatric Immunization",
+            startFromBirthDate:true,
+            assesments: [
+                { "name": "BCG ,OPV 0, Hep-B 1",
+                 "frequency": { "every": 0, "type": "Day", isRecurring:false } },
+
+                 { "name": "DTwP 1,IPV 1,Hep-B 2,Hib 1,Rotavirus 1, PCV 1" ,
+                 "frequency": { "every": 6, "type": "Week", isRecurring:false } },
+            ]
+
+            //, "6 weeks""
+
+
+        })
+
 
     }
 

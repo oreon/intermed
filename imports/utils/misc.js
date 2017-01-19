@@ -367,3 +367,27 @@ export const getAggregated = (arr, val) =>
         .flatten()
         .filter(x => !!x)
         .value()
+
+export const timedOccurence = (item, times = 1) =>
+    new moment(item.startDate).add(item.frequency.every * times, item.frequency.type.toLowerCase())
+
+
+export const updateAssessmentStartDate = (chart, pt) => {
+    if (chart.startFromBirthDate) {
+        _.forEach(chart.assesments, y => y.startDate = pt.dob)
+    }
+    return chart;
+}
+
+export const applyDobAsStart = (pt) => {
+    console.log(pt)
+
+    _.map(pt.appliedCharts, x => {
+        if (x.startFromBirthDate) {
+            _.foreach(x.assesments, y => y.startDate = pt.dob)
+        }
+    })
+
+    console.log(pt.appliedCharts)
+    return pt.appliedCharts;
+}

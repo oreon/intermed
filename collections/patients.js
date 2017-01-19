@@ -24,7 +24,7 @@ SimpleSchema.messages({
 //TODO add uniques
 
 /*export const*/
-Patients = new Mongo.Collection('patients')
+
 Drugs = new Mongo.Collection('drugs')
 Scripts = new Mongo.Collection('scripts')
 Encounters = new Mongo.Collection('encounters')
@@ -118,6 +118,24 @@ Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
+
+class PatientsCollection extends Mongo.Collection {
+    // insert(pt, callback, language = 'en') {
+    //     console.log(utils.applyDobToCharts(doc))
+    //     doc.appliedCharts = utils.applyDobToCharts(doc);
+    //     console.log (pt)
+    //     //const ourList = list;
+    //     return super.insert(pt, callback);
+    // }
+
+    // update(selector, modifier){
+
+    // }
+
+
+}
+
+Patients = new PatientsCollection('patients')
 
 class ChartsCollection extends Mongo.Collection {
     // insert(list, callback, language = 'en') {
@@ -715,6 +733,10 @@ FrequencySchema = new SimpleSchema({
         type: String,
         label: "per ",
         defaultValue: 'Day'
+    },
+    isRecurring: {
+        type: Boolean,
+        defaultValue: true
     }
 })
 
@@ -1293,6 +1315,7 @@ Schema.wardTemp = new SimpleSchema({
 
 ChartSchema = new SimpleSchema({
     name: { type: String },
+    startFromBirthDate: { type: Boolean, defaultValue: false },
     assesments: {
         type: [RecurringAssesmentItemSchema],
         //optional: true,
@@ -1623,6 +1646,10 @@ if (Meteor.isServer) {
 
     });
 
+    Charts.after.findOne(function (userId, selector, options, doc) {
+    
+    });
+
     Patients.before.find(function (userId, selector, options) {
         ////console.log(this.userId)
 
@@ -1655,6 +1682,17 @@ if (Meteor.isServer) {
         utils.insertValidated(ScriptSchema, Scripts, { "admission": doc._id });
     })
 
+
+    //  Patients.before.insert((userId, doc) => {
+    //     _(doc.appliedCharts)
+    //     .filter(x=>x.startFromBirthDate)
+    //     .map(x => {
+    //        _.map( x.assesments, y => y.startDate = doc.dob)
+    //     })
+
+    //     utils.insertValidated(InvoiceSchema, Invoices, { "admission": doc._id })
+    // })
+
     Encounters.after.insert((userId, doc) => {
         // //debugger
         // inv = { "admission": doc._id, type: 'OutPatient' }
@@ -1685,6 +1723,11 @@ if (Meteor.isServer) {
         doc.ward = Rooms.findOne(doc.room).ward
         doc.facility = utils.getUserFacility(userId)
     })
+
+    Invoices.before.insert((userId, doc) => {
+        admission = Admissions.findOne(doc.admission)
+        doc.patientName = admission.patientName;
+    });
 
     //CollectionHooks.before.insert((userId, doc) => doc.facility = utils.getUserFacility(userId) )
 
@@ -1730,13 +1773,13 @@ Scripts.after.findOne((userId, selector, options, doc) =>
 );
 
 
-Invoices.before.insert((userId, doc) => {
-    admission = Admissions.findOne(doc.admission)
-    doc.patientName = admission.patientName;
-    doc.facility = utils.getUserFacility(userId)
-});
 
 
+// Patients.before.update((userId, doc, fieldNames, modifier, options) => {
+//     modifier.$set = modifier.$set || {};
+//     //console.log(utils.applyDobToCharts(doc))
+//     modifier.$set.appliedCharts = utils.applyDobToCharts(doc).appliedCharts;
+// });
 
 
 defSelector = (userId) => { return { facility: Meteor.users.findOne({ _id: userId }).profile.facility } }

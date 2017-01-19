@@ -264,8 +264,8 @@ doc=patient scope="immunizations"}}
     <div class="tab-content">
     <div id="byProc" class="tab-pane fade ">
         {{# each getEvents patient}}
-        <ul class="list-group">{{item.name}} , Every {{item.frequency.every}} days {{#each dates}}
-            <li class="list-group-item">{{datef .}} </li> {{/each}}
+        <ul class="list-group">{{item.name}} , Every {{item.frequency.every}} {{item.frequency.type}}  {{#each dates}}
+            <li class="list-group-item">{{datesm .}} </li> {{/each}}
         </ul>
         {{/each}}
     </div>
@@ -273,7 +273,7 @@ doc=patient scope="immunizations"}}
     <div id="all" class="tab-pane fade in active">
           <ul class="list-group">
          {{# each getEventsByDate patient}}
-           <li class="list-group-item"> {{item.name}}  -  {{datef date}} </li>
+           <li class="list-group-item"> {{item.name}}  -  {{datesm date}} </li>
          {{/each}}
          </ul>
     </div>
