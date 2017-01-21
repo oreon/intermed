@@ -9,7 +9,7 @@ Template.scheduledEvents.onCreated(function () {
 });
 
 let getPtCharts = (pt) =>
-    _(utils.applyDobAsStart(pt))
+    _(pt.appliedCharts)
         .map(x => Charts.findOne({ name: x }))
         .map(x => utils.updateAssessmentStartDate(x, pt))
         .map('assesments')
@@ -48,7 +48,7 @@ let calcShedFlat = (item) => {
 }
 
 let calcShed = (item, isFlat) => {
-    console.log(item)
+    //console.log(item)
 
     if (!item.frequency.isRecurring) {
         return { item: item, date: utils.timedOccurence(item) }

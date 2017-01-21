@@ -1,4 +1,5 @@
 <template name="measurementTmplAdm">
+    {{admission._id}}
 	{{> msmtTbl measurements=admission.measurements}}
 	<!--<div>
 	{{>quickForm fields='recurringAssessments' collection="Admissions" 
@@ -11,10 +12,11 @@
 </template>
 
 <template name="measurementTmplPt">
+    {{patient._id}}
 	{{> msmtTbl measurements = patient.allMeasurements  }}
 	<div>
-    {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
-      doc=admission scope="measurements"}}
+    {{> quickForm id="insertPtMeasurementForm" type="update-pushArray" collection="Patients" 
+      doc=patient scope="measurements"}}
 	</div>
 </template>
 

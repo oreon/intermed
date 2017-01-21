@@ -380,14 +380,12 @@ export const updateAssessmentStartDate = (chart, pt) => {
 }
 
 export const applyDobAsStart = (pt) => {
-    console.log(pt)
-
+    //console.log(pt)
     _.map(pt.appliedCharts, x => {
         if (x.startFromBirthDate) {
             _.foreach(x.assesments, y => y.startDate = pt.dob)
         }
     })
-
-    console.log(pt.appliedCharts)
+    //console.log(pt.appliedCharts)
     return pt.appliedCharts;
 }

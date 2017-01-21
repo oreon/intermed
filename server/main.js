@@ -106,6 +106,21 @@ Meteor.startup(() => {
             ]
         })
 
+          Charts.insert({
+            "name": "Growth Chart",
+            startFromBirthDate:true,
+            assesments: [
+                { "name": "Height",
+                 "frequency": { "every": 6, "type": "Month"} },
+
+                  { "name": "Weight",
+                 "frequency": { "every": 6, "type": "Month"} },
+
+                  { "name": "Head Circumference",
+                 "frequency": { "every": 6, "type": "Month"} },
+            ]
+          })
+
          Charts.insert({
             "name": "Pediatric Immunization",
             startFromBirthDate:true,
@@ -115,10 +130,38 @@ Meteor.startup(() => {
 
                  { "name": "DTwP 1,IPV 1,Hep-B 2,Hib 1,Rotavirus 1, PCV 1" ,
                  "frequency": { "every": 6, "type": "Week", isRecurring:false } },
+
+                 { "name":"DTwP 2,IPV 2,Hib 2,Rotavirus 2,PCV 2",
+                 "frequency": { "every": 10, "type": "Week", isRecurring:false } },
+
+                 { "name":"DTwP 3,IPV 3,Hib 3,Rotavirus 3,PCV 3",
+                 "frequency": { "every": 14, "type": "Week", isRecurring:false } },
+                 
+                 { "name":"OPV 1,Hep-B 3",
+                 "frequency": { "every": 6, "type": "Month", isRecurring:false } },
+
+                  { "name":"OPV 2,MMR 1",
+                 "frequency": { "every": 9, "type": "Month", isRecurring:false } },
+
+                 { "name":"Hep-A 1, Typhoid Conjugate Vaccine",
+                 "frequency": { "every": 12, "type": "Month", isRecurring:false } }, //validate
+
+                  { "name":" MMR 2 ,Varicella 1 ,PCV booster",
+                 "frequency": { "every": 15, "type": "Month", isRecurring:false } }, 
+
+                 { "name":" DTwP B1/DTaP B1,IPV B1,Hib B1, Hep-A 2", 
+                 "frequency": { "every": 18, "type": "Month", isRecurring:false } }, 
+
+                  { "name":" Booster of TyphoidConjugate Vaccine", 
+                 "frequency": { "every": 2, "type": "Year", isRecurring:false } }, 
+
+                  { "name":" DTwP B2/DTaP B2,OPV 3,Varicella 2,MMR 3", 
+                 "frequency": { "every": 5, "type": "Year", isRecurring:false } }, 
+
+                 { "name":" Tdap/Td, HPV", 
+                 "frequency": { "every": 11, "type": "Year", isRecurring:false } }, 
+                 
             ]
-
-            //, "6 weeks""
-
 
         })
 

@@ -259,6 +259,14 @@ AutoForm.hooks({
         },
     },
 
+    insertSEForm:{
+        formToDoc: function (doc) {
+            if(doc.mainValue)
+                utils.getCurrentPatient().insert({ mainValue: doc.mainValue, measurement:"BP"})
+            return doc;
+        },
+    },
+
     newTestResultsForm: {
 
         formToDoc: function (doc) {

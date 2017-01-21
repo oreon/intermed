@@ -91,8 +91,6 @@ creatorId = {
     },
 }
 
-
-
 creator = {
     type: String,
     optional: true,
@@ -110,11 +108,18 @@ snFld = {
     settings: { height: 90 }
 }
 
+remarksType = {
+    type: String, optional: true,
+    autoform: {
+        type: "textarea",
+    }
+},
 
 
 
 
-Wards = new Mongo.Collection('wards')
+
+    Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
 Beds = new Mongo.Collection('beds')
@@ -481,6 +486,19 @@ RoomSchema = new SimpleSchema([BaseSchema, {
 }
 ])
 
+ScheduledEventPerformed = new SimpleSchema({
+    name: {
+        type: String,
+        autoform: {
+            type: "hidden",
+        }
+    },
+    mainValue: { type: Number, decimal: true, optional: true },
+    remarks: remarksType,
+
+    performDate: tmStamp,
+})
+
 
 WardSchema = new SimpleSchema([BaseSchema, {
     name: { type: String },
@@ -669,7 +687,9 @@ MeasurementSchema = new SimpleSchema([BaseSchema, {
     measurement: {
         type: String,
         optional: false,
-        allowedValues: ['BP', 'Temperature', 'PO2', 'Blood Sugar', 'Pulse', 'Breaths Per Minute']
+        allowedValues: ['BP', 'Temperature', 'PO2', 'Blood Sugar', 'Pulse', 'Breaths Per Minute',
+        'Height','Weight','Head Circumference'
+        ]
     },
     mainValue: { type: Number, optional: true },
     values: { type: [TestResultValue], optional: true },
@@ -680,6 +700,7 @@ MeasurementSchema = new SimpleSchema([BaseSchema, {
         autoform: {
             type: "hidden"
         },
+        optional:true
     },
 }])
 
@@ -751,7 +772,7 @@ DurationSchema = new SimpleSchema({
     }
 })
 
-RecurringAssesmentItemSchema = new SimpleSchema({
+RecurringItemSchema = new SimpleSchema({
     name: {
         type: String,
         label: 'Name of the measurement e.g Blood Pressure, Blood Sugar etc'
@@ -766,7 +787,16 @@ RecurringAssesmentItemSchema = new SimpleSchema({
         label: "Start Date (Leave empty for now)",
         autoValue: function () { if (!this.value) return new Date(); }
     },
+    type: {
+        type: String,
+        defaultValue: 'A',
+        allowedValues: ['I', 'A', 'P']
+    }
 })
+
+RecurringAssesmentItemSchema = new SimpleSchema([RecurringItemSchema, {
+
+}])
 
 
 ScriptItem = new SimpleSchema([BaseSchema, {
@@ -1081,6 +1111,11 @@ PatientSchema = new SimpleSchema([BaseSchema, {
     drugAllergies: { type: [DrugAllergySchema], optional: true },
     immunizations: { type: [ImmunizationSchema], optional: true },
     orderedLabsAndImages: { type: LabsAndImagingSchema, optional: true },
+     measurements: {
+        type: [MeasurementSchema],
+        optional: true,
+    },
+    scheduledEventPerformed:{ type: [ScheduledEventPerformed], optional:true }
     // files: {
     //     type: String,
     //     optional:true,
@@ -1317,7 +1352,7 @@ ChartSchema = new SimpleSchema({
     name: { type: String },
     startFromBirthDate: { type: Boolean, defaultValue: false },
     assesments: {
-        type: [RecurringAssesmentItemSchema],
+        type: [RecurringItemSchema],
         //optional: true,
         // autoValue: function () {
         //     return utils.massageScriptItems(this.value);
@@ -1647,7 +1682,7 @@ if (Meteor.isServer) {
     });
 
     Charts.after.findOne(function (userId, selector, options, doc) {
-    
+
     });
 
     Patients.before.find(function (userId, selector, options) {

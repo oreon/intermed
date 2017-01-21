@@ -38,11 +38,13 @@
 
             <li><a data-toggle="tab" href="#immunizations"><i class="fa fa-bug"></i>Immunizations</a></li>
             <li><a data-toggle="tab" href="#ordered"><i class="fa fa-thermometer-full"></i>Labs</a></li>
-            <li><a data-toggle="tab" href="#testResults"> <i class="fa fa-list"></i>Results</a></li>
+            <li>
+                <a data-toggle="tab" href="#testResults"> <i class="fa fa-list"></i>Results</a>
+            </li>
             <li><a data-toggle="tab" href="#msmts"><i class="fa fa-map"></i>Measurements</a></li>
             <li><a data-toggle="tab" href="#ptGraphs"><i class="fa fa-line-chart"></i>Graphs</a></li>
             <li><a data-toggle="tab" href="#admissions"><i class="fa fa-map"></i>Admissions</a></li>
-            
+
             <li><a data-toggle="tab" href="#docs"><i class="fa fa-file-image-o"></i>Documents</a></li>
             <li><a data-toggle="tab" href="#scheduleEvents"><i class="fa fa-calendar"></i>Upcoming</a></li>
 
@@ -69,7 +71,7 @@
             </div>
 
             <div id="msmts" class="tab-pane fade">
-                {{> measurementTmplPt patient=patient }} 
+                {{> measurementTmplPt patient=patient }}
             </div>
 
             <div id="ptGraphs" class="tab-pane fade">
@@ -257,27 +259,31 @@ doc=patient scope="immunizations"}}
 
 <template name="scheduledEvents">
     <ul class="nav nav-tabs">
-        <li ><a data-toggle="tab" href="#byProc"><i class="fa fa-database"></i>By Procedure</a></li>
+        <li><a data-toggle="tab" href="#byProc"><i class="fa fa-database"></i>By Procedure</a></li>
         <li class="active"><a data-toggle="tab" href="#all"> By Date</a></li>
     </ul>
 
     <div class="tab-content">
-    <div id="byProc" class="tab-pane fade ">
-        {{# each getEvents patient}}
-        <ul class="list-group">{{item.name}} , Every {{item.frequency.every}} {{item.frequency.type}}  {{#each dates}}
-            <li class="list-group-item">{{datesm .}} </li> {{/each}}
-        </ul>
-        {{/each}}
-    </div>
+        <div id="byProc" class="tab-pane fade ">
+            {{# each getEvents patient}}
+            <ul class="list-group">{{item.name}} , Every {{item.frequency.every}} {{item.frequency.type}} {{#each dates}}
+                <li class="list-group-item">{{datesm .}} </li> {{/each}}
+            </ul>
+            {{/each}}
+        </div>
 
-    <div id="all" class="tab-pane fade in active">
-          <ul class="list-group">
-         {{# each getEventsByDate patient}}
-           <li class="list-group-item"> {{item.name}}  -  {{datesm date}} </li>
-         {{/each}}
-         </ul>
-    </div>
+        <div id="all" class="tab-pane fade in active">
+            <ul class="list-group">
+                {{# each getEventsByDate patient}}
+                <li class="list-group-item"> {{item.name}} -  {{datesm date}} 
+<!--                    
+                    {{> quickForm id="insertSEForm" type="update-pushArray" collection="Patients"
+                    doc=patient scope="scheduledEventPerformed"}}-->
+
+                </li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 
 </template>
-
