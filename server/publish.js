@@ -107,7 +107,6 @@ Meteor.publish('Wards', function () {
 Meteor.publish('Rooms', function () {
     return Rooms.find(utils.tenatendFinder(this.userId));
 });
-
 Meteor.publish('Beds', function () {
     return Beds.find(utils.tenatendFinder(this.userId));
 });

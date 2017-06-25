@@ -116,9 +116,6 @@ remarksType = {
 },
 
 
-
-
-
     Wards = new Mongo.Collection('wards')
 Rooms = new Mongo.Collection('rooms')
 Admissions = new Mongo.Collection('admissions')
@@ -143,26 +140,7 @@ class PatientsCollection extends Mongo.Collection {
 Patients = new PatientsCollection('patients')
 
 class ChartsCollection extends Mongo.Collection {
-    // insert(list, callback, language = 'en') {
-    //     const ourList = list;
-    //     if (!ourList.name) {
-    //         const defaultName = TAPi18n.__('lists.insert.list', null, language);
-    //         let nextLetter = 'A';
-    //         ourList.name = `${defaultName} ${nextLetter}`;
 
-    //         while (this.findOne({ name: ourList.name })) {
-    //             // not going to be too smart here, can go past Z
-    //             nextLetter = String.fromCharCode(nextLetter.charCodeAt(0) + 1);
-    //             ourList.name = `${defaultName} ${nextLetter}`;
-    //         }
-    //     }
-
-    //     return super.insert(ourList, callback);
-    // }
-    // remove(selector, callback) {
-    //     Todos.remove({ listId: selector });
-    //     return super.remove(selector, callback);
-    // }
 }
 
 // class LabFindingsCollection extends Mongo.Collection {}
@@ -524,6 +502,7 @@ FacilitySchema = new SimpleSchema([BaseSchema, {
     city: { type: String },
     specializations: {
         type: [String],
+        optional:true,
         autoform: {
             type: "select-checkbox",
             options: function () {
@@ -535,6 +514,7 @@ FacilitySchema = new SimpleSchema([BaseSchema, {
     },
     taxes: {
         type: Number,
+        optional:true
     }
 
 }
@@ -1036,6 +1016,10 @@ PatientSchema = new SimpleSchema([BaseSchema, {
         }
     },
     contactPhone: {
+        type: String,
+        optional: true
+    },
+    patientUniqueId: {
         type: String,
         optional: true
     },

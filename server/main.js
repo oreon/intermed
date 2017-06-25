@@ -1,34 +1,30 @@
 import { Meteor } from 'meteor/meteor';
 
 Meteor.startup(() => {
-    if (Meteor.users.find().count() < 200) {
+    if (Meteor.users.find().count() == 0) {
 
-        // user = {
-        //     "emails": [
-        //         {
-        //             "address": "singhjess@gmail.com",
-        //             "verified": false
-        //         }
-        //     ],
-        //     "roles": ["admin"],password: 'mohali'
-        // }
+         user = {
+             "emails": [
+                 {
+                     "address": "singhjess@gmail.com",
+                     "verified": false
+                 }
+             ],
+             "roles": ["admin"],password: 'mohali'
+         }
 
-        // Meteor.users.insert(user)
+         Meteor.users.insert(user)
 
-        // Roles.setUserRoles(userId, 'admin');
+         Roles.setUserRoles(userId, 'admin');
 
     }
-    //  if (Roles.find().count() == 0) {
-    //      Roles.insert('admin');
-    //      Roles.insert('physician');
-    //      Roles.insert('labTech');
-    //      Roles.insert('nurse');
 
-    //      Roles.insert('manager');
-    //      Roles.insert('clerk');
-    //      Roles.insert('patient');
-    // }
     // code to run on server at startup
+    if (Facilities.find().count() == 0) {
+        Facilities.insert({ "name": "Morningside Clinic", _id:'10001' , 'address': '123', city:'malvern'})
+        Facilities.insert({ "name": "Neilson Diabetes", _id:'10002', 'address': '123' , city:'Scarborough'})
+    }
+
     if (Drugs.find().count() == 0) {
         Drugs.insert({ "name": "Piperacillin" })
         Drugs.insert({ "name": "Penicillin" })
@@ -38,8 +34,6 @@ Meteor.startup(() => {
         Drugs.insert({ "name": "Diclofenac" })
         Drugs.insert({ "name": "Metformin" })
         Drugs.insert({ "name": "Glipizide" })
-
-
 
     }
     if (LabTests.find().count() == 0) {

@@ -2,10 +2,10 @@
 {{#if patient}}
     {{> quickForm collection="Patients" id="editPatientForm" type="update" doc=patient 
     autosave=false
-    omitFields="immunizations, drugAllergies, orderedLabsAndImages"}}
+    omitFields="immunizations, drugAllergies, orderedLabsAndImages, measurements, scheduledEventPerformed"}}
 {{else}}
     {{> quickForm collection="Patients" id="insertPatientForm" type="insert"  autosave=false
-    omitFields="immunizations, drugAllergies, orderedLabsAndImages"
+    omitFields="immunizations, drugAllergies, orderedLabsAndImages, measurements,scheduledEventPerformed"
     }}
 {{/if}}
 

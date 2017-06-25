@@ -15,7 +15,7 @@
     {{patient._id}}
 	{{> msmtTbl measurements = patient.allMeasurements  }}
 	<div>
-    {{> quickForm id="insertPtMeasurementForm" type="update-pushArray" collection="Patients" 
+    {{> quickForm id="insertPtMeasurementForm" type="update-pushArray" collection="Patients"
       doc=patient scope="measurements"}}
 	</div>
 </template>
