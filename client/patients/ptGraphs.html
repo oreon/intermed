@@ -1,0 +1,16 @@
+<template name="PtGraphs">
+    Graphs
+{{#if Template.subscriptionsReady}}
+    {{#if admission}}
+        {{createChartData admission}}
+    {{else}}
+        PT CHARTS
+        {{createChartDataPt patient}}
+    {{/if}}
+    {{#each chartNames}}
+        <div id={{.}}>{{drawChart .}}</div>
+        <hr/>
+        <br/>
+    {{/each}}
+{{/if}}
+</template>

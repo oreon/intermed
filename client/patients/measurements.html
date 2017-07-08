@@ -1,10 +1,10 @@
 <template name="measurementTmplAdm">
-    {{admission._id}}
-	{{> msmtTbl measurements=admission.measurements}}
-	<!--<div>
-	{{>quickForm fields='recurringAssessments' collection="Admissions" 
-		id="updateAssessmentForm" type="update" doc=admission }}
-	</div>-->
+    {{#if admission}}
+        {{> msmtTbl measurements=admission.measurements}}
+    {{else}}
+        {{> msmtTbl measurements=patient.measurements}}
+    {{/if}}
+
 	<div>
     {{> quickForm id="insertMeasurementForm" type="update-pushArray" collection="Admissions" 
       doc=admission scope="measurements"}}
@@ -13,7 +13,7 @@
 
 <template name="measurementTmplPt">
     {{patient._id}}
-	{{> msmtTbl measurements = patient.allMeasurements  }}
+	{{> msmtTbl measurements = patient.measurements  }}
 	<div>
     {{> quickForm id="insertPtMeasurementForm" type="update-pushArray" collection="Patients"
       doc=patient scope="measurements"}}

@@ -220,16 +220,4 @@
 
 
 
-<template name="PtGraphs">
-	{{#if admission}}
-		{{createChartData admission}}
-	{{else}}
-		{{createChartDataPt patient}}
-	{{/if}}
-	{{#each chartNames}}
-		<div id={{.}}>{{drawChart .}}</div>
-		<hr/>
-		<br/>
-	{{/each}}
-</template>
 
