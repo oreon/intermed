@@ -28,6 +28,11 @@ Meteor.publish('Physicians', function () {
 });
 
 
+Meteor.publish('measurements', function(patientId){
+    check(patientId, String);
+    return Measurements.find({patient: patientId});
+});
+
 // Meteor.publish('AllProducts', function () {
 //     return Products.find(utils.tenatendFinder(this.userId));
 // });

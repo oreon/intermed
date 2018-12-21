@@ -34,6 +34,8 @@ LabTests = new Mongo.Collection('labTests')
 Facilities = new Mongo.Collection('facilities')
 ScriptTemplates = new Mongo.Collection('scriptTemplates')
 
+Measurements = new Mongo.Collection('measurements')
+
 TestResults = new Mongo.Collection('testResults')
 
 Invoices = new Mongo.Collection('invoices')
@@ -737,7 +739,8 @@ FrequencySchema = new SimpleSchema({
     },
     isRecurring: {
         type: Boolean,
-        defaultValue: true
+        defaultValue: true,
+        optional: true
     }
 })
 
@@ -782,15 +785,15 @@ RecurringAssesmentItemSchema = new SimpleSchema([RecurringItemSchema, {
 ScriptItem = new SimpleSchema([BaseSchema, {
     drug: {
         type: String,
-        optional: true,
-        autoform: {
-            type: "select2",
-            options: function () {
-                return Drugs.find({}, { sort: { 'name': 1 } }).map(function (c) {
-                    return { label: c.name, value: c._id + "" };
-                });
-            }
-        }
+        //optional: true,
+        //autoform: {
+        //    type: "select2",
+        //    options: function () {
+        //        return Drugs.find({}, { sort: { 'name': 1 } }).map(function (c) {
+        //            return { label: c.name, value: c._id + "" };
+        //        });
+        //    }
+        //}
     },
     route: {
         type: String,
@@ -958,10 +961,6 @@ EncounterSchema = new SimpleSchema([BaseSchema, {
     },
     script: {
         type: ScriptSchema,
-        optional: true,
-    },
-    measurements: {
-        type: [MeasurementSchema],
         optional: true,
     },
     // labsAndImages: {
@@ -1453,13 +1452,12 @@ Patients.helpers({
     admissions: function () {
         return Admissions.find({ patient: this._id }).fetch();
     },
-    allMeasurements: function () {
-        // ptid = Session.get('patient')
-        // if (!ptid) return;
-        // patient = Patients.findOne(ptid)
-        admMsmts = utils.getAggregated(this.admissions(), 'measurements')
-        encMsmts = utils.getAggregated(this.encounters(), 'measurements')
-        return admMsmts.concat(encMsmts)
+    msmts: function () {
+        return Measurements.find({ patient: this._id }).fetch();
+    },
+
+    msmtsByType: function (type) {
+        return Measurements.find({ patient: this._id , measurement:type}, {sort: {createdAt: -1}}).fetch();
     }
 })
 
@@ -2024,6 +2022,7 @@ Patients.attachSchema(PatientSchema)
 Drugs.attachSchema(DrugSchema)
 Scripts.attachSchema(ScriptSchema)
 Encounters.attachSchema(EncounterSchema)
+Measurements.attachSchema(MeasurementSchema)
 
 ChronicDiseases.attachSchema(ChronicDiseaseSchema)
 LabTests.attachSchema(LabTestSchema)

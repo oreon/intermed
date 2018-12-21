@@ -1,0 +1,6 @@
+I am a sr Java/Scala/Data Science Developer/Architect with a master's in computer science currently looking for a challenging assignment.
+
+I am quiet proficient in Scala, R and Python for data exploration and visualization. 
+I have 15+ years experience developing Java, JEE, Scala - with JBoss and Weblogic, Spring, Hibernate, Play framework, WebServices, JSF and JMS applications. Also, I am a big proponent of model driven, test driven and functional programming.
+
+I have certificates in Big Data and Machine learning from Coursera and am creator of an open source tool to enable model driven development - WitchcraftMDA
