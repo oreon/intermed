@@ -10,7 +10,7 @@
     "bcrypt": "^0.8.7",
     "data.task": "^3.1.1",
     "faker": "^3.1.0",
-    "highcharts": "^5.0.5",
+    "highcharts": "^8.1.1",
     "immutable": "^3.8.1",
     "immutable-ext": "^1.0.8",
     "later": "^1.2.0",
